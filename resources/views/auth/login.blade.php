@@ -1,7 +1,8 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Login V17</title>
+	<title>Exvite - Login</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
@@ -24,7 +25,8 @@
 	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="css/util.css">
-	<link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 <!--===============================================================================================-->
 </head>
 <body>
@@ -32,27 +34,34 @@
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100">
-				<form class="login100-form validate-form">
+				<form class="login100-form validate-form" method="POST" action="{{ route('login') }}">
 					<span class="login100-form-title p-b-34">
 						Account Login
-					</span>
-					
-					<div class="wrap-input100 rs1-wrap-input100 validate-input m-b-20" data-validate="Type user name">
-						<input id="first-name" class="input100" type="text" name="username" placeholder="User name">
-						<span class="focus-input100"></span>
-					</div>
-					<div class="wrap-input100 rs2-wrap-input100 validate-input m-b-20" data-validate="Type password">
-						<input class="input100" type="password" name="pass" placeholder="Password">
-						<span class="focus-input100"></span>
-					</div>
-					
+                    </span>
+                    @csrf
+
+                        <label for="email" class="col-md-6 col-form-label text-md-left">{{ __('E-Mail Address') }}</label>
+                             <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+                         @error('email')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                            <label for="password" class="col-md-6 col-form-label text-md-left">{{ __('Password') }}</label>
+                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+                                @error('password')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                         		
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn">
-							Sign in
+						<button type="submit" class="btn btn-success w-100">
+                            {{ __('Login') }}
 						</button>
 					</div>
 
-					<div class="w-full text-center p-t-27 p-b-239">
+					<div class="w-full text-center p-t-27 p-b-105">
 						<span class="txt1">
 							Forgot
 						</span>
@@ -61,10 +70,11 @@
 							User name / password?
 						</a>
 					</div>
-
-					<div class="w-full text-center">
-						<a href="#" class="txt3">
-							Sign Up
+                        <div class="col-lg-12 m-2"> <a href="#" class="btn btn-primary facebook w-100"> <span>Login with Facebook</span> <i class="fa fa-facebook"></i> </a> </div>
+                        <div class="col-lg-12 m-2"> <a href="#" class="btn btn-danger google w-100"> Login with Google <i class="fa fa-google"></i> </a> </div>
+					<div class="w-full text-center"> Belum punya akun ? 
+						<a href="#">
+                            {{ __('Register') }}
 						</a>
 					</div>
 				</form>

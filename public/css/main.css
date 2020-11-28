@@ -343,6 +343,7 @@ input.input100 {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  margin-top: 20px;
 }
 
 .login100-form-btn {
@@ -407,7 +408,7 @@ input.input100 {
   .login100-form {
     padding-left: 15px;
     padding-right: 15px;
-    padding-top: 150px;
+    padding-top: 15px;
   }
 
   .rs1-wrap-input100,
