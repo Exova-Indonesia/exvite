@@ -6,7 +6,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
-	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+	<link rel="icon" type="image/png" href="images/favicon.ico"/>
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
 <!--===============================================================================================-->
@@ -33,15 +33,15 @@
 	
 	<div class="limiter">
 		<div class="container-login100">
-			<div class="wrap-login100">
+			<div class="wrap-login100 border-0">
 				<form class="login100-form validate-form" method="POST" action="{{ route('login') }}">
 					<span class="login100-form-title p-b-34">
-						Account Login
+						Login To Exvite
                     </span>
                     @csrf
 
                         <label for="email" class="col-md-6 col-form-label text-md-left">{{ __('E-Mail Address') }}</label>
-                             <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+                             <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
                          @error('email')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -54,6 +54,13 @@
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+
+                                    <label for="remember">
+                                        {{ __('Remember Me') }}
+                                    </label>
+                                </div>
                          		
 					<div class="container-login100-form-btn">
 						<button type="submit" class="btn btn-success w-100">
@@ -61,25 +68,29 @@
 						</button>
 					</div>
 
-					<div class="w-full text-center p-t-27 p-b-105">
+					<div class="w-full text-center p-t-27 p-b-30">
 						<span class="txt1">
 							Forgot
 						</span>
-
-						<a href="#" class="txt2">
-							User name / password?
+						@if (Route::has('password.request'))
+						<a href="{{ route('password.request') }}" class="txt2">
+							Password?
 						</a>
+						@endif
+						<p class="txt1">
+							OR
+						</p>
 					</div>
                         <div class="col-lg-12 m-2"> <a href="#" class="btn btn-primary facebook w-100"> <span>Login with Facebook</span> <i class="fa fa-facebook"></i> </a> </div>
                         <div class="col-lg-12 m-2"> <a href="#" class="btn btn-danger google w-100"> Login with Google <i class="fa fa-google"></i> </a> </div>
 					<div class="w-full text-center"> Belum punya akun ? 
-						<a href="#">
+						<a href="{{ route('register') }}">
                             {{ __('Register') }}
 						</a>
 					</div>
 				</form>
 
-				<div class="login100-more" style="background-image: url('images/bg-01.jpg');"></div>
+				<div class="login100-more" style="background-image: url('images/banner-exvite.jpg');"></div>
 			</div>
 		</div>
 	</div>
