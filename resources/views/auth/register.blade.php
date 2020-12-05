@@ -33,8 +33,9 @@
 	
 	<div class="limiter">
 		<div class="container-login100">
-			<div class="wrap-login100 border-0">
+			<div class="wrap-login100 border-0 justify-content-center">
 				<form class="login100-form validate-form" method="POST" action="{{ route('login') }}">
+				<img class="mx-auto d-block" src="images/icons/icon.png" alt="icon" width="80" height="80">
 					<span class="login100-form-title p-b-34">
 						Join To Exvite
                     </span>
@@ -73,16 +74,14 @@
 							OR
 						</span>
 					</div>
-                        <div class="col-lg-12 m-2"> <a href="#" class="btn btn-primary facebook w-100"> <span>Login with Facebook</span> <i class="fa fa-facebook"></i> </a> </div>
-                        <div class="col-lg-12 m-2"> <a href="#" class="btn btn-danger google w-100"> Login with Google <i class="fa fa-google"></i> </a> </div>
+						<button class="btn btn-primary facebook w-100 m-2"> <a href="#" class="text-white text-decoration-none"> <span>Login with Facebook</span> <i class="fa fa-facebook"></i> </a> </button>
+                        <button class="btn btn-danger google w-100 m-2"> <a href="#" class="text-white text-decoration-none"> Login with Google <i class="fa fa-google"></i> </a> </button>
 					<div class="w-full text-center"> Sudah punya akun ? 
 						<a href="{{ route('login') }}">
                             {{ __('Login') }}
 						</a>
 					</div>
 				</form>
-
-				<div class="login100-more" style="background-image: url('images/banner-exvite.jpg');"></div>
 			</div>
 		</div>
 	</div>

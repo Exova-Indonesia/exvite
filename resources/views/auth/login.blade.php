@@ -33,21 +33,22 @@
 	
 	<div class="limiter">
 		<div class="container-login100">
-			<div class="wrap-login100 border-0">
+			<div class="wrap-login100 border-0 justify-content-center">
 				<form class="login100-form validate-form" method="POST" action="{{ route('login') }}">
+				<img class="mx-auto d-block" src="images/icons/icon.png" alt="icon" width="80" height="80">
 					<span class="login100-form-title p-b-34">
 						Login To Exvite
                     </span>
                     @csrf
 
-                        <label for="email" class="col-md-6 col-form-label text-md-left">{{ __('E-Mail Address') }}</label>
+                        <label for="email" class="col-form-label text-md-left">{{ __('E-Mail Address') }}</label>
                              <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
                          @error('email')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
-                            <label for="password" class="col-md-6 col-form-label text-md-left">{{ __('Password') }}</label>
+                            <label for="password" class="col-form-label text-md-left">{{ __('Password') }}</label>
                             <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
                                 @error('password')
                             <span class="invalid-feedback" role="alert">
@@ -68,29 +69,19 @@
 						</button>
 					</div>
 
-					<div class="w-full text-center p-t-27 p-b-30">
+					<div class="w-full text-center p-t-20 p-b-25">
 						<span class="txt1">
-							Forgot
-						</span>
-						@if (Route::has('password.request'))
-						<a href="{{ route('password.request') }}" class="txt2">
-							Password?
-						</a>
-						@endif
-						<p class="txt1">
 							OR
-						</p>
+						</span>
 					</div>
-                        <div class="col-lg-12 m-2"> <a href="#" class="btn btn-primary facebook w-100"> <span>Login with Facebook</span> <i class="fa fa-facebook"></i> </a> </div>
-                        <div class="col-lg-12 m-2"> <a href="#" class="btn btn-danger google w-100"> Login with Google <i class="fa fa-google"></i> </a> </div>
+                        <button class="btn btn-primary facebook w-100 m-2"> <a href="#" class="text-white text-decoration-none"> <span>Login with Facebook</span> <i class="fa fa-facebook"></i> </a> </button>
+                        <button class="btn btn-danger google w-100 m-2"> <a href="#" class="text-white text-decoration-none"> Login with Google <i class="fa fa-google"></i> </a> </button>
 					<div class="w-full text-center"> Belum punya akun ? 
 						<a href="{{ route('register') }}">
                             {{ __('Register') }}
 						</a>
 					</div>
 				</form>
-
-				<div class="login100-more" style="background-image: url('images/banner-exvite.jpg');"></div>
 			</div>
 		</div>
 	</div>
