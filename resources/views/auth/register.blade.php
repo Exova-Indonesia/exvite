@@ -34,34 +34,38 @@
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100 border-0 justify-content-center">
-				<form class="login100-form validate-form" method="POST" action="{{ route('login') }}">
+				<form class="login100-form validate-form" method="POST" action="{{ route('register') }}">
 				<img class="mx-auto d-block" src="images/icons/icon.png" alt="icon" width="80" height="80">
 					<span class="login100-form-title p-b-34">
 						Join To Exvite
                     </span>
                     @csrf
 
-                        <label for="name" class="col-md-6 col-form-label text-md-left">{{ __('Name') }}</label>
+                        <label for="name" class="col-form-label text-md-left">{{ __('Name') }}</label>
                              <input id="name" type="name" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('email') }}" required autocomplete="name" autofocus>
                          @error('name')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
-                        <label for="email" class="col-md-6 col-form-label text-md-left">{{ __('E-Mail Address') }}</label>
+                        <label for="email" class="col-form-label text-md-left">{{ __('E-Mail Address') }}</label>
                              <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
                          @error('email')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
-                            <label for="password" class="col-md-6 col-form-label text-md-left">{{ __('Password') }}</label>
+                            <label for="password" class="col-form-label text-md-left">{{ __('Password') }}</label>
                             <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
                         @error('password')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
+
+                            <label for="password-confirm" class="col-form-label text-md-right">{{ __('Confirm Password') }}</label>
+                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+
                          		
 					<div class="container-login100-form-btn">
 						<button type="submit" class="btn btn-success w-100">
@@ -86,7 +90,11 @@
 		</div>
 	</div>
 	
-	
+	<footer class="page-footer">
+		<div class="footer-copyright text-center py-3"> &copy; 2020 Copyright 
+			<a href="#">Exova Indonesia</a>
+		</div>
+	</footer>
 
 	<div id="dropDownSelect1"></div>
 	

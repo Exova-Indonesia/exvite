@@ -86,7 +86,11 @@
 		</div>
 	</div>
 	
-	
+	<footer class="page-footer">
+		<div class="footer-copyright text-center py-3"> &copy; 2020 Copyright 
+			<a href="#">Exova Indonesia</a>
+		</div>
+	</footer>
 
 	<div id="dropDownSelect1"></div>
 	
