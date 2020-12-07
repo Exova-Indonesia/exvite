@@ -74,8 +74,8 @@
 							OR
 						</span>
 					</div>
-                        <button class="btn btn-primary facebook w-100 m-2"> <a href="#" class="text-white text-decoration-none"> <span>Login with Facebook</span> <i class="fa fa-facebook"></i> </a> </button>
-                        <button class="btn btn-danger google w-100 m-2"> <a href="#" class="text-white text-decoration-none"> Login with Google <i class="fa fa-google"></i> </a> </button>
+                        <button type="button" class="btn btn-primary facebook w-100 m-2"> <a href="{{ url('/auth/facebook') }}" class="text-white text-decoration-none"> <span>Login with Facebook</span> <i class="fa fa-facebook"></i> </a> </button>
+                        <button type="button" class="btn btn-danger google w-100 m-2"> <a href="{{ url('/auth/google') }}" class="text-white text-decoration-none"> Login with Google <i class="fa fa-google"></i> </a> </button>
 					<div class="w-full text-center"> Belum punya akun ? 
 						<a href="{{ route('register') }}">
                             {{ __('Register') }}
