@@ -70,6 +70,13 @@
 					</div>
 
 					<div class="w-full text-center p-t-20 p-b-25">
+						<p>
+						@if (Route::has('password.request'))
+                            <a class="btn btn-link" href="{{ route('password.request') }}">
+                            	{{ __('Forgot Your Password?') }}
+                            </a>
+						@endif
+						</p>
 						<span class="txt1">
 							OR
 						</span>
@@ -87,8 +94,8 @@
 	</div>
 	
 	<footer class="page-footer">
-		<div class="footer-copyright text-center py-3"> &copy; 2020 Copyright 
-			<a href="#">Exova Indonesia</a>
+		<div class="footer-copyright text-center py-3"> &copy; {{ date('Y') }} Copyright 
+			<a href="#">{{ config('app.induk') }}</a>
 		</div>
 	</footer>
 

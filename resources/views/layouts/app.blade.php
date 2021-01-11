@@ -65,12 +65,16 @@
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
                                     <img class="rounded-circle" src="{{ Auth::user()->avatar }}" width="40" height="40" alt="avatar">
                                 </a>
 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                <div class="dropdown-menu dropdown-menu-right p-3" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item text-center" href="#">
+                                        <img class="rounded-circle" src="{{ Auth::user()->avatar }}" width="80" height="80" alt="avatar">
+                                        <h5 class="text-uppercase m-2">{{ Auth::user()->name }}</h5>
+                                        <p> Bronze Customer </p>
+                                    </a>
+                                    <a class="btn btn-danger w-100" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}

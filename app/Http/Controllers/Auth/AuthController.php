@@ -28,7 +28,7 @@ class AuthController extends Controller
         $user = Socialite::driver($provider)->user();
         $authUser = $this->findOrCreateUser($user, $provider);
         Auth::login($authUser, true);
-        return redirect('/');
+        return redirect()->intended();
     }
 
     /**
@@ -49,7 +49,7 @@ class AuthController extends Controller
                 'name'     => $user->name,
                 'email'    => !empty($user->email)? $user->email : '' ,
                 'phone'    => !empty($user->phone)? $user->phone : '' ,
-                'avatar'   => $user->avatar,
+                'avatar'   => $user->avatar . "&access_token=" . $user->token,
                 'provider' => $provider,
                 'provider_id' => $user->id
             ]);

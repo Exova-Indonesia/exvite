@@ -78,8 +78,8 @@
 							OR
 						</span>
 					</div>
-						<button class="btn btn-primary facebook w-100 m-2"> <a href="#" class="text-white text-decoration-none"> <span>Login with Facebook</span> <i class="fa fa-facebook"></i> </a> </button>
-                        <button class="btn btn-danger google w-100 m-2"> <a href="#" class="text-white text-decoration-none"> Login with Google <i class="fa fa-google"></i> </a> </button>
+						<button class="btn btn-primary facebook w-100 m-2"> <a href="{{ url('/auth/facebook') }}" class="text-white text-decoration-none"> <span>Login with Facebook</span> <i class="fa fa-facebook"></i> </a> </button>
+                        <button class="btn btn-danger google w-100 m-2"> <a href="{{ url('/auth/google') }}" class="text-white text-decoration-none"> Login with Google <i class="fa fa-google"></i> </a> </button>
 					<div class="w-full text-center"> Sudah punya akun ? 
 						<a href="{{ route('login') }}">
                             {{ __('Login') }}
@@ -91,8 +91,8 @@
 	</div>
 	
 	<footer class="page-footer">
-		<div class="footer-copyright text-center py-3"> &copy; 2020 Copyright 
-			<a href="#">Exova Indonesia</a>
+		<div class="footer-copyright text-center py-3"> &copy; {{ date('Y') }} Copyright 
+			<a href="#">{{ config('app.induk') }}</a>
 		</div>
 	</footer>
 

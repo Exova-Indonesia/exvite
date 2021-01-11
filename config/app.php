@@ -14,6 +14,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Exvite'),
+    'induk' => env('APP_INDUK', 'Exova Indonesia'),
 
     /*
     |--------------------------------------------------------------------------
