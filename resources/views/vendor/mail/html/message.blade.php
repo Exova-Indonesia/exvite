@@ -21,7 +21,8 @@
 {{-- Footer --}}
 @slot('footer')
 @component('mail::footer')
-© {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')
+© {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')<br>
+{{ 'Untuk pertanyaan lebih lanjut silakan hubungi email :' }} <a href="mailto:support@exova.id">support@exova.id</a> {{ '| phone :' }} <a href="https:://api.whatsapp/send?phone=6281238169667">+6281238169667</a>
 @endcomponent
 @endslot
 @endcomponent

@@ -40,7 +40,7 @@ class AuthController extends Controller
      */
     public function findOrCreateUser($user, $provider)
     {
-        $authUser = User::where('provider_id', $user->id)->first();
+        $authUser = User::where('user_id', $user->id)->first();
         if ($authUser) {
             return $authUser;
         }
@@ -51,7 +51,8 @@ class AuthController extends Controller
                 'phone'    => !empty($user->phone)? $user->phone : '' ,
                 'avatar'   => $user->avatar . "&access_token=" . $user->token,
                 'provider' => $provider,
-                'provider_id' => $user->id
+                'provider_id' => $user->id,
+                'user_id' => $user->id
             ]);
             return $data;
         }
