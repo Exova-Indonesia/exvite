@@ -30,62 +30,56 @@
     </div>
 </div>
 <section id="services_page" class="pt-5 mt-5 wow fadeInUp pb-5" data-wow-delay="0.4s">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-xs-12 col-md-12 col-md-offset-1">
-                                    <div class="page-title text-center">
-                                    <div class="space-20"></div>
-                                    <h5 class="title">Layanan Kami</h5>
-                                    <div class="row text-center align-items-end">
-                                        <!-- Pricing Table-->
-                                        <div class="col-lg-4 mb-5 mb-lg-0">
-                                        </div>
-                                        <!-- END -->
-                                        <!-- Pricing Table-->
-                                        <div class="col-lg-4 mb-5 mb-lg-0">
-                                            <div class="bg-white p-5 rounded-lg shadow">
-                                            <h1 class="h6 text-secondary text-uppercase font-weight-bold mb-4">Jasa Exova</h1>
-                                            <img class="rounded-circle" src="{{ Auth::user()->avatar ?? '' }}" width="80px" height="80px" alt="avatar">
-
-                                            <div class="custom-separator my-4 mx-auto bg-primary"></div>
-
-                                            <ul class="list-unstyled my-5 text-small text-secondary text-left">
-                                                <li class="mb-3 text-center">
-                                                    Jasa Exova adalah tempat membeli/menjual jasa seperti photography, 
-                                                    design, videography, web apps developing hingga games
-                                                </li>
-                                            </ul>
-                                            <a href="#" class="btn btn-primary btn-block p-2 shadow rounded-pill">Lihat Detail</a>
-                                            </div>
-                                        </div>
-                                        <!-- END -->
-
-
-                                        <!-- Pricing Table-->
-                                        <div class="col-lg-4 mb-5 mb-lg-0">
-                                            <div class="bg-white p-5 rounded-lg shadow">
-                                            <h1 class="h6 text-secondary text-uppercase font-weight-bold mb-4">Exova Creations</h1>
-                                            <img class="rounded-circle" src="{{ Auth::user()->avatar ?? '' }}" width="80px" height="80px" alt="avatar">
-
-                                            <div class="custom-separator my-4 mx-auto bg-primary"></div>
-
-                                            <ul class="list-unstyled my-5 text-small text-secondary text-left font-weight-normal">
-                                                <li class="mb-3 text-center">
-                                                    Exova Creations adalah layanan untuk membuat sesuatu seperti 
-                                                    undangan online, web portofolio, hingga web company profile dengan cepat dan aman
-                                                </li>
-                                            </ul>
-                                            <a href="#" class="btn btn-primary btn-block p-2 shadow rounded-pill">Lihat Detail</a>
-                                            </div>
-                                        </div>
-                                        <!-- END -->
-                                        </div>
-                                    </div>
-                                </div>
+    <div class="container">
+         <div class="row">
+            <div class="col-xs-12 col-md-12 col-md-offset-1">
+                <div class="page-title text-center">
+                    <div class="space-20"></div>
+                    <h5 class="title">Layanan Kami</h5>
+                    <div class="row text-center align-items-end">
+                        <!-- Pricing Table-->
+                        <div class="col-lg-4 mb-5 mb-lg-0">
+                        </div>
+                        <!-- END -->
+                        <!-- Pricing Table-->
+                        <div class="col-lg-4 mb-5 mb-lg-0">
+                            <div class="bg-white p-5 rounded-lg shadow">
+                            <h1 class="h6 text-secondary text-uppercase font-weight-bold mb-4">Jasa Exova</h1>
+                            <img class="rounded-circle" src="{{ Auth::user()->avatar ?? '' }}" width="80px" height="80px" alt="avatar">
+                            <div class="custom-separator my-4 mx-auto bg-primary"></div>
+                            <ul class="list-unstyled my-5 text-small text-secondary text-left">
+                                <li class="mb-3 text-center">
+                                    Jasa Exova adalah tempat membeli/menjual jasa seperti photography, 
+                                    design, videography, web apps developing hingga games
+                                </li>
+                            </ul>
+                            <a href="#" class="btn btn-primary btn-block p-2 shadow rounded-pill">Lihat Detail</a>
                             </div>
                         </div>
+                        <!-- END -->
+                        <!-- Pricing Table-->
+                        <div class="col-lg-4 mb-5 mb-lg-0">
+                            <div class="bg-white p-5 rounded-lg shadow">
+                            <h1 class="h6 text-secondary text-uppercase font-weight-bold mb-4">Exova Creations</h1>
+                            <img class="rounded-circle" src="{{ Auth::user()->avatar ?? '' }}" width="80px" height="80px" alt="avatar">
+                            <div class="custom-separator my-4 mx-auto bg-primary"></div>
+                            <ul class="list-unstyled my-5 text-small text-secondary text-left font-weight-normal">
+                                <li class="mb-3 text-center">
+                                    Exova Creations adalah layanan untuk membuat sesuatu seperti 
+                                    undangan online, web portofolio, hingga web company profile dengan cepat dan aman
+                                </li>
+                            </ul>
+                            <a href="#" class="btn btn-primary btn-block p-2 shadow rounded-pill">Lihat Detail</a>
+                            </div>
+                        </div>
+                        <!-- END -->
+                        </div>
                     </div>
-                </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <section class="feature-area py-5" id="highlight">
     <div class="container">
@@ -343,14 +337,6 @@
                     <div class="team-box">
                         <div class="team-image">
                         <img src="{{ url('images/executive/mametfix.jpg') }}" alt="">
-                        </div>
-                        <h4>Adi Palguna</h4>
-                        <h6 class="position">Co-Founder & CFO</h6>
-                        <p>Bio</p>
-                    </div>
-                    <div class="team-box">
-                        <div class="team-image">
-                        <img src="{{ ('../yusa2.jpg') }}" alt="">
                         </div>
                         <h4>Adi Palguna</h4>
                         <h6 class="position">Co-Founder & CFO</h6>

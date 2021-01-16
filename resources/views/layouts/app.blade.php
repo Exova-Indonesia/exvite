@@ -122,8 +122,8 @@
             </div>
         </nav>
         <div class="preloader">
-<span><i class="lnr lnr-sun"></i></span>
-</div>
+            <span><img width="40px" height="40px" src="{{ ('https://assets.exova.id/img/1.png') }}"></span>
+        </div>
         <main>
             @yield('content')
         </main>
