@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Exvite'),
+    'name' => env('APP_NAME', 'Exova Indonesia'),
     'induk' => env('APP_INDUK', 'Exova Indonesia'),
 
     /*
@@ -68,7 +68,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Singapore',
 
     /*
     |--------------------------------------------------------------------------

@@ -75,3 +75,37 @@ function scrollFunction() {
   }
 }
 */
+
+let steps = [
+    {
+      "selector": "[data-component=intro]",
+      "step": 1,
+      "title": "Selamat datang di Exova Indonesia",
+      "content": "Yuk biar makin kenal sama exova, ikutin tour ini bentar aja ;)",
+      "image": ""
+    },
+    {
+        "selector": "[data-component=services_page]",
+        "step": 4,
+        "title": "Layanan Exova Indonesia ada apa aja sih ?",
+        "content": "Nih, saat ini baru ada 2 layanan Exova, Exova Jasa dan Exova Creations",
+        "image": ""
+    },
+    {
+        "selector": "[data-component=jasa]",
+        "step": 3,
+        "title": "Apa itu Exova Jasa ?",
+        "content": "Exova Jasa adalah sebuah layanan dimana kamu bisa jual ataupun beli jasa",
+        "image": ""
+    },
+    {
+        "selector": "[data-component=highlight]",
+        "step": 2,
+        "title": "Apa itu Exova Jasa ?",
+        "content": "Exova Creations adalah layanan yang bisa kmu gunakan untuk membuat undangan online, website portofolio pribadi ataupun company profile",
+        "image": ""
+    },
+  ]
+
+//var tourguide = new Tourguide({steps: steps});
+    //tourguide.start();
