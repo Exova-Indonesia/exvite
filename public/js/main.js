@@ -85,24 +85,108 @@ let steps = [
       "image": ""
     },
     {
+        "selector": "[data-component=intro_2]",
+        "step": 2,
+        "title": "Di Exova bisa ngapain aja sih ?",
+        "content": "Oke, jadi di Exova itu kalian bisa menjual ataupun membeli produk/jasa",
+        "image": ""
+    },
+    {
         "selector": "[data-component=services_page]",
-        "step": 4,
-        "title": "Layanan Exova Indonesia ada apa aja sih ?",
-        "content": "Nih, saat ini baru ada 2 layanan Exova, Exova Jasa dan Exova Creations",
+        "step": 3,
+        "title": "Terus layanan Exova ada apa aja ?",
+        "content": "Saat ini baru ada 2 layanan Exova yaitu, Exova Jasa dan Exova Creations",
         "image": ""
     },
     {
         "selector": "[data-component=jasa]",
-        "step": 3,
-        "title": "Apa itu Exova Jasa ?",
-        "content": "Exova Jasa adalah sebuah layanan dimana kamu bisa jual ataupun beli jasa",
+        "step": 4,
+        "title": "Apaan tuh Exova Jasa ?",
+        "content": "Exova Jasa adalah sebuah layanan dimana kamu bisa jual jasa kamu ataupun beli jasa dari penjual lainnya",
+        "image": ""
+    },
+    {
+        "selector": "[data-component=creations]",
+        "step": 5,
+        "title": "Lalu apaan tuh Exova Creations ?",
+        "content": "Exova Creations adalah layanan yang bisa kamu gunakan untuk membuat undangan online, membuat website pribadi kamu, mendesain produk kamu, dan juga membuat website company profile",
+        "image": ""
+    },
+    {
+        "selector": "[data-component=wallet]",
+        "step": 6,
+        "title": "Satu lagi kenalan yuk sama Exova Wallet",
+        "content": "Dengan Exova Wallet Kamu bisa dengan mudah menerima refund transaksi, saling kirim uang dengan teman, dan juga untuk menampung pendapatan kamu tentunya",
+        "image": ""
+    },
+    {
+        "selector": "[data-component=withdraw]",
+        "step": 7,
+        "title": "Withdraw",
+        "content": "Kamu bisa mencairkan saldo kamu ke rekening kamu",
+        "image": ""
+    },
+    {
+        "selector": "[data-component=send]",
+        "step": 7,
+        "title": "Send",
+        "content": "Dengan fitur Send ini kamu bisa kirim uang untuk temen, pacar, gebetan, sahabat, atau keluarga kamu",
+        "image": ""
+    },
+    {
+        "selector": "[data-component=mywallet]",
+        "step": 8,
+        "title": "My Wallet",
+        "content": "Tentu saja dengan Kamu klik ini, Kamu akan diarahkan ke detail dari Wallet Kamu",
+        "image": ""
+    },
+    {
+        "selector": "[data-component=wallethistory]",
+        "step": 9,
+        "title": "History Transaksi",
+        "content": "Kamu bisa melacak history transaksi kamu dengan fitur ini",
         "image": ""
     },
     {
         "selector": "[data-component=highlight]",
-        "step": 2,
-        "title": "Apa itu Exova Jasa ?",
-        "content": "Exova Creations adalah layanan yang bisa kmu gunakan untuk membuat undangan online, website portofolio pribadi ataupun company profile",
+        "step": 10,
+        "title": "Higlight",
+        "content": "Fitur highlight adalah fitur promosi berbayar milik Exova, kamu bisa menggunakan fitur ini dengan gratis jika kamu langganan membership",
+        "image": ""
+    },
+    {
+        "selector": "[data-component=membership]",
+        "step": 11,
+        "title": "Membership",
+        "content": "Fitur membership akan memberikan kamu banyak keuntungan, dengan berlangganan fitur ini kamu akan dapat keuntungan sesuai paket yang kamu pilih",
+        "image": ""
+    },
+    {
+        "selector": "[data-component=faq]",
+        "step": 12,
+        "title": "Frequently Asked Question",
+        "content": "Kamu bisa temukan jawaban atas pertanyaan kamu disini yaa",
+        "image": ""
+    },
+    {
+        "selector": "[data-component=kontak]",
+        "step": 13,
+        "title": "Kontak Kami",
+        "content": "Atau kamu juga bisa hubungi Kami jika ada pertanyaan yang ingin ditanyakan, kami tersedia 24/7 kok ;)",
+        "image": ""
+    },
+    {
+        "selector": "[data-component=follow]",
+        "step": 14,
+        "title": "Yuk Ikutin Kami",
+        "content": "Dapetin berita dan konten menarik setiap harinya dengan mengikuti kami di sosial media",
+        "image": ""
+    },
+    {
+        "selector": "[data-component=team]",
+        "step": 15,
+        "title": "Salam kenal ya",
+        "content": "Dan terakhir ini adalah Kami yang ada dibalik Exova Indonesia :)",
         "image": ""
     },
   ]

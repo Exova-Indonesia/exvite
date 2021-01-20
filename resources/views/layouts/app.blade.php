@@ -70,13 +70,10 @@
                     <ul class="navbar-nav ml-auto text-center">
                         <!-- Authentication Links -->
                         <li class="nav-item active">
-                            <a class="nav-link" href="#dashboard_page">Dashboard <span class="sr-only">(current)</span></a>
+                            <a class="nav-link" href="#dashboard_page">@lang('header.header.home')<span class="sr-only">(current)</span></a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link" href="#services_page"> Layanan </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#tutorial">Cara Kerja</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#faq">Bantuan</a>
@@ -167,7 +164,7 @@
                         <div><a href="#">Exova Jasa</a></div>
                         <div><a href="#">Exova Creations</a></div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3" data-component="follow">
                         <div class="footer-header">
                             Dapatkan Info Menarik
                         </div>
@@ -177,10 +174,10 @@
                                 <button type="submit" class="site-btn">Ikuti</button>
                             </form>
                             <div class="footer__social">
-                                <a href="#"><i class="fa p-3 rounded-pill fa-twitter"></i></a>
-                                <a href="#"><i class="fa p-3 rounded-pill fa-facebook"></i></a>
-                                <a href="#"><i class="fa p-3 rounded-pill fa-instagram"></i></a>
-                                <a href="#"><i class="fa p-3 rounded-pill fa-linkedin"></i></a>
+                                <a href="#"><i class="fab p-3 rounded-pill fa-twitter"></i></a>
+                                <a href="#"><i class="fab p-3 rounded-pill fa-facebook"></i></a>
+                                <a href="#"><i class="fab p-3 rounded-pill fa-instagram"></i></a>
+                                <a href="#"><i class="fab p-3 rounded-pill fa-linkedin"></i></a>
                                 <a href="#"><i class="fa p-3 rounded-pill fa-share-alt"></i></a>
                             </div>
                         </div>

@@ -20,8 +20,7 @@ Route::get('/welcome', function () {
 
 Auth::routes(['verify' => true]);
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
+Route::get('/{locale}', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('auth/{provider}', [App\Http\Controllers\Auth\AuthController::class, 'redirectToProvider']);
 Route::get('auth/{provider}/callback', [App\Http\Controllers\Auth\AuthController::class, 'handleProviderCallback']);
 

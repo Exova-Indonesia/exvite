@@ -27,7 +27,7 @@
                 {{--<input class="bttn-white wow font-weight-normal text-white fadeInUp text-capitalize" data-wow-delay="0.8s" placeholder="Aku mau beli . . .">--}}
                 <div class="col-sm-12 exova-wallets">
                 <!-- Wallet Card -->
-                <div class="section wallet-card-section pt-1">
+                <div class="section wallet-card-section pt-1" data-component="wallet">
                     <div class="wallet-card">
                         <!-- Balance -->
                         <div class="balance">
@@ -44,7 +44,7 @@
                         <!-- * Balance -->
                         <!-- Wallet Footer -->
                         <div class="wallet-footer">
-                            <div class="item">
+                            <div class="item" data-component="withdraw">
                                 <a href="#" data-toggle="modal" data-target="#withdrawActionSheet">
                                     <div class="icon-wrapper bg-danger">
                                         <i class="fa fa-arrow-down"></i>
@@ -52,7 +52,7 @@
                                     <strong>Withdraw</strong>
                                 </a>
                             </div>
-                            <div class="item">
+                            <div class="item" data-component="send">
                                 <a href="#" data-toggle="modal" data-target="#sendActionSheet">
                                     <div class="icon-wrapper">
                                         <i class="fa fa-arrow-right"></i>
@@ -60,7 +60,7 @@
                                     <strong>Send</strong>
                                 </a>
                             </div>
-                            <div class="item">
+                            <div class="item" data-component="mywallet">
                                 <a href="app-cards.html">
                                     <div class="icon-wrapper bg-success">
                                         <i class="fas fa-piggy-bank"></i>
@@ -68,7 +68,7 @@
                                     <strong>My Wallet</strong>
                                 </a>
                             </div>
-                            <div class="item">
+                            <div class="item" data-component="wallethistory">
                                 <a href="#" data-toggle="modal" data-target="#exchangeActionSheet">
                                     <div class="icon-wrapper bg-primary">
                                         <i class="fa fa-history"></i>
@@ -87,22 +87,22 @@
         </div>
     </div>
 </div>
-<section id="services_page" class="py-3 wow fadeInUp pb-5" data-wow-delay="0.4s">
+<section id="services_page" class="py-3 wow fadeInUp pb-5" data-wow-delay="0.4s" data-component="services_page">
     <div class="container">
          <div class="row">
             <div class="col-xs-12 col-md-12 col-md-offset-1">
                 <div class="page-title text-center">
                     <div class="space-20"></div>
-                    <h5 class="title" data-component="services_page">Layanan Kami</h5>
+                    <h5 class="title">Layanan Kami</h5>
                     <div class="row text-center align-items-end">
                         <!-- Pricing Table-->
                         <div class="col-lg-4 mb-5 mb-lg-0">
                         </div>
                         <!-- END -->
                         <!-- Pricing Table-->
-                        <div class="col-lg-4 mb-5 mb-lg-0">
+                        <div class="col-lg-4 mb-5 mb-lg-0" data-component="jasa">
                             <div class="bg-white p-5 rounded-lg shadow">
-                            <h1 class="h6 text-secondary text-uppercase font-weight-bold mb-4" data-component="jasa">Jasa Exova</h1>
+                            <h1 class="h6 text-secondary text-uppercase font-weight-bold mb-4">Jasa Exova</h1>
                             <img class="rounded-circle" src="{{ Auth::user()->avatar ?? '' }}" width="80px" height="80px" alt="avatar">
                             <div class="custom-separator my-4 mx-auto bg-primary"></div>
                             <ul class="list-unstyled my-5 text-small text-secondary text-left">
@@ -116,7 +116,7 @@
                         </div>
                         <!-- END -->
                         <!-- Pricing Table-->
-                        <div class="col-lg-4 mb-5 mb-lg-0">
+                        <div class="col-lg-4 mb-5 mb-lg-0" data-component="creations">
                             <div class="bg-white p-5 rounded-lg shadow">
                             <h1 class="h6 text-secondary text-uppercase font-weight-bold mb-4" >Exova Creations</h1>
                             <img class="rounded-circle" src="{{ Auth::user()->avatar ?? '' }}" width="80px" height="80px" alt="avatar">
@@ -124,7 +124,7 @@
                             <ul class="list-unstyled my-5 text-small text-secondary text-left font-weight-normal">
                                 <li class="mb-3 text-center">
                                     Exova Creations adalah layanan untuk membuat sesuatu seperti 
-                                    undangan online, web portofolio, hingga web company profile dengan cepat dan aman
+                                    undangan online, web portofolio, hingga web company profile dengan cepat
                                 </li>
                             </ul>
                             <a href="#" class="btn btn-primary btn-block p-2 shadow rounded-pill">Lihat Detail</a>
@@ -139,52 +139,47 @@
     </div>
 </section>
 
-<section class="feature-area py-5" id="highlight" data-tour="step: 1; title: Step1; content: Lorem ipsum dolor sit amet">
+<section class="py-5" id="highlight">
     <div class="container">
         <div class="row">
-            <div class="col-lg-12 col-sm-6 wow fadeInUp" data-wow-delay="0.4s">
+            <div class="col-lg-12 wow fadeInUp" data-wow-delay="0.4s">
                 <div class="page-title text-center">
                     <h5 class="title">Highlight</h5>
                         <div class="space-10"></div>
                     </div>
-                <div class="row">
-                <div class="col-lg-3 mb-5 mb-lg-0">
-                    <div class="bg-white rounded-lg text-center shadow">
+                    <p class="text-right"><a class="text-primary" href="#">Lihat Semua</a></p>
+                <div class="row"  data-component="highlight">
+                <div class="col-lg-2 mb-5 col-sm-6 mb-lg-0">
+                    <a href="#" class="rounded-lg text-center">
                         <div class="ribbon-wrapper">
-                            <div class="ribbon bg-danger">
+                            <div class="ribbon bg-danger text-white">
                                 Highlight
                             </div>
                         </div>
                             <img class="w-100" src="{{ Auth::user()->avatar ?? '' }}" alt="products">
-                            <div class="p-3">
+                            <div class="p-3 bg-white shadow-sm">
                                 <ul class="list-unstyled my-2 text-small text-secondary text-left font-weight-normal">
-                                    <h1 class="h6 text-secondary text-left text-uppercase font-weight-bold mb-2">Exova Creations</h1>
-                                    <li class="mb-3 text-left">
-                                        IDR 0 - 120k
-                                    </li>
+                                    <div>Exova Creations</div>
+                                    <div class="font-weight-bold">IDR 0 - 120k</div>
                                 </ul>
-                            <a href="#" class="btn btn-primary btn-block p-2 shadow rounded-pill">Lihat Detail</a>
                         </div>
-                    </div>
+                    </a>
                 </div>
-                <div class="col-lg-3 mb-5 mb-lg-0">
-                    <div class="bg-white rounded-lg text-center shadow">
+                <div class="col-lg-2 mb-5 col-sm-6 mb-lg-0">
+                    <a href="#" class="rounded-lg text-center">
                         <div class="ribbon-wrapper">
-                            <div class="ribbon bg-danger">
+                            <div class="ribbon bg-danger text-white">
                                 Highlight
                             </div>
                         </div>
                             <img class="w-100" src="{{ Auth::user()->avatar ?? '' }}" alt="products">
-                            <div class="p-3">
+                            <div class="p-3 bg-white shadow-sm">
                                 <ul class="list-unstyled my-2 text-small text-secondary text-left font-weight-normal">
-                                    <h1 class="h6 text-secondary text-left text-uppercase font-weight-bold mb-2">Exova Creations</h1>
-                                    <li class="mb-3 text-left">
-                                        IDR 0 - 120k
-                                    </li>
+                                    <div>Exova Creations</div>
+                                    <div class="font-weight-bold">IDR 0 - 120k</div>
                                 </ul>
-                            <a href="#" class="btn btn-primary btn-block p-2 shadow rounded-pill">Lihat Detail</a>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -199,7 +194,7 @@
                     <h5 class="title">Membership</h5>
                     <div class="space-10"></div>
                 </div>
-                <div class="row">
+                <div class="row" data-component="membership">
                     <div class="col-md-4 col-sm-6 wow fadeInLeft my-2" data-wow-delay="0.3s">
                         <div class="price-table">
                             <div class="price-head">
@@ -258,103 +253,6 @@
         </div>
     </section>
 
-<section class="py-5" id="tutorial">
-<div class="container">
-    <div class="page-title text-center">
-        <h5 class="title">Cara kerja</h5>
-    </div>
-    <div class="row">
-    <div class="col-md-6">
-    <div class="page-title text-center">
-        <h5 class="title">Penjual</h5>
-    </div>
-    <ul class="timeline">
-        <li class="wow fadeInUp" data-wow-delay="0.2s">
-        <div class="tl-circ"></div>
-        <div class="timeline-panel">
-            <div class="tl-heading">
-            <h4>Register/Login</h4>
-            </div>
-            <div class="tl-body">
-            <p>Kamu bisa daftar/login<a href="/login"> disini </a>dengan akun sosmed kamu juga kok, dijamin aman hehe</p>
-            </div>
-        </div>
-        </li>
-        
-        <li class="timeline-inverted wow fadeInUp" data-wow-delay="0.2s">
-        <div class="tl-circ"></div>
-        <div class="timeline-panel">
-            <div class="tl-heading">
-            <h4>Cari apa yang kamu pengen</h4>
-            </div>
-            <div class="tl-body">
-            <p>Dalam kolom pencarian diatas kamu bisa cari apa yang kamu pengen, 
-            selain itu kamu juga bisa cari di masing - masing layanan kami</p>
-            </div>
-        </div>
-        </li>
-        
-        <li class="wow fadeInUp" data-wow-delay="0.2s">
-        <div class="tl-circ"></div>
-        <div class="timeline-panel">
-            <div class="tl-heading">
-            <h4>New Apple Device Release Date</h4>
-            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> 3/22/2014</small></p>
-            </div>
-            <div class="tl-body">
-            <p>In memory of Steve Jobs.</p>
-            </div>
-        </div>
-        </li>
-    </ul>
-  </div>
-  <div class="col-md-6">
-    <div class="page-title text-center">
-        <h5 class="title">Pembeli</h5>
-    </div>
-    <ul class="timeline">
-        <li class="timeline-inverted wow fadeInUp" data-wow-delay="0.2s">
-        <div class="tl-circ"></div>
-        <div class="timeline-panel">
-            <div class="tl-heading">
-            <h4>Cari apa yang kamu pengen</h4>
-            </div>
-            <div class="tl-body">
-            <p>Dalam kolom pencarian diatas kamu bisa cari apa yang kamu pengen, 
-            selain itu kamu juga bisa cari di masing - masing layanan kami</p>
-            </div>
-        </div>
-        </li>
-        
-        <li class="wow fadeInUp" data-wow-delay="0.2s">
-        <div class="tl-circ"></div>
-        <div class="timeline-panel">
-            <div class="tl-heading">
-            <h4>New Apple Device Release Date</h4>
-            <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> 3/22/2014</small></p>
-            </div>
-            <div class="tl-body">
-            <p>In memory of Steve Jobs.</p>
-            </div>
-        </div>
-        </li>
-        <li class="timeline-inverted wow fadeInUp" data-wow-delay="0.2s">
-            <div class="tl-circ"></div>
-                <div class="timeline-panel">
-                <div class="tl-heading">
-                <h4>Register/Login</h4>
-                </div>
-                <div class="tl-body">
-                <p>Kamu bisa daftar/login<a href="/login"> disini </a>dengan akun sosmed kamu juga kok, dijamin aman hehe</p>
-                </div>
-            </div>
-        </li>
-    </ul>
-  </div>
-  </div>
-</div>
-</section>
-
 <section id="faq" class="questions-area section-padding">
     <div class="container">
         <div class="row">
@@ -366,20 +264,20 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" data-component="faq">
             <div class="col-xs-12 col-sm-6">
                 <div class="toggole-boxs wow fadeInUp" data-wow-delay="0.2s">
                     <h3>Apa itu Exova Indonesia ?</h3>
                     <div>
                         <p>Exova Indonesia adalah platform tempat menyalurkan hobby jadi uang</p>
                     </div>
-                        <h3>Cara Pembayaran dan Metode Pembayaran</h3>
+                        <h3>Apa saja metode pembayaran di Exova ?</h3>
                     <div>
-                        <p>Melalui debet/credit card, Ovo, Gopay, Dana, dan E-Wallets lainnya</p>
+                        <p>Pembayaran bisa dilakukan melalui debet/credit card, Ovo, Gopay, Dana, ExoPay, dan E-Wallet lainnya</p>
                     </div>
-                        <h3>Bagaimana Cara Mendapatkan Pendapatan</h3>
+                        <h3>Bagaimana cara mendapatkan pendapatan ?</h3>
                     <div>
-                        <p>Menjual produk/jasa anda di layanan Exova</p>
+                        <p>Dengan enjual produk/jasa anda di layanan <a href="#">Exova Jasa</a></p>
                     </div>
                         <h3>Bagaimana Cara Berlangganan Premium</h3>
                     <div>
@@ -389,9 +287,12 @@
             </div>
             <div class="col-xs-12 col-sm-6">
                 <div class="toggole-boxs wow fadeInUp" data-wow-delay="0.2s">
-                        <h3>Cara Pembelian Produk/Jasa</h3>
+                        <h3>Apa keuntungan berlangganan premium ?</h3>
                     <div>
-                        <p>Klik menu produk/jasa, kemudian cari dan pilih produk/jasa, isi beberapa opsi yang harus diisi, (disini kamu juga bisa berkomunikasi dengan penjual terlebih dahulu) lalu tekan tombol bayar, pilih metode pembayaran, dan lakukan pembayaran</p>
+                        <p>Jika kamu berlangganan premiun, adapun keuntungan yang akan kamu dapatkan <br>
+                        1. Kamu bisa menikmati semua produk <a href="#">Exova Creations</a> secara gratis selama kamu berlangganan <br>
+                        2. Kamu bisa sepuasnya menjadikan produk yang kamu jual di <a href="#">Exova Jasa</a> sebagai highlight secara gratis ( Highlight adalah fitur promosi berbayar milik Exova )<br>
+                        3. Mendapatkan penawaran menarik lainnya</p>
                     </div>
                         <h3>Cara Menjual Produk/Jasa</h3>
                     <div>
@@ -411,7 +312,7 @@
     </div>
 </section>
 
-<section class="testimonial-area" id="tentang" data-tour="step: 2; title: Step1; content: Lorem ipsum dolor sit amet">
+<section class="testimonial-area" id="tentang">
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
@@ -423,7 +324,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-xs-12" data-component="team">
                 <div class="team-slide wow fadeInUp" data-wow-delay="0.3s">
                     <div class="team-box">
                         <div class="team-image">
@@ -469,7 +370,7 @@
             </div>
         </div>
     </div>
-    <div class="container">
+    <div class="container" data-component="kontak">
         <div class="row">
             <div class="col-xs-12 wow fadeInUp" data-wow-delay="0.2s">
                 <div class="page-title text-center">
