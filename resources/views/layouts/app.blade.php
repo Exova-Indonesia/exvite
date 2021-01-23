@@ -16,6 +16,7 @@
     <link rel="icon" href="{{ ('https://assets.exova.id/img/1.png') }}">
 
     <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="{{ asset('js/vendor/jquery-1.12.4.min.js') }}" defer></script>
     <script src="{{ asset('js/vendor/jquery-ui.js') }}" defer></script>
     <script src="{{ asset('js/vendor/bootstrap.min.js') }}" defer></script>
@@ -28,9 +29,9 @@
     <script src="{{ asset('js/wow.min.js') }}" defer></script>
     <script src="{{ asset('particles.js/particles.js') }}" defer></script>
     <script src="{{ asset('tourguide.js/tourguide.min.js') }}" defer></script>
+    <script src="{{ asset('sweetalert2/sweetalert2.min.js') }}" defer></script>
     <script src="{{ asset('js/main.js') }}" defer></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
-    
 
     <!--<link rel="dns-prefetch" href="//fonts.gstatic.com">-->
     <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
@@ -48,6 +49,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="css/timeline.css">
+    <link rel="stylesheet" href="{{ asset('sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
 
 </head>
 <body data-spy="scroll" data-target=".mainmenu-area" data-component="intro">
@@ -70,39 +72,39 @@
                     <ul class="navbar-nav ml-auto text-center">
                         <!-- Authentication Links -->
                         <li class="nav-item active">
-                            <a class="nav-link" href="#dashboard_page">@lang('header.header.home')<span class="sr-only">(current)</span></a>
+                            <a class="nav-link" href="#dashboard_page">@lang('layout.header.home')<span class="sr-only">(current)</span></a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link" href="#services_page"> Layanan </a>
+                            <a class="nav-link" href="#services_page"> @lang('layout.header.services') </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#faq">Bantuan</a>
+                            <a class="nav-link" href="#faq"> @lang('layout.header.help') </a>
                         </li>
-                            <a class="nav-link" href="#tentang">Tentang Kami</a>
+                            <a class="nav-link" href="#tentang"> @lang('layout.header.about') </a>
                         </li>
                         @guest
                                 <li class="nav-item">
-                                    <a class="btn btn-danger m-1 mr-2" href="#membership">Go Premium</a>
+                                    <a class="btn btn-danger m-1 mr-2" href="#membership"> @lang('layout.header.membership') </a>
                                 </li>
                             @if (Route::has('login'))
                                 <li class="nav-item">
-                                    <a class="btn btn-outline-primary m-1" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                    <a class="btn btn-outline-success m-1" href="{{ route('login') }}"> @lang('layout.header.login') </a>
                                 </li>
                             @endif
                             
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="btn btn-primary m-1" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="btn btn-success m-1" href="{{ route('register') }}"> @lang('layout.header.register') </a>
                                 </li>
                             @endif
                         @else
                             <li class="nav-item dropdown">
-                                <a class="btn btn-danger m-1 mr-2" href="#membership">Go Premium</a>
+                                <a class="btn btn-danger m-1 mr-2" href="#membership"> @lang('layout.header.membership') </a>
                                 <a id="navbarDropdown" class="navbar-brand dropdown-toggle ml-3" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     <img class="rounded-circle" src="{{ Auth::user()->avatar }}" width="40" height="40" alt="avatar">
                                 </a>
 
-                                <div class="dropdown-menu dropdown-menu-right p-3" aria-labelledby="navbarDropdown">
+                                <div class="dropdown-menu profile-drop dropdown-menu-right p-3" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item text-center pb-3">
                                         <img class="rounded-circle" src="{{ Auth::user()->avatar }}" width="80" height="80" alt="avatar">
                                         <h5 class="text-uppercase m-2">
@@ -113,11 +115,11 @@
                                         <span> Bronze Customer </span>
                                     </a>
                                     <div class="border-top py-2">
-                                        <div class="py-1"><a href="#">Pendapatan<span class="float-right">IDR 0</span></a></div>
-                                        <div class="py-1"><a href="#">Refund<span class="float-right">IDR 0</span></a></div>
+                                        <div class="py-1"><a href="#">@lang('layout.header.profile.revenue')<span class="float-right">IDR {{ number_format($balance->revenue, 0) }}</span></a></div>
+                                        <div class="py-1"><a href="#">@lang('layout.header.profile.refund')<span class="float-right">IDR {{ number_format($balance->fund, 0) }}</span></a></div>
                                     </div>
                                     <a class="btn btn-primary w-100" href="#">
-                                        {{ __('Lihat Profil') }}
+                                        @lang('layout.header.profile.button')
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -137,7 +139,6 @@
             @yield('content')
         </main>
     </div>
-</body>
     <footer class="footer">
         <div class="container">
             <div class="col footer-body">
@@ -146,32 +147,32 @@
                         <div class="footer-header">
                             <img src="{{ ('https://assets.exova.id/img/logo.png') }}">
                         </div>
-                        <span>Exova Indonesia adalah tempat menyalurkan hobby jadi uang</span>
+                        <span>@lang('layout.footer.subfooter1.description')</span>
                     </div>
                     <div class="col-md-3">
                         <div class="footer-header">
-                            Exova
+                            @lang('layout.footer.subfooter2.title')
                         </div>
-                        <div><a href="#">Blog</a></div>
-                        <div><a href="#">Bantuan</a></div>
-                        <div><a href="#">Tentang Exova</a></div>
-                        <div><a href="#">Exova Membership</a></div>
+                        <div><a href="#">@lang('layout.footer.subfooter2.blog')</a></div>
+                        <div><a href="#">@lang('layout.footer.subfooter2.help')</a></div>
+                        <div><a href="#">@lang('layout.footer.subfooter2.about')</a></div>
+                        <div><a href="#">@lang('layout.footer.subfooter2.membership')</a></div>
                     </div>
                     <div class="col-md-2">
                         <div class="footer-header">
                             Layanan
                         </div>
-                        <div><a href="#">Exova Jasa</a></div>
-                        <div><a href="#">Exova Creations</a></div>
+                        <div><a href="#">@lang('layout.footer.subfooter3.jasa')</a></div>
+                        <div><a href="#">@lang('layout.footer.subfooter3.creations')</a></div>
                     </div>
                     <div class="col-md-3" data-component="follow">
                         <div class="footer-header">
-                            Dapatkan Info Menarik
+                            @lang('layout.footer.subfooter4.title')
                         </div>
                         <div class="footer__newslatter">
                             <form action="#">
                                 <input type="text" placeholder="Email">
-                                <button type="submit" class="site-btn">Ikuti</button>
+                                <button type="submit" class="site-btn">@lang('layout.footer.subfooter4.button')</button>
                             </form>
                             <div class="footer__social">
                                 <a href="#"><i class="fab p-3 rounded-pill fa-twitter"></i></a>
@@ -187,9 +188,32 @@
             <div class="footer-cp">
                 <span class="text-muted">{{ date('Y') }} {{ ('Copyright | ') }}<a href="#">{{ ('Exova Indonesia') }}</a></span>
                 <div class="footer-cp-2">
-                    <span class="text-muted"><a href="#">Kebijakan Privasi </a>|<a href="#"> Syarat & Ketentuan</a></span>
+                    <span class="text-muted"><a href="#"> @lang('layout.footer.terms') </a>|<a href="#"> @lang('layout.footer.privacy') </a></span>
                 </div>
             </div>
         </div>
     </footer>
+    <script>
+    $(function() {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000
+    });
+      @if(session('status'))
+        Toast.fire({
+          icon: 'success',
+          title: '{{ session('status') }}',
+        })
+      @endif
+      @if(session('error'))
+        Toast.fire({
+          icon: 'error',
+          title: '{{ session('error') }}',
+        })
+      @endif
+    })
+    </script>
+</body>
 </html>

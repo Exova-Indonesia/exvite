@@ -15,30 +15,35 @@
                     <h1 class="wow fadeInUp" data-wow-delay="0.4s">Exova Indonesia</h1>
                 <div class="space-20"></div>
                 <div class="desc wow fadeInUp" data-wow-delay="0.6s">
-                    <p>Exova Indonesia adalah platform tempat menyalurkan hobby jadi uang</p>
+                    <p>@lang('home.header.description')</p>
                 </div>
                 <div class="space-20"></div>
                     <div class="input-group mb-4 border bg-white rounded-pill p-1">
                         <div class="input-group-prepend border-0">
                             <button id="button-addon4" type="button" class="btn btn-link text-info"><i class="fa fa-search h3 mb-0"></i></button>
                         </div>
-                            <input type="search" placeholder="What're you searching for?" aria-describedby="button-addon4" class="form-control bg-transparent border-0">
+                            <input id="search" type="search" autocomplete="off" placeholder="@lang('home.header.search')" aria-describedby="button-addon4" class="form-control bg-transparent border-0">
+                        </div>
+                        <div id="result">
                         </div>
                 {{--<input class="bttn-white wow font-weight-normal text-white fadeInUp text-capitalize" data-wow-delay="0.8s" placeholder="Aku mau beli . . .">--}}
                 <div class="col-sm-12 exova-wallets">
+                @guest
+                @else
                 <!-- Wallet Card -->
                 <div class="section wallet-card-section pt-1" data-component="wallet">
                     <div class="wallet-card">
                         <!-- Balance -->
                         <div class="balance">
                             <div class="left">
-                                <span class="title">Total Saldo</span>
-                                <h1 class="total text-secondary">IDR 2,562,097.50</h1>
+                                <span class="title">Total @lang('home.wallet.balance')</span>
+                                <h1 class="total text-secondary">IDR {{ number_format($balance->balance, 0) }}</h1>
                             </div>
                             <div class="right text-secondary">
-                                <a class="button" role="button">
+                            Account No. {{ $balance->wallet_id }}
+                                <!--a class="button" role="button">
                                     <i class="fa fa-credit-card"></i>
-                                </a>
+                                </a>-->
                             </div>
                         </div>
                         <!-- * Balance -->
@@ -49,7 +54,7 @@
                                     <div class="icon-wrapper bg-danger">
                                         <i class="fa fa-arrow-down"></i>
                                     </div>
-                                    <strong>Withdraw</strong>
+                                    <strong>@lang('home.wallet.withdraw')</strong>
                                 </a>
                             </div>
                             <div class="item" data-component="send">
@@ -57,7 +62,7 @@
                                     <div class="icon-wrapper">
                                         <i class="fa fa-arrow-right"></i>
                                     </div>
-                                    <strong>Send</strong>
+                                    <strong>@lang('home.wallet.send')</strong>
                                 </a>
                             </div>
                             <div class="item" data-component="mywallet">
@@ -65,7 +70,7 @@
                                     <div class="icon-wrapper bg-success">
                                         <i class="fas fa-piggy-bank"></i>
                                     </div>
-                                    <strong>My Wallet</strong>
+                                    <strong>@lang('home.wallet.mywallet')</strong>
                                 </a>
                             </div>
                             <div class="item" data-component="wallethistory">
@@ -73,7 +78,7 @@
                                     <div class="icon-wrapper bg-primary">
                                         <i class="fa fa-history"></i>
                                     </div>
-                                    <strong>History</strong>
+                                    <strong>@lang('home.wallet.history')</strong>
                                 </a>
                             </div>
 
@@ -82,6 +87,7 @@
                     </div>
                 </div>
                 <!-- Wallet Card -->
+                @endguest
             </div>
             </div>
         </div>
@@ -93,7 +99,7 @@
             <div class="col-xs-12 col-md-12 col-md-offset-1">
                 <div class="page-title text-center">
                     <div class="space-20"></div>
-                    <h5 class="title">Layanan Kami</h5>
+                    <h5 class="title">@lang('home.services.title')</h5>
                     <div class="row text-center align-items-end">
                         <!-- Pricing Table-->
                         <div class="col-lg-4 mb-5 mb-lg-0">
@@ -107,11 +113,10 @@
                             <div class="custom-separator my-4 mx-auto bg-primary"></div>
                             <ul class="list-unstyled my-5 text-small text-secondary text-left">
                                 <li class="mb-3 text-center">
-                                    Jasa Exova adalah tempat membeli/menjual jasa seperti photography, 
-                                    design, videography, web apps developing hingga games
+                                    @lang('home.services.jasa.description')
                                 </li>
                             </ul>
-                            <a href="#" class="btn btn-primary btn-block p-2 shadow rounded-pill">Lihat Detail</a>
+                            <a href="#" class="btn btn-primary btn-block p-2 shadow rounded-pill">@lang('home.services.jasa.button')</a>
                             </div>
                         </div>
                         <!-- END -->
@@ -123,11 +128,10 @@
                             <div class="custom-separator my-4 mx-auto bg-primary"></div>
                             <ul class="list-unstyled my-5 text-small text-secondary text-left font-weight-normal">
                                 <li class="mb-3 text-center">
-                                    Exova Creations adalah layanan untuk membuat sesuatu seperti 
-                                    undangan online, web portofolio, hingga web company profile dengan cepat
+                                    @lang('home.services.creations.description')
                                 </li>
                             </ul>
-                            <a href="#" class="btn btn-primary btn-block p-2 shadow rounded-pill">Lihat Detail</a>
+                            <a href="#" class="btn btn-primary btn-block p-2 shadow rounded-pill">@lang('home.services.creations.button')</a>
                             </div>
                         </div>
                         <!-- END -->
@@ -147,7 +151,7 @@
                     <h5 class="title">Highlight</h5>
                         <div class="space-10"></div>
                     </div>
-                    <p class="text-right"><a class="text-primary" href="#">Lihat Semua</a></p>
+                    <p class="text-right"><a class="text-primary" href="#">@lang('home.highlight.seeall')</a></p>
                 <div class="row"  data-component="highlight">
                 <div class="col-lg-2 mb-5 col-sm-6 mb-lg-0">
                     <a href="#" class="rounded-lg text-center">
@@ -207,7 +211,7 @@
                                 </ul>
                             </div>
                             <div class="price-button">
-                                <a href="#">Langganan</a>
+                                <a href="#">@lang('home.membership.subscribe')</a>
                             </div>
                         </div>
                     </div>
@@ -228,7 +232,7 @@
                                 </ul>
                             </div>
                             <div class="price-button">
-                                <a href="#">Langganan</a>
+                                <a href="#">@lang('home.membership.subscribe')</a>
                             </div>
                         </div>
                     </div>
@@ -244,7 +248,7 @@
                                 </ul>
                             </div>
                             <div class="price-button">
-                                <a href="#">Langganan</a>
+                                <a href="#">@lang('home.membership.subscribe')</a>
                             </div>
                         </div>
                     </div>
@@ -258,8 +262,8 @@
         <div class="row">
             <div class="col-xs-12">
                 <div class="page-title text-center">
-                    <h5 class="title">FAQ</h5>
-                    <h3 class="dark-color">Frequently Asked Questions</h3>
+                    <h5 class="title">@lang('home.help.title')</h5>
+                    <h3 class="dark-color">@lang('home.help.subtitle')</h3>
                     <div class="space-60"></div>
                 </div>
             </div>
@@ -374,7 +378,7 @@
         <div class="row">
             <div class="col-xs-12 wow fadeInUp" data-wow-delay="0.2s">
                 <div class="page-title text-center">
-                    <h5 class="title">Contact US</h5>
+                    <h5 class="title">@lang('home.contact.title')</h5>
                     <div class="space-60"></div>
                 </div>
             </div>
@@ -411,48 +415,51 @@
     </div>
 </section>
 <!-- Modals -->
+@guest
+<!-- Modals -->
+@else
 <!-- Send Action Sheet -->
 <div class="modal fade" id="sendActionSheet" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-            <div class="modal-header justify-content-center">
-                <h5 class="modal-title">Send Money</h5>
+            <div class="modal-header">
+                <h5 class="modal-title">@lang('wallet.send.title')</h5>
+                <h5 class="text-right">IDR {{ number_format($balance->balance, 0) }}</h5>
             </div>
             <div class="modal-body">
                 <div class="action-sheet-content">
-                    <form>
+                    <form method="POST" action="{{ route('wallet.send') }}">
+                        @csrf
                         <div class="form-group basic">
                             <div class="input-wrapper">
-                                <label class="label" for="text11">To</label>
-                                <input type="text" class="form-control" id="text11"
-                                    placeholder="No. Exova Wallet">
+                                <label class="label" for="transfer_to">@lang('wallet.form.to')</label>
+                                <input type="text" class="form-control" id="transfer_to" name="transfer_to"
+                                    placeholder="@lang('wallet.form.to_place')">
+                            </div>
+                        </div>
+                        <div class="form-group basic">
+                            <div class="input-wrapper">
+                                <label class="label" for="note">@lang('wallet.form.note')</label>
+                                <input type="text" class="form-control" id="note" name="note"
+                                    placeholder="@lang('wallet.form.note')">
                                 <i class="clear-input">
                                     <ion-icon name="close-circle"></ion-icon>
                                 </i>
                             </div>
                         </div>
                         <div class="form-group basic">
-                            <div class="input-wrapper">
-                                <label class="label" for="note">Note</label>
-                                <input type="text" class="form-control" id="note"
-                                    placeholder="Note">
-                                <i class="clear-input">
-                                    <ion-icon name="close-circle"></ion-icon>
-                                </i>
-                            </div>
-                        </div>
-                        <div class="form-group basic">
-                            <label class="label">Enter Amount</label>
+                            <label class="label">@lang('wallet.form.amount')</label>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="input14">IDR</span>
                                 </div>
-                                <input type="text" class="form-control form-control-lg" placeholder="0">
+                                <input type="text" id="amount" name="amount" class="form-control saldo form-control-lg" autocomplete="off" placeholder="0">
                             </div>
                         </div>
                         <div class="form-group basic">
-                            <button type="button" class="btn btn-primary btn-block btn-lg"
-                                data-dismiss="modal">Send</button>
+                            <button type="submit" class="btn btn-primary submit-trf btn-block btn-lg" disabled>
+                                @lang('wallet.send.title')
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -461,4 +468,70 @@
     </div>
 </div>
 <!-- * Send Action Sheet -->
+
+<!-- Withdraw Action Sheet -->
+<div class="modal fade" id="withdrawActionSheet" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@lang('wallet.withdraw.title')</h5>
+                <h5 class="text-right">IDR {{ number_format($balance->balance, 0) }}</h5>
+            </div>
+            <div class="modal-body">
+                <div class="action-sheet-content">
+                    <form method="POST" action="{{ route('wallet.withdraw') }}">
+                        @csrf
+                        <div class="form-group basic">
+                            <div class="input-wrapper">
+                                <label class="label" for="withdraw_to">@lang('wallet.withdraw.to')</label>
+                                <input type="text" class="form-control" id="withdraw_to" name="withdraw_to"
+                                    placeholder="@lang('wallet.withdraw.to')">
+                            </div>
+                        </div>
+                        <div class="form-group basic">
+                            <div class="input-wrapper">
+                                <label class="label" for="withdraw_user">@lang('wallet.withdraw.user')</label>
+                                <input type="text" class="form-control" id="withdraw_user" name="withdraw_user"
+                                    placeholder="@lang('wallet.withdraw.user')">
+                            </div>
+                        </div>
+                        <div class="form-group basic">
+                            <div class="input-wrapper">
+                                <label class="label" for="withdraw_bank">@lang('wallet.withdraw.bank')</label>
+                                <input type="text" class="form-control" id="withdraw_bank" name="withdraw_bank"
+                                    placeholder="@lang('wallet.withdraw.bank')">
+                            </div>
+                        </div>
+                        <div class="form-group basic">
+                            <div class="input-wrapper">
+                                <label class="label" for="note">@lang('wallet.withdraw.note')</label>
+                                <input type="text" class="form-control" id="note" name="note"
+                                    placeholder="@lang('wallet.withdraw.note')">
+                                <i class="clear-input">
+                                    <ion-icon name="close-circle"></ion-icon>
+                                </i>
+                            </div>
+                        </div>
+                        <div class="form-group basic">
+                            <label class="label">@lang('wallet.form.amount')</label>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="input14">IDR</span>
+                                </div>
+                                <input type="text" id="amount" name="amount" class="form-control saldo form-control-lg" autocomplete="off" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="form-group basic">
+                            <button type="submit" class="btn btn-primary submit-trf btn-block btn-lg" disabled>
+                                @lang('wallet.send.title')
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- * Withdraw Action Sheet -->
+@endguest
 @endsection

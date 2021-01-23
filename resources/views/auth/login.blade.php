@@ -2,11 +2,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Exvite - Login</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Exova - @lang('authuser.login.title')</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="description" content="Exova Indonesia adalah platform tempat menyalurkan hobby menjadi uang secara online, cepat, mudah, dan aman">
+    <meta name="keywords" content="Freelancer, Exova Indonesia, Exova, E-Commerce, Freelancer Platform, 
+    Lowongan Pekerjaan, Marketplace, Studio Online, Desainer, Photographer, Videographer, Web Developers,
+    Apps Developers, Undangan Online, Online Invitations, Company Profile, Portfolio">
+    <meta name="author" content="Exova Indonesia">
 <!--===============================================================================================-->	
-	<link rel="icon" type="image/png" href="images/favicon.ico"/>
+	<link rel="icon" type="image/png" href="https://assets.exova.id/img/1.png"/>
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
 <!--===============================================================================================-->
@@ -37,18 +42,18 @@
 				<form class="login100-form validate-form" method="POST" action="{{ route('login') }}">
 				<img class="mx-auto d-block" src="images/icons/icon.png" alt="icon" width="80" height="80">
 					<span class="login100-form-title p-b-34">
-						Login To Exvite
+						@lang('authuser.login.title')
                     </span>
                     @csrf
 
-                        <label for="email" class="col-form-label text-md-left">{{ __('E-Mail Address') }}</label>
+                        <label for="email" class="col-form-label text-md-left"> @lang('authuser.login.email') </label>
                              <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
                          @error('email')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
-                            <label for="password" class="col-form-label text-md-left">{{ __('Password') }}</label>
+                            <label for="password" class="col-form-label text-md-left"> @lang('authuser.login.password') </label>
                             <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
                                 @error('password')
                             <span class="invalid-feedback" role="alert">
@@ -59,13 +64,13 @@
                                     <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 
                                     <label for="remember">
-                                        {{ __('Remember Me') }}
+                                         @lang('authuser.login.rememberme')
                                     </label>
                                 </div>
                          		
 					<div class="container-login100-form-btn">
 						<button type="submit" class="btn btn-success w-100">
-                            {{ __('Login') }}
+							@lang('authuser.login.login')
 						</button>
 					</div>
 
@@ -73,19 +78,19 @@
 						<p>
 						@if (Route::has('password.request'))
                             <a class="btn btn-link" href="{{ route('password.request') }}">
-                            	{{ __('Forgot Your Password?') }}
+							@lang('authuser.login.forget')
                             </a>
 						@endif
 						</p>
 						<span class="txt1">
-							OR
+							@lang('authuser.login.or')
 						</span>
 					</div>
-                        <button type="button" class="btn btn-primary facebook w-100 m-2"> <a href="{{ url('/auth/facebook') }}" class="text-white text-decoration-none"> <span>Login with Facebook</span> <i class="fa fa-facebook"></i> </a> </button>
-                        <button type="button" class="btn btn-danger google w-100 m-2"> <a href="{{ url('/auth/google') }}" class="text-white text-decoration-none"> Login with Google <i class="fa fa-google"></i> </a> </button>
-					<div class="w-full text-center"> Belum punya akun ? 
+                        <button type="button" class="btn btn-primary facebook w-100 m-2"> <a href="{{ url('/auth/facebook') }}" class="text-white text-decoration-none"> <span>@lang('authuser.login.facebook')</span> <i class="fa fa-facebook"></i> </a> </button>
+                        <button type="button" class="btn btn-danger google w-100 m-2"> <a href="{{ url('/auth/google') }}" class="text-white text-decoration-none"> @lang('authuser.login.google') <i class="fa fa-google"></i> </a> </button>
+					<div class="w-full text-center"> @lang('authuser.login.havenoaccount') 
 						<a href="{{ route('register') }}">
-                            {{ __('Register') }}
+							@lang('authuser.login.register')
 						</a>
 					</div>
 				</form>

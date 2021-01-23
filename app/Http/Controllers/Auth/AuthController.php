@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
+use App\Models\Wallet;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
@@ -40,11 +41,16 @@ class AuthController extends Controller
      */
     public function findOrCreateUser($user, $provider)
     {
-        $authUser = User::where('user_id', $user->id)->first();
+        $authUser = User::where('provider_id', $user->id)->first();
         if ($authUser) {
             return $authUser;
         }
         else{
+            $id = date('Ymd').rand();
+            Wallet::create([
+                'wallet_id' => date('Ymd').rand(),
+                'user_id' => $id,
+            ]);
             $data = User::create([
                 'name'     => $user->name,
                 'email'    => !empty($user->email)? $user->email : '' ,
@@ -52,7 +58,7 @@ class AuthController extends Controller
                 'avatar'   => $user->avatar . "&access_token=" . $user->token,
                 'provider' => $provider,
                 'provider_id' => $user->id,
-                'user_id' => $user->id
+                'id' => $id,
             ]);
             return $data;
         }

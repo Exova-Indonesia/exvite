@@ -127,7 +127,8 @@ section {
 	width: 100%;
 	border: 1px solid #e1e1e1;
 	border-radius: 50px;
-	padding-left: 30px;
+  padding-left: 30px;
+  padding-right: 90px;
 	font-size: 14px;
 	color: #666666;
 }
@@ -162,7 +163,6 @@ section {
 	display: inline-block;
 	height: 40px;
 	width: 40px;
-	background: #e1e1e1;
 	font-size: 15px;
 	color: #111111;
 	line-height: 40px;
@@ -224,6 +224,28 @@ canvas{
   position: absolute;
   top: 200px;
   left: 60px;
+}
+.profile-drop {
+  max-width: 345px;
+}
+.autocomplete {
+  position: absolute;
+  top: 54%;
+  left: 45px;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 10rem;
+  padding: 9px;
+  margin: 0.125rem 0 0;
+  font-size: 0.9rem;
+  color: #212529;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
 }
 
 /* ---- stats.js ---- */

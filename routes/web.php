@@ -20,9 +20,17 @@ Route::get('/welcome', function () {
 
 Auth::routes(['verify' => true]);
 
-Route::get('/{locale}', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('/search', [App\Http\Controllers\HomeController::class, 'autocomplete']);
 Route::get('auth/{provider}', [App\Http\Controllers\Auth\AuthController::class, 'redirectToProvider']);
 Route::get('auth/{provider}/callback', [App\Http\Controllers\Auth\AuthController::class, 'handleProviderCallback']);
+
+///Wallet
+Route::post('/wallet/ceksaldo', [App\Http\Controllers\WalletController::class, 'ceksaldo']);
+Route::post('/wallet/send', [App\Http\Controllers\WalletController::class, 'send'])->name('wallet.send');
+Route::post('/wallet/status/send', [App\Http\Controllers\WalletController::class, 'sendstatus']);
+
+Route::post('/wallet/withdraw', [App\Http\Controllers\WalletController::class, 'withdraw'])->name('wallet.withdraw');
 
 Route::get('/send', function() {
     $name = Auth::user()->name;
