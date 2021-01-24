@@ -8,7 +8,7 @@ return [
         'membership' => 'Go Premium',
         'profile' => [
             'revenue' => 'Pendapatan',
-            'refund' => 'Refund',
+            'fund' => 'Dana',
             'button' => 'Lihat Profil',
         ],
         'login' => 'Masuk',

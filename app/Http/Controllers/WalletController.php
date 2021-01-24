@@ -12,12 +12,46 @@ use Illuminate\Support\Facades\Http;
 class WalletController extends Controller
 {
 
-    public function ceksaldo(Request $request) {
-        $debited = Wallet::where('user_id', Auth::user()->id)->first();
-        if(($debited->balance < preg_replace(['/[,.]/'],'',$request->amount)) || ($debited->balance == 0)) {
+    public function cekminimum(Request $request) {
+        if($request->amount < 10000) {
+            return response()->json(['error'=> Lang::get('validation.balanceminimal'), 'statuscode'=> 400]);
+        } else {
+            return response()->json(['statuscode'=> 200]);
+        }
+    }
+
+    public function cekdana(Request $request) {
+        $credited = Wallet::where('user_id', Auth::user()->id)->first();
+        if(($credited->fund < preg_replace(['/[,.]/'],'',$request->amount)) || ($credited->fund == 0)) {
             return response()->json(['error'=> Lang::get('validation.balance'), 'statuscode'=> 400]);
         } else {
             return response()->json(['statuscode'=> 200]);
+        }
+    }
+    public function cekpendapatan(Request $request) {
+        $credited = Wallet::where('user_id', Auth::user()->id)->first();
+        if(($credited->revenue < preg_replace(['/[,.]/'],'',$request->amount)) || ($credited->revenue == 0)) {
+            return response()->json(['error'=> Lang::get('validation.balance'), 'statuscode'=> 400]);
+        } else {
+            return response()->json(['statuscode'=> 200]);
+        }
+    }
+    public function cekbalance(Request $request) {
+        $credited = Wallet::where('user_id', Auth::user()->id)->first();
+        if(($credited->balance < preg_replace(['/[,.]/'],'',$request->amount)) || ($credited->balance == 0)) {
+            return response()->json(['error'=> Lang::get('validation.balance'), 'statuscode'=> 400]);
+        } else {
+            return response()->json(['statuscode'=> 200]);
+        }
+    }
+
+    public function cekuser(Request $request) {
+        $debited = Wallet::with('walletusers')->where('wallet_id', $request->wallet_id)->first();
+        //return response()->json($debited->walletusers['name']);
+        if(!$debited) {
+            return response()->json(['status'=> Lang::get('validation.balance'), 'statuscode'=> 400]);
+        } else {
+            return response()->json(['status'=> $debited->walletusers['name'] . ' - ' . $debited->wallet_id, 'statuscode'=> 200]);
         }
     }
 
@@ -28,7 +62,7 @@ class WalletController extends Controller
 
     public function send(Request $request) {
         $debited = Wallet::where('user_id', Auth::user()->id)->first();
-        if($debited->balance < preg_replace(['/[,.]/'],'',$request->amount)) {
+        if($debited->fund < preg_replace(['/[,.]/'],'',$request->amount)) {
             return redirect()->back()->with(['error'=> Lang::get('validation.balance')]);
         } else {
 

@@ -2749,6 +2749,18 @@ textarea.form-control {
   width:auto;
   padding:0 10px 0 0 
 }
+.input-group .input-group-text-check { 
+  background:transparent;
+  border-radius:0;
+  font-size:14px;
+  text-transform: uppercase;
+  border: 1px solid var(--green);
+  font-weight:500;
+  color:var(--green);
+  height:40px;
+  width:auto;
+  padding: 9px 5px 10px 5px;
+}
 .custom-file-upload { 
   position:relative;
   display:flex;

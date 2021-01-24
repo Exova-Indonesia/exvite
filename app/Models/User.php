@@ -10,7 +10,8 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
-
+    
+    protected $primaryKey = 'id';
     /**
      * The attributes that are mass assignable.
      *

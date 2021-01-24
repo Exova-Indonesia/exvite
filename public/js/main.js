@@ -93,7 +93,41 @@
               }, ms || 0);
             };
         }
-    $('.saldo').keyup( delay(function () {
+    $('.saldo_withdraw').keyup( delay(function () {
+        var amount = $(this).val();
+        var select = $('#select_form').find(":selected").val();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'Access-Control-Allow-Origin': '*',
+            }
+        });
+    $.ajax({
+        url:'http://localhost:8000/wallet/'+select,
+        type:'POST',
+        data :'amount='+amount,
+        dataType:'json',
+        success: function (data) {
+            if (data.statuscode == 400) {
+                Toast.fire({
+                    icon: 'error',
+                    title: data.error,
+                });
+                $('.submit-wdrw').attr('disabled', 'disabled');
+        } else {
+                $('.submit-wdrw').removeAttr('disabled');
+            }
+        },
+        beforeSend:function() {
+          //
+        },
+        error:function() {
+          //
+        }
+    });
+    }, 500));
+
+    $('.saldo_withdraw').keyup( delay(function () {
         var amount = $(this).val();
         $.ajaxSetup({
             headers: {
@@ -102,7 +136,39 @@
             }
         });
     $.ajax({
-        url:'http://localhost:8000/wallet/ceksaldo',
+        url:'http://localhost:8000/wallet/minimum',
+        type:'POST',
+        data :'amount='+amount,
+        dataType:'json',
+        success: function (data) {
+            if (data.statuscode == 400) {
+                Toast.fire({
+                    icon: 'error',
+                    title: data.error,
+                });
+                $('.submit-wdrw').attr('disabled', 'disabled');
+            }
+        },
+        beforeSend:function() {
+          //
+        },
+        error:function() {
+          //
+        }
+    });
+    }, 500));
+
+    $('.saldo_send').keyup( delay(function () {
+        var amount = $(this).val();
+        var select = $('#select_send').find(":selected").val();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'Access-Control-Allow-Origin': '*',
+            }
+        });
+    $.ajax({
+        url:'http://localhost:8000/wallet/'+select,
         type:'POST',
         data :'amount='+amount,
         dataType:'json',
@@ -124,7 +190,36 @@
           //
         }
     });
-}, 500));
+    }, 500));
+    
+    $('#check').click(function () {
+        var user = $('#transfer_to').val();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'Access-Control-Allow-Origin': '*',
+            }
+        });
+    $.ajax({
+        url:'http://localhost:8000/wallet/cekuser',
+        type:'POST',
+        data :'wallet_id='+user,
+        dataType:'json',
+        success: function (data) {
+            if (data.statuscode == 400) {
+                $('#transfer_user').html(data.status);
+        } else {
+                $('#transfer_user').html('<i class="fa fa-user text-success"></i> '+data.status);
+            }
+        },
+        beforeSend:function() {
+          //
+        },
+        error:function() {
+         //
+        }
+    });
+});
     
 
 })(jQuery);

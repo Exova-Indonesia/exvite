@@ -116,7 +116,7 @@
                                     </a>
                                     <div class="border-top py-2">
                                         <div class="py-1"><a href="#">@lang('layout.header.profile.revenue')<span class="float-right">IDR {{ number_format($balance->revenue, 0) }}</span></a></div>
-                                        <div class="py-1"><a href="#">@lang('layout.header.profile.refund')<span class="float-right">IDR {{ number_format($balance->fund, 0) }}</span></a></div>
+                                        <div class="py-1"><a href="#">@lang('layout.header.profile.fund')<span class="float-right">IDR {{ number_format($balance->fund, 0) }}</span></a></div>
                                     </div>
                                     <a class="btn btn-primary w-100" href="#">
                                         @lang('layout.header.profile.button')

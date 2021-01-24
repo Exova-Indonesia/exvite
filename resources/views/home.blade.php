@@ -424,7 +424,6 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">@lang('wallet.send.title')</h5>
-                <h5 class="text-right">IDR {{ number_format($balance->balance, 0) }}</h5>
             </div>
             <div class="modal-body">
                 <div class="action-sheet-content">
@@ -432,19 +431,29 @@
                         @csrf
                         <div class="form-group basic">
                             <div class="input-wrapper">
-                                <label class="label" for="transfer_to">@lang('wallet.form.to')</label>
+                                <label class="label" for="select_send">@lang('wallet.form.from')</label>
+                                <select type="text" class="form-control" id="select_send" name="trf_from"
+                                    placeholder="@lang('wallet.form.to')">
+                                <option value="dana" selected>Exova Dana - IDR {{ number_format($balance->fund, 0) }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group basic">
+                            <label class="label" for="transfer_to">@lang('wallet.form.to')</label>
+                                <div class="input-group mb-2">
                                 <input type="text" class="form-control" id="transfer_to" name="transfer_to"
                                     placeholder="@lang('wallet.form.to_place')">
+                                    <div class="input-group-prepend">
+                                    <span class="input-group-text-check" role="button" id="check">check</span>
+                                </div>
                             </div>
+                            <div id="transfer_user"></div>
                         </div>
                         <div class="form-group basic">
                             <div class="input-wrapper">
                                 <label class="label" for="note">@lang('wallet.form.note')</label>
                                 <input type="text" class="form-control" id="note" name="note"
                                     placeholder="@lang('wallet.form.note')">
-                                <i class="clear-input">
-                                    <ion-icon name="close-circle"></ion-icon>
-                                </i>
                             </div>
                         </div>
                         <div class="form-group basic">
@@ -453,7 +462,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="input14">IDR</span>
                                 </div>
-                                <input type="text" id="amount" name="amount" class="form-control saldo form-control-lg" autocomplete="off" placeholder="0">
+                                <input type="text" id="amount" name="amount" class="form-control saldo_send form-control-lg" autocomplete="off" placeholder="0">
                             </div>
                         </div>
                         <div class="form-group basic">
@@ -475,7 +484,6 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">@lang('wallet.withdraw.title')</h5>
-                <h5 class="text-right">IDR {{ number_format($balance->balance, 0) }}</h5>
             </div>
             <div class="modal-body">
                 <div class="action-sheet-content">
@@ -483,29 +491,30 @@
                         @csrf
                         <div class="form-group basic">
                             <div class="input-wrapper">
-                                <label class="label" for="withdraw_to">@lang('wallet.withdraw.to')</label>
-                                <input type="text" class="form-control" id="withdraw_to" name="withdraw_to"
+                                <label class="label" for="select_form">@lang('wallet.withdraw.from')</label>
+                                <select type="text" class="form-control" id="select_form" name="withdraw_from">
+                                <option value="pendapatan" selected>@lang('wallet.withdraw.revenue') - IDR {{ number_format($balance->revenue, 0) }}</option>
+                                <option value="dana">@lang('wallet.withdraw.fund') - IDR {{ number_format($balance->fund, 0) }}</option>
+                                <option value="balance">@lang('wallet.withdraw.total') - IDR {{ number_format($balance->balance, 0) }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group basic">
+                            <label class="label" for="withdraw_to">@lang('wallet.withdraw.to')</label>
+                                <div class="input-group mb-2">
+                                <select type="text" class="form-control" id="withdraw_to" name="withdraw_to"
                                     placeholder="@lang('wallet.withdraw.to')">
-                            </div>
-                        </div>
-                        <div class="form-group basic">
-                            <div class="input-wrapper">
-                                <label class="label" for="withdraw_user">@lang('wallet.withdraw.user')</label>
-                                <input type="text" class="form-control" id="withdraw_user" name="withdraw_user"
-                                    placeholder="@lang('wallet.withdraw.user')">
-                            </div>
-                        </div>
-                        <div class="form-group basic">
-                            <div class="input-wrapper">
-                                <label class="label" for="withdraw_bank">@lang('wallet.withdraw.bank')</label>
-                                <input type="text" class="form-control" id="withdraw_bank" name="withdraw_bank"
-                                    placeholder="@lang('wallet.withdraw.bank')">
+                                <option value="Pilih Akun Bank" selected hidden disabled>Pilih Akun Bank</option>
+                                <option value="norek">Bank 1 - Nama</option>
+                                </select>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text-check" role="button" id="check"><i class="fa fa-user-plus text-success"></i></span>
                             </div>
                         </div>
                         <div class="form-group basic">
                             <div class="input-wrapper">
                                 <label class="label" for="note">@lang('wallet.withdraw.note')</label>
-                                <input type="text" class="form-control" id="note" name="note"
+                                <input type="text" class="form-control" name="note"
                                     placeholder="@lang('wallet.withdraw.note')">
                                 <i class="clear-input">
                                     <ion-icon name="close-circle"></ion-icon>
@@ -516,14 +525,14 @@
                             <label class="label">@lang('wallet.form.amount')</label>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="input14">IDR</span>
+                                    <span class="input-group-text">IDR</span>
                                 </div>
-                                <input type="text" id="amount" name="amount" class="form-control saldo form-control-lg" autocomplete="off" placeholder="0">
+                                <input type="text" id="amount" name="amount" class="form-control saldo_withdraw form-control-lg" autocomplete="off" placeholder="0">
                             </div>
                         </div>
                         <div class="form-group basic">
-                            <button type="submit" class="btn btn-primary submit-trf btn-block btn-lg" disabled>
-                                @lang('wallet.send.title')
+                            <button type="submit" class="btn btn-primary submit-wdrw btn-block btn-lg" disabled>
+                                @lang('wallet.withdraw.title')
                             </button>
                         </div>
                     </form>

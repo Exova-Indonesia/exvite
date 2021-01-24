@@ -119,6 +119,7 @@ return [
     'url' => 'The :attribute format is invalid.',
     'uuid' => 'The :attribute must be a valid UUID.',
     'balance' => 'Saldo anda tidak cukup',
+    'balanceminimal' => 'Minimum penarikan IDR 10,000',
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines

@@ -25,8 +25,13 @@ Route::post('/search', [App\Http\Controllers\HomeController::class, 'autocomplet
 Route::get('auth/{provider}', [App\Http\Controllers\Auth\AuthController::class, 'redirectToProvider']);
 Route::get('auth/{provider}/callback', [App\Http\Controllers\Auth\AuthController::class, 'handleProviderCallback']);
 
-///Wallet
-Route::post('/wallet/ceksaldo', [App\Http\Controllers\WalletController::class, 'ceksaldo']);
+//Wallet
+Route::post('/wallet/pendapatan', [App\Http\Controllers\WalletController::class, 'cekpendapatan']);
+Route::post('/wallet/dana', [App\Http\Controllers\WalletController::class, 'cekdana']);
+Route::post('/wallet/balance', [App\Http\Controllers\WalletController::class, 'cekbalance']);
+Route::post('/wallet/minimum', [App\Http\Controllers\WalletController::class, 'cekminimum']);
+
+Route::post('/wallet/cekuser', [App\Http\Controllers\WalletController::class, 'cekuser']);
 Route::post('/wallet/send', [App\Http\Controllers\WalletController::class, 'send'])->name('wallet.send');
 Route::post('/wallet/status/send', [App\Http\Controllers\WalletController::class, 'sendstatus']);
 
