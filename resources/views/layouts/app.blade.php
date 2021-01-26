@@ -17,10 +17,13 @@
 
     <!-- Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
     <script src="{{ asset('js/vendor/jquery-1.12.4.min.js') }}" defer></script>
     <script src="{{ asset('js/vendor/jquery-ui.js') }}" defer></script>
     <script src="{{ asset('js/vendor/bootstrap.min.js') }}" defer></script>
 
+    <script src="{{ asset('datatables/jquery.dataTables.js') }}" defer></script>
+    <script src="{{ asset('datatables-bs4/js/dataTables.bootstrap4.js') }}" defer></script>
     <script src="{{ asset('js/owl.carousel.min.js') }}" defer></script>
     <script src="{{ asset('js/contact-form.js') }}" defer></script>
     <script src="{{ asset('js/ajaxchimp.js') }}" defer></script>
@@ -40,6 +43,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('fontawesome/css/all.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('datatables-bs4/css/dataTables.bootstrap4.css') }}">
     <link rel="stylesheet" href="css/owl.carousel.min.css">
     <link rel="stylesheet" href="css/linearicons.css">
     <link rel="stylesheet" href="css/magnific-popup.css">
@@ -52,9 +56,9 @@
     <link rel="stylesheet" href="{{ asset('sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
 
 </head>
-<body data-spy="scroll" data-target=".mainmenu-area" data-component="intro">
+<body data-spy="scroll" data-target=".mainmenu-area" data-component="intro" class="@if(Request::is('/')) @else pt-90 @endif">
     <div id="app">
-        <nav class="navbar mainmenu-area navbar-expand-md fixed-top p-3" data-spy="affix" data-offset-top="200">
+        <nav class="navbar mainmenu-area navbar-expand-md fixed-top p-3 @if(Request::is('/')) @else bg-exova @endif" data-spy="affix" data-offset-top="200">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <img src="{{ ('https://assets.exova.id/img/logo.png') }}" alt="Logo">
@@ -72,19 +76,19 @@
                     <ul class="navbar-nav ml-auto text-center">
                         <!-- Authentication Links -->
                         <li class="nav-item active">
-                            <a class="nav-link" href="#dashboard_page">@lang('layout.header.home')<span class="sr-only">(current)</span></a>
+                            <a class="nav-link" href="@if(Request::is('/')) #dashboard_page @else {{ url('/#dashboard_page') }} @endif">@lang('layout.header.home')<span class="sr-only">(current)</span></a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link" href="#services_page"> @lang('layout.header.services') </a>
+                            <a class="nav-link" href="@if(Request::is('/')) #services_page @else {{ url('/#services_page') }} @endif"> @lang('layout.header.services') </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#faq"> @lang('layout.header.help') </a>
+                            <a class="nav-link" href="@if(Request::is('/')) #faq @else {{ url('/#faq') }} @endif"> @lang('layout.header.help') </a>
                         </li>
-                            <a class="nav-link" href="#tentang"> @lang('layout.header.about') </a>
+                            <a class="nav-link" href="@if(Request::is('/')) #tentang @else {{ url('/#tentang') }} @endif"> @lang('layout.header.about') </a>
                         </li>
                         @guest
                                 <li class="nav-item">
-                                    <a class="btn btn-danger m-1 mr-2" href="#membership"> @lang('layout.header.membership') </a>
+                                    <a class="btn btn-danger m-1 mr-2" href="@if(Request::is('/')) #membership @else {{ url('/#membership') }} @endif"> @lang('layout.header.membership') </a>
                                 </li>
                             @if (Route::has('login'))
                                 <li class="nav-item">
@@ -99,7 +103,7 @@
                             @endif
                         @else
                             <li class="nav-item dropdown">
-                                <a class="btn btn-danger m-1 mr-2" href="#membership"> @lang('layout.header.membership') </a>
+                                <a class="btn btn-danger m-1 mr-2" href="@if(Request::is('/')) #membership @else {{ url('/#membership') }} @endif"> @lang('layout.header.membership') </a>
                                 <a id="navbarDropdown" class="navbar-brand dropdown-toggle ml-3" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     <img class="rounded-circle" src="{{ Auth::user()->avatar }}" width="40" height="40" alt="avatar">
                                 </a>

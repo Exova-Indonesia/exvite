@@ -120,6 +120,8 @@ return [
     'uuid' => 'The :attribute must be a valid UUID.',
     'balance' => 'Saldo anda tidak cukup',
     'balanceminimal' => 'Minimum penarikan IDR 10,000',
+    'addbank' => 'Berhasil menambahkan metode pembayaran',
+    'deletebank' => 'Metode pembayaran berhasil dihapus',
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines

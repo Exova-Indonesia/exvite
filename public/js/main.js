@@ -1,8 +1,7 @@
 
-
 (function ($) {
     "use strict";
-
+    var url = "http://localhost:8000/";
     $(document).ready(function () {
         $('#search').keyup(function () {
             var query = $(this).val();
@@ -219,8 +218,44 @@
          //
         }
     });
-});
+    });
+
+    $('#add_banks').on('click', function () {
+        $('#addbanks_form').css('display', 'block');
+    })
     
+    $.getJSON('http://localhost:8000/js/banks.json', function (data) {
+        let banks = data;
+        $.each(banks, function (i, data) {
+            $('#bank_code').append('<option value="'+data.code+'">'+data.name+'</option>')
+        })
+    })
+
+
+    // $('#bank_name').select2({
+    //     placeholder: "Pilih Nama Bank",
+    //     ajax: {
+    //         url: 'http://localhost:8000/js/banks.json',
+    //         dataType: 'json',
+    //         delay: 250,
+    //         processResults: function (data) {
+    //             return {
+    //                 results: $.map(data, function (banks) {
+    //                     return {
+    //                         text: banks.name,
+    //                         id: banks.code,
+    //                     }
+    //                 })
+    //             }
+    //         }, cache: false
+    //     }
+    // })
+
+    // $($('#bank_name').data('select2').$container).addClass('form-control')
+    
+    $(function () {
+        $('#history_transaction').DataTable();
+    })
 
 })(jQuery);
 

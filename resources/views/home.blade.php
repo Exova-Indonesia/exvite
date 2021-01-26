@@ -40,7 +40,8 @@
                                 <h1 class="total text-secondary">IDR {{ number_format($balance->balance, 0) }}</h1>
                             </div>
                             <div class="right text-secondary">
-                            Account No. {{ $balance->wallet_id }}
+                            <span class="title">@lang('home.wallet.code')</span>
+                            <a class="text-secondary">{{ $balance->wallet_id }}</a>
                                 <!--a class="button" role="button">
                                     <i class="fa fa-credit-card"></i>
                                 </a>-->
@@ -66,7 +67,7 @@
                                 </a>
                             </div>
                             <div class="item" data-component="mywallet">
-                                <a href="app-cards.html">
+                                <a href="{{ url('wallet') }}">
                                     <div class="icon-wrapper bg-success">
                                         <i class="fas fa-piggy-bank"></i>
                                     </div>

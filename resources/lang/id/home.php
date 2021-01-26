@@ -11,6 +11,7 @@ return [
         'send' => 'Transfer',
         'mywallet' => 'Wallet Saya',
         'history' => 'Riwayat',
+        'code' => 'Kode ExoWallet',
     ],
     'services' => [
         'title' => 'Layanan Kami',

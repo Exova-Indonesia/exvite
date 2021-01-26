@@ -21,4 +21,10 @@ class Transaction extends Model
         'wal_status',
         'wal_token',
     ];
+    public function creditedwallet() {
+        return $this->belongsTo(Wallet::class, 'wal_debited_wallet');
+    }
+    public function debitedwallet() {
+        return $this->belongsTo(Wallet::class, 'wal_credited_wallet');
+    }
 }

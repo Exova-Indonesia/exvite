@@ -26,6 +26,11 @@ Route::get('auth/{provider}', [App\Http\Controllers\Auth\AuthController::class, 
 Route::get('auth/{provider}/callback', [App\Http\Controllers\Auth\AuthController::class, 'handleProviderCallback']);
 
 //Wallet
+Route::get('/wallet', [App\Http\Controllers\WalletController::class, 'index']);
+Route::post('/add/bank', [App\Http\Controllers\WalletController::class, 'addbank'])->name('bank.add');
+Route::get('/bank/{id}', [App\Http\Controllers\WalletController::class, 'deletebank']);
+Route::post('/transaction-details', [App\Http\Controllers\WalletController::class, 'transdetails']);
+
 Route::post('/wallet/pendapatan', [App\Http\Controllers\WalletController::class, 'cekpendapatan']);
 Route::post('/wallet/dana', [App\Http\Controllers\WalletController::class, 'cekdana']);
 Route::post('/wallet/balance', [App\Http\Controllers\WalletController::class, 'cekbalance']);

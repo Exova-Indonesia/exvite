@@ -1,5 +1,17 @@
 <?php 
 return [
+    'title' => 'Wallet Saya',
+    'payments' => 'Metode Pembayaran',
+    'addpayments' => 'Tambahkan Metode',
+    'method' => 'Tambahkan Metode',
+    'history' => [
+        'title' => 'Riwayat Transaksi',
+        'date' => 'Tanggal',
+        'to' => 'Akun',
+        'note' => 'Catatan',
+        'amount' => 'Jumlah',
+        'status' => 'Status',
+    ],
     'send' => [
         'title' => 'Transfer',
     ],
@@ -15,12 +27,24 @@ return [
         'to' => 'Kepada',
         'bank' => 'Nama Bank',
         'user' => 'Nama Pemilik',
+        'id' => 'Nomor Rekening',
         'note' => 'Catatan',
         'amount' => 'Jumlah',
         'from' => 'Dari Akun',
         'revenue' => 'Pendapatan Exova',
         'fund' => 'Dana Exova',
         'total' => 'Total Saldo',
+        'choosebank' => 'Pilih Bank',
+    ],
+    'modal' => [
+        'title' => 'Detail Transaksi',
+        'status' => 'Status',
+        'to' => 'Akun',
+        'id' => 'Nomor Akun',
+        'type' => 'Tipe Transaksi',
+        'note' => 'Catatan',
+        'date' => 'Tanggal',
+        'amount' => 'Jumlah',
     ],
 ];
 ?>

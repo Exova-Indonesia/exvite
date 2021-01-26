@@ -5,12 +5,60 @@ namespace App\Http\Controllers;
 use Auth;
 use Lang;
 use App\Models\Wallet;
+use App\Models\Bank;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
 
 class WalletController extends Controller
 {
+
+    public function index() {
+        $balance = Wallet::where('user_id', Auth::user()->id)->first();
+        $bank = Bank::where('user_id', Auth::user()->id)->get();
+        $credited = Transaction::with('creditedwallet.walletusers')
+        ->where('wal_credited_wallet', $balance->wallet_id)
+        ->with('debitedwallet.walletusers')
+        ->Orwhere('wal_debited_wallet', $balance->wallet_id)
+        ->orderBy('created_at', 'DESC')
+        ->get();
+        return view('wallet', ['balance' => $balance, 'bank' => $bank, 'credited' => $credited]);
+        // return response()->json($credited);
+    }
+    public function transdetails(Request $request) {
+        $transaction = Transaction::with('creditedwallet.walletusers')
+        ->where('wal_transaction_id', $request->trans_id)
+        ->with('debitedwallet.walletusers')
+        ->Orwhere('wal_transaction_id', $request->trans_id)
+        ->first();
+        return response()->json($transaction);
+    }
+
+    public function deletebank($id) {
+        $transaction = Bank::where('bank_id', $id)->delete();
+        return back()->with(['status' => Lang::get('validation.deletebank')]);
+    }
+    public function addbank(Request $request) {
+
+        $validator = Validator::make($request->all(), [
+            'bank_code' => ['required', 'string'],
+            'bank_user' => ['required', 'string', 'max:255'],
+            'bank_account' => ['required', 'string'],
+        ]);
+
+        if($validator->fails()) {
+            return back()->withErrors($validator->messages());
+        }
+
+        Bank::create([
+            'user_id' => Auth::user()->id,
+            'bank_user' => $request->bank_user,
+            'bank_account' => base64_encode($request->bank_account),
+            'bank_code' => $request->bank_code,
+        ]);
+        return back()->with(['status' => Lang::get('validation.addbank')]);
+    }
 
     public function cekminimum(Request $request) {
         if($request->amount < 10000) {

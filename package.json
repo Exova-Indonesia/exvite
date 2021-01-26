@@ -23,6 +23,7 @@
         "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
+        "numeral": "^2.0.6",
         "particles.js": "^2.0.0",
         "tourguidejs": "^0.2.1"
     }
