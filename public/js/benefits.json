@@ -1,0 +1,30 @@
+{
+    "benefits": 
+    [
+        {
+            "name":"Become Seller",
+            "available": "Yes",
+            "counts": ""
+        },
+        {
+            "name":"Free Promote Products",
+            "available": "No",
+            "counts": ""
+        },
+        {
+            "name":"Free Buy All Exova Create Products",
+            "available": "No",
+            "counts": ""
+        },
+        {
+            "name":"Sell Products",
+            "available": "Yes",
+            "counts": "20"
+        },
+        {
+            "name":"Products Legends Discount",
+            "available": "Yes",
+            "counts": "50%"
+        }
+    ]
+}

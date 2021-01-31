@@ -27,4 +27,7 @@ class Transaction extends Model
     public function debitedwallet() {
         return $this->belongsTo(Wallet::class, 'wal_credited_wallet');
     }
+    public function withdraw() {
+        return $this->belongsTo(Bank::class, 'wal_debited_bank');
+    }
 }

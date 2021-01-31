@@ -18,7 +18,7 @@
                     <p>@lang('home.header.description')</p>
                 </div>
                 <div class="space-20"></div>
-                    <div class="input-group mb-4 border bg-white rounded-pill p-1">
+                    <div class="input-group mb-4 border bg-white rounded-pill p-2">
                         <div class="input-group-prepend border-0">
                             <button id="button-addon4" type="button" class="btn btn-link text-info"><i class="fa fa-search h3 mb-0"></i></button>
                         </div>
@@ -75,7 +75,7 @@
                                 </a>
                             </div>
                             <div class="item" data-component="wallethistory">
-                                <a href="#" data-toggle="modal" data-target="#exchangeActionSheet">
+                                <a href="{{ url('wallet') }}">
                                     <div class="icon-wrapper bg-primary">
                                         <i class="fa fa-history"></i>
                                     </div>
@@ -200,59 +200,41 @@
                     <div class="space-10"></div>
                 </div>
                 <div class="row" data-component="membership">
+                    @foreach($subs as $s)
                     <div class="col-md-4 col-sm-6 wow fadeInLeft my-2" data-wow-delay="0.3s">
                         <div class="price-table">
                             <div class="price-head">
-                                <h4>NewBie</h4>
-                                <h2>IDR 0<span></span></h2>
+                                <h4>{{ $s->plan_name }}</h4>
+                                @if(!empty($s->price_per_year_old))
+                                <h5 class="m-0 text-danger"><s>IDR {{ number_format($s->price_per_year_old, 0) }}</s></h5>
+                                @endif
+                                <h2>IDR {{ number_format($s->price_per_year, 0) }}<span></span></h2>
                             </div>
                             <div class="price-content">
                                 <ul>
-                                    <li><i class="fa fa-check mr-2 text-success"></i>Buat Akun</li>
+                                @foreach($s->plan_benefits['benefits'] as $b)
+                                    <li>
+                                    @if($b['available'] == 'Yes')
+                                    <i class="fa fa-check mr-2 text-success"></i>
+                                    @else
+                                    <i class="fa fa-times mr-2 text-danger"></i>
+                                    @endif
+                                    {{ $b['counts'] }}
+                                    {{ $b['name'] }}
+                                    </li>
+                                @endforeach
                                 </ul>
                             </div>
                             <div class="price-button">
-                                <a href="#">@lang('home.membership.subscribe')</a>
+                            @if((Auth::user()->subscription == $s->plan_name) || ($s->plan_name == 'NewBie'))
+                                <a class="text-white">@lang('home.membership.owned')</a>
+                            @else
+                                <a href="#" disabled>@lang('home.membership.buy')</a>
+                            @endif
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 wow fadeInUp my-2" data-wow-delay="0.4s">
-                        <div class="price-table">
-                        <div class="ribbon-wrapper">
-                            <div class="ribbon bg-danger text-white">
-                                Best Seller
-                            </div>
-                        </div>
-                            <div class="price-head">
-                                <h4>Master</h4>
-                                <h2>IDR 99,000 <span></span></h2>
-                            </div>
-                            <div class="price-content">
-                                <ul>
-                                    <li><i class="fa fa-times mr-2 text-danger my-2"></i><del>Buat Akun</del></li>
-                                </ul>
-                            </div>
-                            <div class="price-button">
-                                <a href="#">@lang('home.membership.subscribe')</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6 wow fadeInRight my-2" data-wow-delay="0.3s">
-                        <div class="price-table">
-                            <div class="price-head">
-                                <h4>Legends</h4>
-                                <h2>IDR 149,000<span></span></h2>
-                            </div>
-                            <div class="price-content">
-                                <ul>
-                                    <li><i class="fa fa-times mr-2 text-danger"></i><del>Buat Akun</del></li>
-                                </ul>
-                            </div>
-                            <div class="price-button">
-                                <a href="#">@lang('home.membership.subscribe')</a>
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -506,10 +488,12 @@
                                 <select type="text" class="form-control" id="withdraw_to" name="withdraw_to"
                                     placeholder="@lang('wallet.withdraw.to')">
                                 <option value="Pilih Akun Bank" selected hidden disabled>Pilih Akun Bank</option>
-                                <option value="norek">Bank 1 - Nama</option>
+                                @foreach($bank as $b)
+                                    <option value="{{ $b->bank_id }}">****{{ substr(base64_decode($b->bank_account), -4) }} - {{ $b->bank_user }}</option>
+                                @endforeach
                                 </select>
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text-check" role="button" id="check"><i class="fa fa-user-plus text-success"></i></span>
+                                    <a href="{{ url('wallet') }}" class="input-group-text-check" role="button" id="check"><i class="fa fa-user-plus text-success"></i></a>
                             </div>
                         </div>
                         <div class="form-group basic">
@@ -528,7 +512,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">IDR</span>
                                 </div>
-                                <input type="text" id="amount" name="amount" class="form-control saldo_withdraw form-control-lg" autocomplete="off" placeholder="0">
+                                <input type="text" id="amoun" name="amount" class="form-control saldo_withdraw form-control-lg" autocomplete="off" placeholder="0">
                             </div>
                         </div>
                         <div class="form-group basic">

@@ -206,9 +206,9 @@
         dataType:'json',
         success: function (data) {
             if (data.statuscode == 400) {
-                $('#transfer_user').html(data.status);
+                $('#transfer_user').html(`<i class="fas fa-exclamation text-danger"></i> `+data.status);
         } else {
-                $('#transfer_user').html('<i class="fa fa-user text-success"></i> '+data.status);
+                $('#transfer_user').html(`<i class="fa fa-user text-success"></i> `+data.status);
             }
         },
         beforeSend:function() {

@@ -41,6 +41,7 @@ Route::post('/wallet/send', [App\Http\Controllers\WalletController::class, 'send
 Route::post('/wallet/status/send', [App\Http\Controllers\WalletController::class, 'sendstatus']);
 
 Route::post('/wallet/withdraw', [App\Http\Controllers\WalletController::class, 'withdraw'])->name('wallet.withdraw');
+Route::get('/history/export', [App\Http\Controllers\WalletController::class, 'export_history']);
 
 Route::get('/send', function() {
     $name = Auth::user()->name;

@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use DB;
 use App;
 use auth;
+use App\Models\Bank;
 use App\Models\Wallet;
+use App\Models\Plan;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -33,11 +35,13 @@ class HomeController extends Controller
         App::setLocale($locale);
         */
         if(Auth::user()) {
-            $balance = Wallet::where('user_id', Auth::user()->id)->first();
-            return view('home', ['balance' => $balance]);
+        $balance = Wallet::where('user_id', Auth::user()->id)->first();
+        $bank = Bank::where('user_id', Auth::user()->id)->get();
         } else {
-            return view('home');
+        $balance = '';
         }
+        $subs = Plan::all();
+        return view('home', ['balance' => $balance, 'subs' => $subs, 'bank' => $bank]);
     }
     public function autocomplete(Request $request)  {
        $query = $request->get('query');

@@ -116,7 +116,7 @@
                                             <i role="button" class="fa fa-power-off text-danger" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();"></i>
                                         </h5>
-                                        <span> Bronze Customer </span>
+                                        <span><i class="fas fa-crown text-warning"></i> {{ Auth::user()->subscription }} Customer</span>
                                     </a>
                                     <div class="border-top py-2">
                                         <div class="py-1"><a href="#">@lang('layout.header.profile.revenue')<span class="float-right">IDR {{ number_format($balance->revenue, 0) }}</span></a></div>

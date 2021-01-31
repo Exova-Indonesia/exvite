@@ -6,7 +6,7 @@
             <div class="card mb-3">
                 <div class="card-header">
                     @lang('wallet.title')
-                    <span class="float-right text-muted">****{{ substr($balance->wallet_id, -4) }}</span>
+                    <span class="float-right text-muted">{{ $balance->wallet_id }}</span>
                 </div>
                 <div class="card-body">
                     <p>@lang('wallet.withdraw.total')<b class="float-right">IDR {{ number_format($balance->balance, 0) }}</b></p>
@@ -30,6 +30,9 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-md-12 text-right">
+                            <button type="button" data-target="#withdrawActionSheet" data-toggle="modal" class="btn btn-success">@lang('wallet.withdraw.title')</button>
                         </div>
                     </div>
                 </div>
@@ -88,9 +91,11 @@
                         </form>
                     </div>
                     </div>
+                    @if($bankscount < 3)
                     <div class="border-dashed add-payments my-2" id="add_banks" role="button">
-                        <span>@lang('wallet.method')</span>
+                        <span>@lang('wallet.addpayments')</span>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -100,13 +105,16 @@
                     @lang('wallet.history.title')
                 </div>
                 <div class="card-body">
-                    <div class="table-responsive">
+                <div class="text-right">
+                    <a href="{{ url('history/export') }}" class="btn btn-success m-1">Export Riwayat</a>
+                </div>
+                    <div class="table-responsive my-4">
                         <table class="table" id="history_transaction">
                             <thead>
                                 <tr>
                                     <th>@lang('wallet.history.date')</th>
                                     <th>@lang('wallet.history.to')</th>
-                                    <th>@lang('wallet.history.note')</th>
+                                    <th>@lang('wallet.modal.type')</th>
                                     <th>@lang('wallet.history.amount')</th>
                                     <th>@lang('wallet.history.status')</th>
                                 </tr>
@@ -115,13 +123,15 @@
                             @foreach($credited as $c)
                             <tr data-target="#detailtransaksi" data-toggle="modal" role="button" data-trans="{{ $c->wal_transaction_id }}">   
                                 <td>{{ $c->created_at }}</td>
-                                @if($c->creditedwallet->walletusers['id'] == Auth::user()->id)
+                                @if($c->wal_credited_wallet == $c->wal_debited_wallet)
+                                <td>{{ $c->withdraw['bank_user'] }}</td>
+                                @elseif($c->creditedwallet->walletusers['id'] == Auth::user()->id)
                                 <td>{{ $c->debitedwallet->walletusers['name'] }}</td>
                                 @else
                                 <td>{{ $c->creditedwallet->walletusers['name'] }}</td>
                                 @endif
-                                <td>{{ $c->wal_description }}</td>
-                                @if($c->creditedwallet->walletusers['id'] == Auth::user()->id)
+                                <td>{{ $c->wal_transaction_type }}</td>
+                                @if($c->creditedwallet->walletusers['id'] == Auth::user()->id && $c->wal_credited_wallet !== $c->wal_debited_wallet)
                                 <td class="text-success"> + IDR {{ number_format($c->wal_amount, 0) }}</td>
                                 @else
                                 <td class="text-danger"> - IDR {{ number_format($c->wal_amount, 0) }}</td>
@@ -174,7 +184,7 @@
             </li>
             <li class="list-group-item">
                 <strong>@lang('wallet.modal.amount')</strong>
-                <span class="float-right text-right amount"></span>
+                <span class="amount float-right text-right"></span>
             </li>
         </ul>
     </div>
@@ -187,28 +197,99 @@
   </div>
 </div>
 
+<!-- Withdraw Action Sheet -->
+<div class="modal fade" id="withdrawActionSheet" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@lang('wallet.withdraw.title')</h5>
+            </div>
+            <div class="modal-body">
+                <div class="action-sheet-content">
+                    <form method="POST" action="{{ route('wallet.withdraw') }}">
+                        @csrf
+                        <div class="form-group basic">
+                            <div class="input-wrapper">
+                                <label class="label" for="select_form">@lang('wallet.withdraw.from')</label>
+                                <select type="text" class="form-control" id="select_form" name="withdraw_from">
+                                <option value="pendapatan" selected>@lang('wallet.withdraw.revenue') - IDR {{ number_format($balance->revenue, 0) }}</option>
+                                <option value="dana">@lang('wallet.withdraw.fund') - IDR {{ number_format($balance->fund, 0) }}</option>
+                                <option value="balance">@lang('wallet.withdraw.total') - IDR {{ number_format($balance->balance, 0) }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group basic">
+                            <label class="label" for="withdraw_to">@lang('wallet.withdraw.to')</label>
+                                <div class="input-group mb-2">
+                                <select type="text" class="form-control" id="withdraw_to" name="withdraw_to"
+                                    placeholder="@lang('wallet.withdraw.to')">
+                                <option value="Pilih Akun Bank" selected hidden disabled>Pilih Akun Bank</option>
+                                @foreach($bank as $b)
+                                    <option value="{{ $b->bank_id }}">****{{ substr(base64_decode($b->bank_account), -4) }} - {{ $b->bank_user }}</option>
+                                @endforeach
+                                </select>
+                        </div>
+                        <div class="form-group basic">
+                            <div class="input-wrapper">
+                                <label class="label" for="note">@lang('wallet.withdraw.note')</label>
+                                <input type="text" class="form-control" name="note"
+                                    placeholder="@lang('wallet.withdraw.note')">
+                                <i class="clear-input">
+                                    <ion-icon name="close-circle"></ion-icon>
+                                </i>
+                            </div>
+                        </div>
+                        <div class="form-group basic">
+                            <label class="label">@lang('wallet.form.amount')</label>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">IDR</span>
+                                </div>
+                                <input type="text" id="amount" name="amount" class="form-control saldo_withdraw form-control-lg" autocomplete="off" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="form-group basic">
+                            <button type="submit" class="btn btn-primary submit-wdrw btn-block btn-lg" disabled>
+                                @lang('wallet.withdraw.title')
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- * Withdraw Action Sheet -->
+
 <script type="text/javascript">
     $(document).ready(function() {
         function transactiondetails(data) {
-        $('.status').html(data.wal_status)
         if (data.wal_status == 'success') {
-            $('.status').addClass('text-success')
+            $('.status').html(`<span class="float-right text-right text-success">`+data.wal_status+`</span>`)
         } else if(data.wal_status == 'pending') {
-            $('.status').addClass('text-warning')
+            $('.status').html(`<span class="float-right text-right text-warning">`+data.wal_status+`</span>`)
         } else {
-            $('.status').addClass('text-danger')
+            $('.status').html(`<span class="float-right text-right text-danger">`+data.wal_status+`</span>`)
         }
-        if(data.creditedwallet.walletusers.id == <?php echo Auth::user()->id ?>) {
-            $('.to').html(data.debitedwallet.walletusers.name);
+        if(data.creditedwallet.walletusers.id == <?php echo Auth::user()->id ?> && data.wal_credited_wallet != data.wal_debited_wallet) {
+            $('.amount').html(`<span class="float-right text-right text-success">+ IDR `+numeral(data.wal_amount).format('0,0'))+`</span>`
+        } else {
+            $('.amount').html(`<span class="float-right text-right text-danger">- IDR `+numeral(data.wal_amount).format('0,0'))+`</span>`
+        }
+        if(data.wal_credited_wallet == data.wal_debited_wallet) {
+            $('.to').html(data.withdraw.bank_user);
+            $('.id').html("****"+atob(data.withdraw.bank_account).substr(-4))
+        } else if(data.creditedwallet.walletusers.id == <?php echo Auth::user()->id ?>) {
             $('.id').html("****"+data.wal_credited_wallet.substr(-4))
+            $('.to').html(data.debitedwallet.walletusers.name);
         } else {
-            $('.to').html(data.creditedwallet.walletusers.name);
             $('.id').html("****"+data.wal_debited_wallet.substr(-4))
+            $('.to').html(data.creditedwallet.walletusers.name);
         }
+        
         $('.type').html(data.wal_transaction_type)
         $('.note').html(data.wal_description)
         $('.date').html(new Date(data.updated_at).toUTCString())
-        $('.amount').html("IDR "+numeral(data.wal_amount).format('0,0'))
     }
 
     $('#detailtransaksi').on('show.bs.modal', function (event) {
@@ -246,7 +327,7 @@
         var modal = $(this)
         
     })
-    })
+})
 </script>
 <!-- Modals Detail Transaction -->
 @endsection

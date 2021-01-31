@@ -29,6 +29,8 @@ return [
     ],
     'membership' => [
         'subscribe' => 'Langganan',
+        'buy' => 'Beli',
+        'owned' => 'Dimiliki',
     ],
     'help' => [
         'title' => 'Bantuan',

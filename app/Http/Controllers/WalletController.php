@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Lang;
+use PDF;
 use App\Models\Wallet;
 use App\Models\Bank;
 use App\Models\Transaction;
@@ -14,23 +15,30 @@ use Illuminate\Support\Facades\Validator;
 class WalletController extends Controller
 {
 
+    public function __construct() {
+        $this->middleware('auth');
+    }
+
     public function index() {
         $balance = Wallet::where('user_id', Auth::user()->id)->first();
         $bank = Bank::where('user_id', Auth::user()->id)->get();
+        $bankscount = Bank::where('user_id', Auth::user()->id)->count();
         $credited = Transaction::with('creditedwallet.walletusers')
         ->where('wal_credited_wallet', $balance->wallet_id)
         ->with('debitedwallet.walletusers')
         ->Orwhere('wal_debited_wallet', $balance->wallet_id)
+        ->with('withdraw')
         ->orderBy('created_at', 'DESC')
         ->get();
-        return view('wallet', ['balance' => $balance, 'bank' => $bank, 'credited' => $credited]);
-        // return response()->json($credited);
+        return view('wallet', ['balance' => $balance, 'bank' => $bank, 'credited' => $credited, 'bankscount' => $bankscount]);
+       // return response()->json($credited);
     }
     public function transdetails(Request $request) {
         $transaction = Transaction::with('creditedwallet.walletusers')
         ->where('wal_transaction_id', $request->trans_id)
         ->with('debitedwallet.walletusers')
         ->Orwhere('wal_transaction_id', $request->trans_id)
+        ->with('withdraw')
         ->first();
         return response()->json($transaction);
     }
@@ -61,7 +69,7 @@ class WalletController extends Controller
     }
 
     public function cekminimum(Request $request) {
-        if($request->amount < 10000) {
+        if(preg_replace(['/[,.]/'],'',$request->amount) < 10000) {
             return response()->json(['error'=> Lang::get('validation.balanceminimal'), 'statuscode'=> 400]);
         } else {
             return response()->json(['statuscode'=> 200]);
@@ -95,23 +103,66 @@ class WalletController extends Controller
 
     public function cekuser(Request $request) {
         $debited = Wallet::with('walletusers')->where('wallet_id', $request->wallet_id)->first();
+        $credited = WalletController::index()->balance;
         //return response()->json($debited->walletusers['name']);
-        if(!$debited) {
-            return response()->json(['status'=> Lang::get('validation.balance'), 'statuscode'=> 400]);
+        if($request->wallet_id == $credited->wallet_id) {
+            return response()->json(['status'=> Lang::get('validation.sendself'), 'statuscode'=> 400]);
+        } else if(!$debited) {
+            return response()->json(['status'=> Lang::get('validation.usernotfound'), 'statuscode'=> 400]);
         } else {
             return response()->json(['status'=> $debited->walletusers['name'] . ' - ' . $debited->wallet_id, 'statuscode'=> 200]);
         }
     }
 
-    public function withdraw() {
-        $withdraw = Wallet::where('user_id', Auth::user()->id)->first();
-        
+    public function withdraw(Request $request) {
+        $user = WalletController::index()->balance;
+        $token = hash('sha512', $user->wallet_id.'pending'.preg_replace(['/[,.]/'],'',$request->amount));
+        switch($request->withdraw_from) {
+            case "pendapatan":
+                if(($user->revenue < preg_replace(['/[,.]/'],'',$request->amount)) || ($user->revenue == 0)) {
+                    return back()->with(['error'=> Lang::get('validation.balance')]);
+                }
+                $withdraw = Transaction::create([
+                    'wal_transaction_id' =>  date('mdhi').rand(),
+                    'wal_reference_id' =>  'Pendapatan',
+                    'wal_credited_wallet' => $user->wallet_id,
+                    'wal_debited_wallet' => $user->wallet_id,
+                    'wal_debited_bank' => $request->withdraw_to,
+                    'wal_description' => $request->note,
+                    'wal_amount' => preg_replace(['/[,.]/'],'',$request->amount),
+                    'wal_transaction_type' => 'WITHDRAW',
+                    'wal_status' => 'pending',
+                    'wal_token' => $token,
+                ]);
+                Wallet::where('wallet_id', $user->wallet_id)->update([
+                    'revenue' => $user->revenue - preg_replace(['/[,.]/'],'',$request->amount),
+                    'balance' => $user->balance - preg_replace(['/[,.]/'],'',$request->amount),
+                ]);
+                // $response = Http::post('http://localhost:8080/api/withdraw/status/send', array($withdraw));
+                return back()->with(['status' => Lang::get('validation.withdraw.revenue')]);
+                break;
+
+            case "dana":
+                return back()->with(['status' => Lang::get('validation.withdraw.fund')]);
+                break;
+
+            case "balance":
+                return back()->with(['status' => Lang::get('validation.withdraw.balance')]);
+                break;
+
+            default:
+                return back()->with(['error' => Lang::get('validation.withdraw.failed')]);
+                break;
+
+        }
     }
 
     public function send(Request $request) {
         $debited = Wallet::where('user_id', Auth::user()->id)->first();
         if($debited->fund < preg_replace(['/[,.]/'],'',$request->amount)) {
             return redirect()->back()->with(['error'=> Lang::get('validation.balance')]);
+        } else if($request->transfer_to == $debited->wallet_id) {
+            return redirect()->back()->with(['error'=> Lang::get('validation.sendself')]);
         } else {
 
         $token = hash('sha512', $debited->wallet_id.'pending'.preg_replace(['/[,.]/'],'',$request->amount));
@@ -162,4 +213,28 @@ class WalletController extends Controller
             ]);
         }
     }
+
+
+    public function export_history() {
+        $data = WalletController::index()->credited;
+        $wallet = WalletController::index()->balance;
+        $credited = Transaction::with('creditedwallet.walletusers')
+        ->where('wal_credited_wallet', $wallet->wallet_id)
+        ->count();
+        $debited = Transaction::with('debitedwallet.walletusers')
+        ->where('wal_debited_wallet', $wallet->wallet_id)
+        ->count();
+        $debitedBank = Transaction::with('debitedwallet.walletusers')
+        ->where('wal_debited_wallet', $wallet->wallet_id)
+        ->where('wal_credited_wallet', $wallet->wallet_id)
+        ->count();
+        $debited = $debited - $debitedBank;
+        $pdf = PDF::loadview('pdf.trans_history', ['history' => $data, 'wallet' => $wallet,
+        'credited' => $credited, 'debited' => $debited])->setPaper('a4', 'landscape');
+        return $pdf->download(Lang::get('wallet.history.title').'.pdf');
+        //return response()->json($data);
+        // return view('/pdf.trans_history', ['history' => $data, 'wallet' => $wallet,
+        // 'credited' => $credited, 'debited' => $debited]);
+    }
+
 }

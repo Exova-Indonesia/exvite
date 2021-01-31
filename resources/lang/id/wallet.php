@@ -2,8 +2,7 @@
 return [
     'title' => 'Wallet Saya',
     'payments' => 'Metode Pembayaran',
-    'addpayments' => 'Tambahkan Metode',
-    'method' => 'Tambahkan Metode',
+    'addpayments' => 'Tambahkan Rekening',
     'history' => [
         'title' => 'Riwayat Transaksi',
         'date' => 'Tanggal',
@@ -11,6 +10,9 @@ return [
         'note' => 'Catatan',
         'amount' => 'Jumlah',
         'status' => 'Status',
+        'debited' => 'Didebitkan',
+        'credited' => 'Dikreditkan',
+        'id' => 'Transaction ID',
     ],
     'send' => [
         'title' => 'Transfer',

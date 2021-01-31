@@ -118,10 +118,17 @@ return [
     'uploaded' => 'The :attribute failed to upload.',
     'url' => 'The :attribute format is invalid.',
     'uuid' => 'The :attribute must be a valid UUID.',
-    'balance' => 'Saldo anda tidak cukup',
+    'balance' => 'Saldo kamu tidak cukup',
+    'sendself' => 'Kamu tidak bisa transfer dengan tujuan Exova Wallet kamu sendiri',
     'balanceminimal' => 'Minimum penarikan IDR 10,000',
     'addbank' => 'Berhasil menambahkan metode pembayaran',
     'deletebank' => 'Metode pembayaran berhasil dihapus',
+    'usernotfound' => 'Pengguna tidak ditemukan',
+    'withdraw' => [
+        'revenue' => 'Penarikan dari Pendapatan Exova berhasil dilakukan',
+        'fund' => 'Penarikan dari Dana Exova berhasil dilakukan',
+        'balance' => 'Penarikan dari Total Saldo Exova berhasil dilakukan',
+    ],
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines

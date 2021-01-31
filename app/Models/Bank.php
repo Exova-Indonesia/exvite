@@ -16,7 +16,5 @@ class Bank extends Model
         'bank_account',
         'user_id',
     ];
-    public function banks() {
-        //
-    }
+    protected $primaryKey = 'bank_id';
 }
