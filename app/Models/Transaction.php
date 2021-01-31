@@ -30,4 +30,7 @@ class Transaction extends Model
     public function withdraw() {
         return $this->belongsTo(Bank::class, 'wal_debited_bank');
     }
+    public function snap() {
+        return $this->hasOne(SnapTransaction::class, 'snap_transaction_id');
+    } 
 }

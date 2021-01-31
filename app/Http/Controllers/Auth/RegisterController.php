@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use App\Models\Wallet;
+use Lang;
+use App\Models\Activity;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -64,7 +68,7 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(array $data)
+    protected function create(array $data, Request $request)
     {
         $id = date('Ymd').rand();
             $user = User::create([
@@ -73,10 +77,18 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'avatar' => "http://localhost:8000/images/users/default.png",
+            'subscription' => 'Newbie',
         ]);
             Wallet::create([
             'wallet_id' => date('Ymd').rand(),
             'user_id' => $id,
+        ]);
+        Activity::create([
+            'activity_id' => date('Ymdhis').rand(0, 1000),
+            'user_id' => Auth::user()->id ?? '',
+            'activity' => Lang::get('activity.user.register'),
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
         ]);
         return $user;
     }

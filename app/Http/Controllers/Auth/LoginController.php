@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Lang;
+use App\Models\Activity;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -33,7 +37,7 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Request $request)
     {
         $this->redirectTo = url()->previous();
         $this->middleware('guest')->except('logout');

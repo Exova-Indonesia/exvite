@@ -119,6 +119,7 @@ return [
     'url' => 'The :attribute format is invalid.',
     'uuid' => 'The :attribute must be a valid UUID.',
     'balance' => 'Saldo kamu tidak cukup',
+    'fund' => 'Dana kamu tidak cukup',
     'sendself' => 'Kamu tidak bisa transfer dengan tujuan Exova Wallet kamu sendiri',
     'balanceminimal' => 'Minimum penarikan IDR 10,000',
     'addbank' => 'Berhasil menambahkan metode pembayaran',
@@ -128,6 +129,7 @@ return [
         'revenue' => 'Penarikan dari Pendapatan Exova berhasil dilakukan',
         'fund' => 'Penarikan dari Dana Exova berhasil dilakukan',
         'balance' => 'Penarikan dari Total Saldo Exova berhasil dilakukan',
+        'required' => 'Harap masukkan data dengan benar',
     ],
     /*
     |--------------------------------------------------------------------------

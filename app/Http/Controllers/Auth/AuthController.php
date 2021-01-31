@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Lang;
+use App\Models\Activity;
 use App\Models\User;
 use App\Models\Wallet;
+use Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
@@ -43,6 +46,13 @@ class AuthController extends Controller
     {
         $authUser = User::where('provider_id', $user->id)->first();
         if ($authUser) {
+            Activity::create([
+                'activity_id' => date('Ymdhis').rand(0, 1000),
+                'user_id' => $authUser->id,
+                'activity' => Lang::get('activity.user.with').$provider,
+                'ip_address' => Request::ip(),
+                'user_agent' => Request::userAgent(),
+            ]);
             return $authUser;
         }
         else{
@@ -59,6 +69,14 @@ class AuthController extends Controller
                 'provider' => $provider,
                 'provider_id' => $user->id,
                 'id' => $id,
+                'subscription' => 'Newbie',
+            ]);
+            Activity::create([
+                'activity_id' => date('Ymdhis').rand(0, 1000),
+                'user_id' => $id,
+                'activity' => Lang::get('activity.user.with').$provider,
+                'ip_address' => Request::ip(),
+                'user_agent' => Request::userAgent(),
             ]);
             return $data;
         }

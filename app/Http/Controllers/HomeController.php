@@ -39,6 +39,7 @@ class HomeController extends Controller
         $bank = Bank::where('user_id', Auth::user()->id)->get();
         } else {
         $balance = '';
+        $bank = '';
         }
         $subs = Plan::all();
         return view('home', ['balance' => $balance, 'subs' => $subs, 'bank' => $bank]);

@@ -226,11 +226,7 @@
                                 </ul>
                             </div>
                             <div class="price-button">
-                            @if((Auth::user()->subscription == $s->plan_name) || ($s->plan_name == 'NewBie'))
-                                <a class="text-white">@lang('home.membership.owned')</a>
-                            @else
-                                <a href="#" disabled>@lang('home.membership.buy')</a>
-                            @endif
+                                <a href="#">@lang('home.membership.buy')</a>
                             </div>
                         </div>
                     </div>
