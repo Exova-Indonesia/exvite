@@ -21,7 +21,7 @@ class WalletController extends Controller
         $this->middleware('auth');
     }
 
-    public function index() {
+    public static function index() {
         $balance = Wallet::where('user_id', Auth::user()->id)->first();
         $bank = Bank::where('user_id', Auth::user()->id)->get();
         $bankscount = Bank::where('user_id', Auth::user()->id)->count();
@@ -310,15 +310,15 @@ class WalletController extends Controller
         ]);
 
         $url = 'http://localhost:8080/api/wallet/status/send';
-        $ch = curl_init($url);
-        $payload = json_encode(array($send));
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        //$response = Http::post('http://localhost:8080/api/wallet/status/send', array($send));
+        // $ch = curl_init($url);
+        // $payload = json_encode(array($send));
+        // curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        // curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+        // curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // $result = curl_exec($ch);
+        // curl_close($ch);
+        $response = Http::put('http://localhost:8080/api/wallet/status/send', array($send));
         return redirect()->back();
         }
     }

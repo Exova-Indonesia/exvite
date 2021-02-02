@@ -152,7 +152,7 @@
                     <h5 class="title">Highlight</h5>
                         <div class="space-10"></div>
                     </div>
-                    <p class="text-right"><a class="text-primary" href="#">@lang('home.highlight.seeall')</a></p>
+                    <p class="text-right"><a class="text-primary" href="{{ url('highlight') }}">@lang('home.highlight.seeall')</a></p>
                 <div class="row"  data-component="highlight">
                 <div class="col-lg-2 mb-5 col-sm-6 mb-lg-0">
                     <a href="#" class="rounded-lg text-center">
@@ -226,7 +226,7 @@
                                 </ul>
                             </div>
                             <div class="price-button">
-                                <a href="#">@lang('home.membership.buy')</a>
+                                <a href="payments">@lang('home.membership.buy')</a>
                             </div>
                         </div>
                     </div>

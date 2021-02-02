@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use App\Models\Wallet;
+use Illuminate\Support\Str;
 use Lang;
 use App\Models\Activity;
 use Illuminate\Support\Facades\Auth;
@@ -78,6 +79,7 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
             'avatar' => "http://localhost:8000/images/users/default.png",
             'subscription' => 'Newbie',
+            'api_token' => Str::random(64),
         ]);
             Wallet::create([
             'wallet_id' => date('Ymd').rand(),

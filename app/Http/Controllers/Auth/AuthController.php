@@ -6,6 +6,7 @@ use Lang;
 use App\Models\Activity;
 use App\Models\User;
 use App\Models\Wallet;
+use Illuminate\Support\Str;
 use Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -70,6 +71,7 @@ class AuthController extends Controller
                 'provider_id' => $user->id,
                 'id' => $id,
                 'subscription' => 'Newbie',
+                'api_token' => Str::random(64),
             ]);
             Activity::create([
                 'activity_id' => date('Ymdhis').rand(0, 1000),

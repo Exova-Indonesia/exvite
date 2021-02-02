@@ -44,6 +44,12 @@ Route::post('/wallet/withdraw', [App\Http\Controllers\WalletController::class, '
 Route::get('/history/export', [App\Http\Controllers\WalletController::class, 'export_history']);
 // Route::get('/tests', [App\Http\Controllers\WalletController::class, 'tests']);
 
+Route::get('/payments', [App\Http\Controllers\PaymentsController::class, 'index']);
+Route::get('/data/payments', [App\Http\Controllers\PaymentsController::class, 'data']);
+
+Route::get('/highlight', [App\Http\Controllers\HighlightController::class, 'index']);
+Route::get('/highlight/all', [App\Http\Controllers\HighlightController::class, 'all']);
+
 Route::get('/send', function() {
     $name = Auth::user()->name;
     auth()->user()->notify(new \App\Notifications\MailResetPasswordNotification($name));
