@@ -226,7 +226,7 @@
                                 </ul>
                             </div>
                             <div class="price-button">
-                                <a href="payments">@lang('home.membership.buy')</a>
+                                <a href="/purchase/{{ $s->plan_id }}/{{ $s->plan_name }}">@lang('home.membership.buy')</a>
                             </div>
                         </div>
                     </div>

@@ -131,6 +131,9 @@ return [
         'balance' => 'Penarikan dari Total Saldo Exova berhasil dilakukan',
         'required' => 'Harap masukkan data dengan benar',
     ],
+    'pay' => [
+        'nomethod' => 'Tidak ada metode pembayaran yang cocok',
+    ],
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines

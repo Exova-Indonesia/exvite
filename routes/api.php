@@ -18,3 +18,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::put('/wallet/status/send', [App\Http\Controllers\WalletController::class, 'sendstatus']);
+Route::get('/payments/handling', [App\Http\Controllers\PaymentsHandling::class, 'handling']);

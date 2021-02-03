@@ -28,7 +28,10 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
-
+    'md_secret' => env('MD_SECRET'),
+    'md_production' => env('MD_PRODUCTION'),
+    'md_sanitized' => env('MD_SANITIZED'),
+    
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode

@@ -46,6 +46,10 @@ Route::get('/history/export', [App\Http\Controllers\WalletController::class, 'ex
 
 Route::get('/payments', [App\Http\Controllers\PaymentsController::class, 'index']);
 Route::get('/data/payments', [App\Http\Controllers\PaymentsController::class, 'data']);
+Route::post('/payments/pay', [App\Http\Controllers\PaymentsController::class, 'pay'])->name('pay');
+Route::get('/payments/handling', [App\Http\Controllers\PaymentsHandling::class, 'handling']);
+
+Route::get('/purchase/{id}/{name}', [App\Http\Controllers\CartController::class, 'cart']);
 
 Route::get('/highlight', [App\Http\Controllers\HighlightController::class, 'index']);
 Route::get('/highlight/all', [App\Http\Controllers\HighlightController::class, 'all']);

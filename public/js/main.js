@@ -290,12 +290,58 @@
     });
 
     $(document).ready(function () {
+        let products = ``;
+        function price(val, pm_price, subtotal) {
+            let pricing, total;
+            if (val == 'QRIS') {
+                pricing = pm_price * subtotal;
+            } else {
+                pricing = parseInt(pm_price);
+            }
+            total = subtotal+pricing;
+            $('.serv_price').html('IDR ' + numeral(pricing).format('0,0'));
+            $('.buy_price').html('IDR ' + numeral(subtotal).format('0,0'));
+            $('.total').html('IDR ' + numeral(total).format('0,0'));
+        }
         $.getJSON('http://localhost:8000/data/payments', function (data) {
+            let buy_price, subtotal = 0;
+            $.each(data[1], function (i, data) {
+                buy_price = parseInt(data.price)
+                subtotal += buy_price;
+                products += `
+                <div class="col-lg-6 py-1">
+                    <div class="row">
+                        <div class="mx-2 border p-2">
+                            <img width="80" height="80" src="https://assets.exova.id/img/1.png">
+                        </div>
+                        <div class="mx-2">
+                            <div class="">
+                                <h5 class="m-0">`+data.name+`</h5>
+                            </div>
+                            <div class="">
+                                <span>IDR `+numeral(buy_price).format('0,0')+`</span>
+                            </div>
+                            <div class="">
+                                <span>Quantity : `+data.quantity+`</span>
+                            </div>
+                            <div class="">
+                                <span>SubTotal : IDR `+numeral(data.price * data.quantity).format('0,0')+`</span>
+                            </div>
+                            <div class="">
+                                <span>`+data.note+`</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+                $('.products').html(products);
+            })
             $('.payment-method-radio').on('change', function () {
                 $('.payment-method-radio').removeClass('highlight-active');
                 $(this).addClass('highlight-active');
                 let val = $('input[name=method]:checked').val();
-                $.each(data, function (i, data) {
+                $('.method').html(val);
+                $.each(data[0], function (i, data) {
                 if (val == data.pm_name) {
                     let content = '';
                     content += `
@@ -303,15 +349,40 @@
                     <p>`+data.pm_description+`</p>
                     `;
                     $('.method-desc').html(content);
+                    price(val, data.pm_price, subtotal);
                     }
                 })
-        })
+            })
+            let val = $('input[name=method]:checked').val();
+            price(val, data[0][0].pm_price, subtotal);
             let content = '';
             content += `
-            <img width="200" height="66" src="`+data[0].pm_icons+`" alt="Icons">
-            <p>`+data[0].pm_description+`</p>
+            <img width="200" height="66" src="`+data[0][0].pm_icons+`" alt="Icons">
+            <p>`+data[0][0].pm_description+`</p>
             `;
             $('.method-desc').html(content);
+        })
+
+        $('.snap').on('click', function () {
+            let val = $('input[name=method]:checked').val();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Access-Control-Allow-Origin': '*',
+                }
+            });
+            $.ajax({
+                url: url + "payments/pay",
+                data: 'method=' + val,
+                type: "POST",
+                success: function (data) {
+                    console.log(data.link)
+                    window.location = data.link;
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
         })
     })
 
@@ -457,29 +528,4 @@ let steps = [
 
 
 
-/* Fungsi formatRupiah */
-//Format Number
-var rupiah = document.getElementById('amount');
-rupiah.addEventListener('keyup', function(e){
-    // tambahkan 'Rp.' pada saat form di ketik
-    // gunakan fungsi formatRupiah() untuk mengubah angka yang di ketik menjadi format angka
-    rupiah.value = formatRupiah(this.value);
-});
 
-
-function formatRupiah(angka, prefix){
-    var number_string = angka.replace(/[^,\d]/g, '').toString(),
-    split   		= number_string.split(','),
-    sisa     		= split[0].length % 3,
-    rupiah     		= split[0].substr(0, sisa),
-    ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
-
-    // tambahkan titik jika yang di input sudah menjadi angka ribuan
-    if(ribuan){
-        separator = sisa ? '.' : '';
-        rupiah += separator + ribuan.join(',');
-    }
-
-    rupiah = split[1] != undefined ? rupiah + '.' + split[1] : rupiah;
-    return prefix == undefined ? rupiah : (rupiah ? + rupiah : '');
-}
