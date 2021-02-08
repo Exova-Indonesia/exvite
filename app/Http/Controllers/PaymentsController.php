@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
-\Midtrans\Config::$serverKey = config('md_secret');
-\Midtrans\Config::$isProduction = config('md_production');
-\Midtrans\Config::$isSanitized = config('md_sanitized');
+\Midtrans\Config::$serverKey = config('app.md_secret');
+\Midtrans\Config::$isProduction = config('app.md_production');
+\Midtrans\Config::$isSanitized = config('app.md_sanitized');
 
+use Auth;
 use App\Models\Subscription;
+use App\Models\SubsOrder;
+use App\Models\OrderDetails;
 use App\Models\PayMethod;
 use Illuminate\Http\Request;
 
@@ -29,15 +32,17 @@ class PaymentsController extends Controller
     public function pay(Request $request) {
         // $cart = Cart::where('cart_id', $request->cart_id);
         $data = $request->session()->get('cart_shopping');
+        $adm_fee = 0.02;
         switch($request->method) {
             case "QRIS":
                 $subtotal = 0;
+                $method = 'QRIS';
                 foreach($data as $d) {
                     $subtotal += $d['price'] * $d['quantity']; 
                 }
                 $fee = array(
                     'id'=>rand(),
-                    'price'=>$subtotal*0.02,
+                    'price'=>$subtotal*$adm_fee,
                     'name'=>'Biaya Layanan',
                     'quantity'=>1,
                 );
@@ -49,8 +54,9 @@ class PaymentsController extends Controller
                         'name'=>$d['name'],
                         'quantity'=>$d['quantity'],
                     );
+                    PaymentsController::createOrders($d, $subtotal, $method, $subtotal*$adm_fee);
                 }
-                $total = $subtotal + $subtotal*0.02;
+                $total = $subtotal + $subtotal*$adm_fee;
                 $params = array(
                     'transaction_details' => array(
                         'order_id' => rand(),
@@ -87,9 +93,10 @@ class PaymentsController extends Controller
         }
     }
     function banks($data, $method) {
+        $adm_fee = 4000;
             $fee = array(
                 'id'=>rand(),
-                'price'=>4000,
+                'price'=>$adm_fee,
                 'name'=>'Biaya Layanan',
                 'quantity'=>1,
             );
@@ -103,8 +110,9 @@ class PaymentsController extends Controller
                     'quantity'=>$d['quantity'],
                 );
                 $subtotal += $d['price'] * $d['quantity'];
+                PaymentsController::createOrders($d, $subtotal, $method, $adm_fee);
             }
-            $total = $subtotal + 4000;
+            $total = $subtotal + $adm_fee;
             $params = array(
                 'transaction_details' => array(
                     'order_id' => rand(),
@@ -118,4 +126,43 @@ class PaymentsController extends Controller
             return redirect($paymentUrl);
             // return response()->json($paymentUrl);
     }
-}
+
+    function createOrders($d, $subtotal, $method, $adm_fee) {
+        $order_id = date('hi').rand();
+        switch($d['type']) {
+            case "Subscription":
+                SubsOrder::create([
+                    'order_id' => $order_id,
+                    'product_id'  =>$d['id'],
+                    'customer_id' =>Auth::user()->id,
+                    'type' => $d['type'],
+                    'invoice' => '',
+                ]);
+                OrderDetails::create([
+                    'orders_details_id' => date('hi').rand(),
+                    'order_id' =>$order_id,
+                    'quantity' => $d['quantity'],
+                    'unit_price' => $d['price'],
+                    'discount' => 0,
+                    'admin_fee' => $adm_fee,
+                    'total_price' => $subtotal + $adm_fee,
+                    'payment_type' => $method,
+                    'invoice' => '',
+                    'status' => 'pending',
+                ]);
+                break;
+            case "Jasa":
+                JasaOrder::create([
+                    'order_id' => date('hi').rand(),
+                    'product_id'  =>$d['id'],
+                    'customer_id' =>Auth::user()->id,
+                    'type' => $d['type'],
+                    'invoice' => '',
+                    'status' => '',
+                    'note' => '',
+                    'deadline' => '',
+                ]);
+                break;
+            }
+        }
+    }

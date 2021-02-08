@@ -2,7 +2,7 @@
 return [
     'header' => [
         'title' => 'Exova Indonesia',
-        'description' => 'Exova Indonesia adalah platform tempat menyalurkan hobby jadi uang',
+        'description' => 'Exova Indonesia adalah platform memasarkan produk secara cepat secara cerdas dan modern menggunakan teknologi <i> Smart Digital Marketing</i>',
         'search' => 'Apa yang ingin kamu cari?',
     ],
     'wallet' => [

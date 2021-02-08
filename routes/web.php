@@ -50,6 +50,11 @@ Route::post('/payments/pay', [App\Http\Controllers\PaymentsController::class, 'p
 Route::get('/payments/handling', [App\Http\Controllers\PaymentsHandling::class, 'handling']);
 
 Route::get('/purchase/{id}/{name}', [App\Http\Controllers\CartController::class, 'cart']);
+Route::get('/cart', [App\Http\Controllers\CartController::class, 'index']);
+Route::delete('/cart', [App\Http\Controllers\CartController::class, 'delete']);
+Route::put('/cart', [App\Http\Controllers\CartController::class, 'update']);
+Route::get('/cart/data', [App\Http\Controllers\CartController::class, 'cart_data']);
+Route::get('/cart/create', [App\Http\Controllers\CartController::class, 'cart_create']);
 
 Route::get('/highlight', [App\Http\Controllers\HighlightController::class, 'index']);
 Route::get('/highlight/all', [App\Http\Controllers\HighlightController::class, 'all']);

@@ -363,8 +363,162 @@
             $('.method-desc').html(content);
         })
 
-        $('.snap').on('click', function () {
-            let val = $('input[name=method]:checked').val();
+        // $('.snap').on('click', function () {
+        //     let val = $('input[name=method]:checked').val();
+        //     $.ajaxSetup({
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        //             'Access-Control-Allow-Origin': '*',
+        //         }
+        //     });
+        //     $.ajax({
+        //         url: url + "payments/pay",
+        //         data: 'method=' + val,
+        //         type: "POST",
+        //         success: function (data) {
+        //             console.log(data.link)
+        //             window.location = data.link;
+        //         },
+        //         error: function (data) {
+        //             console.log(data);
+        //         }
+        //     })
+        // })
+    })
+
+
+
+    // Cart
+    $(document).ready(function () {
+        reload()
+        //         var mybtn = document.getElementById('catatan');
+        // mybtn.addEventListener('click', function () {
+        //     console.log("testing");
+        // })
+        // let content = `     <li class="list-group-item">
+        //                         <div class="cart-header">
+        //                             <input class="form-check-input master-check" type="checkbox" name="selectAll" onclick="select()">
+        //                             <label class="form-check-label m-0">Pilih Semua</label>
+        //                             <a class="float-right text-danger delete-cart" role="button"><i class="fas fa-trash"></i> Hapus</a>
+        //                         </div>
+        //                     </li>`;
+        // $.getJSON('cart/data', function (data) {
+        //     $.each(data, function (i, data) {      
+        //         content += `
+        //         <li class="list-group-item border-btm">
+        //             <div class="product-cart-header">
+        //                 <div class="cart-bando mb-2">
+        //                     <div class="float-left">
+        //                         <input class="sub-check" data-type="`+data.product_type+`" data-id="`+data.cart_type+`" type="checkbox">
+        //                         <span class="ml-1">Pilih</span>
+        //                     </div>
+        //                     <div class="text-right">
+        //                         <span class="text-muted mr-2">Subtotal</span>
+        //                         <strong class="h5" id="subtotal-cart"> IDR 14,058</strong>
+        //                     </div>
+        //                 </div>
+        //                 <h5 class="m-0"><i class="fas fa-crown align-text-top text-warning"></i> `+data.jasa.seller.name+`</h5>
+        //                 <p class="text-muted">Sidoarjo</p>
+        //             </div>
+        //             <div class="product-cart-body">
+        //                 <div class="row">
+        //                     <div class="ml-2">
+        //                         <img width="70" height="70" src="`+data.jasa.jasa_thumbnail+`" alt="Products Icons">
+        //                     </div>
+        //                     <div class="ml-3">
+        //                         <p class="mb-1">`+data.jasa.jasa_name+`</p>
+        //                         <p class="mb-1"><strong>IDR `+data.jasa.jasa_price+`</strong></p>
+        //                         <p class="mb-1">`+data.jasa.jasa_subcategory+`</p>
+        //                     </div>
+        //                 </div>
+        //             </div>
+        //             <div class="product-cart-footer">
+        //                 <div class="float-left mt-3">
+        //                     <div role="button" class="text-primary" id="catatan">Tambahkan catatan</div>
+        //                     <div id="catField">
+        //                         <input class="form-control rounded-pill" id="fieldcat" type="text">
+        //                         <small class="text-muted ml-2">12/12</small>
+        //                     </div>
+        //                 </div>
+        //                 <div class="float-right mt-3">
+        //                     <div class="row">
+        //                         <div class="addWishlist px-2">
+        //                             <i class="fas fa-heart text-danger"></i>
+        //                         </div>
+        //                         <div class="text-center">
+        //                             <span role="button" class="minus-quantity"><i class="fas fa-minus"></i></span>
+        //                             <input class="form-quantity" type="number" min="1" value="1">
+        //                             <span role="button" class="plus-quantity"><i class="fas fa-plus"></i></span>
+        //                         </div>
+        //                     </div>
+        //                 </div>
+        //             </div>
+        //         </li>
+        //         `;
+        //         $('#data').html(content)
+            // })
+        // })
+    function reload() {
+        $.getJSON('cart/data', function (data) {
+            $.each(data, function (i, data) {
+                $('.parent').each(function () {
+                    if (data.cart_id == $(this).attr('data-id')) {
+                        let subtotal = parseInt(data.jasa.jasa_price) * parseInt(data.quantity);
+                        $('#subtotal-' + data.cart_id).html('IDR ' + numeral(subtotal).format('0,0'));
+                        $('#notes' + data.cart_id).html(data.note);
+                    }
+                })
+            })
+        })
+        }
+        $.getJSON('cart/data', function (data) {
+            $.each(data, function (i, data) {
+                $('.parent').each(function () {
+                    if (data.cart_id == $(this).attr('data-id')) {
+                        $('#catatan' + data.cart_id).on('click', function () {
+                            $('#catField' + data.cart_id).css('display', 'block');
+                            $(this).css('display', 'none');
+                        })
+                        $('#fieldcat' + data.cart_id).on('change', function () {
+                            let note = $('#fieldcat' + data.cart_id).val();
+                            let qty = parseInt($('#form-quantity' + data.cart_id).val());
+                            quantity(data.cart_id, qty, note);
+                            $('#catField' + data.cart_id).css('display', 'none');
+                            $('#catatan' + data.cart_id).css('display', 'block');
+                        })
+                        $('#form-quantity' + data.cart_id).keyup(function () {
+                            if ($(this).val() == 0) {
+                                $(this).val(1);
+                            }
+                            quantity(data.cart_id, $(this).val())
+                        })
+                        $('#plus-quantity' + data.cart_id).on('click', function () {
+                            if ($('#form-quantity' + data.cart_id).val() >= 1) {
+                                let note = $('#fieldcat' + data.cart_id).val();
+                                let qty = parseInt($('#form-quantity' + data.cart_id).val()) + 1;
+                                $('#form-quantity' + data.cart_id).val(qty);
+                                quantity(data.cart_id, qty)
+                            }
+                        })
+                        $('#minus-quantity' + data.cart_id).on('click', function () {
+                            if ($('#form-quantity' + data.cart_id).val() > 1) {
+                                let note = $('#fieldcat' + data.cart_id).val();
+                                let qty = parseInt($('#form-quantity' + data.cart_id).val()) - 1;
+                                $('#form-quantity' + data.cart_id).val(qty);
+                                quantity(data.cart_id, qty)
+                            }
+                        })
+                        $('#fieldcat' + data.cart_id).keyup(function () {
+                            if ($(this).val().length < 125) {
+                                $('#countstring' + data.cart_id).html($(this).val().length+'/'+'125');
+                            }
+                        })
+                    }
+                })
+            })
+        })
+        
+        function quantity(id, qty) {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
@@ -372,24 +526,72 @@
                 }
             });
             $.ajax({
-                url: url + "payments/pay",
-                data: 'method=' + val,
-                type: "POST",
+                url: url + 'cart',
+                type: 'PUT',
+                data: {id:id, qty:qty, note:note},
                 success: function (data) {
-                    console.log(data.link)
-                    window.location = data.link;
+                    reload();
                 },
                 error: function (data) {
                     console.log(data);
                 }
+                
+            })
+        }
+
+        $('.sub-check').on('change', function () {
+            if ($(this).is(':checked', true)) {
+                $('.delete-cart').css('display', 'block');
+            } else {
+                $('.delete-cart').css('display', 'none');
+            }
+        })
+        $('.master-check').on('click', function () {
+            if ($(this).is(':checked', true)) {
+                $('.sub-check').prop('checked', true);
+                $('.delete-cart').css('display', 'block');
+            } else {
+                $('.sub-check').prop('checked', false);
+                $('.delete-cart').css('display', 'none');
+            }
+        })
+
+        $('.delete-cart').on('click', function (event) {
+            let allID = [];
+            let allType = [];
+            $('.sub-check:checked').each(function () {
+                allID.push($(this).attr('data-id'))
+                allType.push($(this).attr('data-type'))
+            })
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Access-Control-Allow-Origin': '*',
+                }
+            });
+            $.ajax({
+                url: url + 'cart',
+                type: 'DELETE',
+                data: 'id='+allID.join(','),
+                success: function (data) {
+                    Toast.fire({
+                    icon: 'success',
+                    title: data.status,
+                    })
+                    window.location = window.location;
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+                
             })
         })
     })
 
+
 })(jQuery);
 
 (function($){"use strict";$(".carousel-inner .item:first-child").addClass("active");$(".mainmenu-area #primary_menu li a").on("click",function(){$(".navbar-collapse").removeClass("in");});$.scrollUp({scrollText:'<i class="lnr lnr-arrow-up"></i>',easingType:'linear',scrollSpeed:900,animation:'fade'});$('.gallery-slide').owlCarousel({loop:true,margin:0,responsiveClass:true,nav:false,autoplay:true,autoplayTimeout:4000,smartSpeed:1000,navText:['<i class="lnr lnr-chevron-left"></i>','<i class="lnr lnr-chevron-right"></i>'],responsive:{0:{items:1,},600:{items:2},1280:{items:3},1500:{items:4}}});$('.team-slide').owlCarousel({loop:true,margin:0,responsiveClass:true,nav:true,autoplay:true,autoplayTimeout:4000,smartSpeed:1000,navText:['<i class="lnr lnr-chevron-left"></i>','<i class="lnr lnr-chevron-right"></i>'],responsive:{0:{items:1,},600:{items:2},1000:{items:3}}});$(".toggole-boxs").accordion();$('#mc-form').ajaxChimp({url:'https://quomodosoft.us14.list-manage.com/subscribe/post?u=b2a3f199e321346f8785d48fb&amp;id=d0323b0697',callback:function(resp){if(resp.result==='success'){$('.subscrie-form, .join-button').fadeOut();$('body').css('overflow-y','scroll');}}});$('.mainmenu-area a[href*="#"]').not('[href="#"]').not('[href="#0"]').click(function(event){if(location.pathname.replace(/^\//,'')==this.pathname.replace(/^\//,'')&&location.hostname==this.hostname){var target=$(this.hash);target=target.length?target:$('[name='+this.hash.slice(1)+']');if(target.length){event.preventDefault();$('html, body').animate({scrollTop:target.offset().top},1000,function(){var $target=$(target);$target.focus();if($target.is(":focus")){return false;}else{$target.attr('tabindex','-1');$target.focus();};});}}});var magnifPopup=function(){$('.popup').magnificPopup({type:'iframe',removalDelay:300,mainClass:'mfp-with-zoom',gallery:{enabled:true},zoom:{enabled:true,duration:300,easing:'ease-in-out',opener:function(openerElement){return openerElement.is('img')?openerElement:openerElement.find('img');}}});};magnifPopup();$(window).on("load",function(){$('.preloader').fadeOut(500);new WOW().init({mobile:false,});});})(jQuery);
-
 
 /* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
 particlesJS.load('particles-js', 'particles.js/particlesjs.json', function() {

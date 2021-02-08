@@ -134,6 +134,12 @@ return [
     'pay' => [
         'nomethod' => 'Tidak ada metode pembayaran yang cocok',
     ],
+    'cart' => [
+        'delete' => [
+            'success' => 'Berhasil menghapus dari keranjang',
+            'failed' => 'Gagal menghapus dari keranjang',
+        ],
+    ],
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
