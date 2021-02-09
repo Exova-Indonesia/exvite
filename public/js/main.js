@@ -1,4 +1,5 @@
 
+
 (function ($) {
     "use strict";
     var url = "http://localhost:8000/";
@@ -460,10 +461,12 @@
         // })
     function reload() {
         $.getJSON('cart/data', function (data) {
+            let total = 0;
             $.each(data, function (i, data) {
                 $('.parent').each(function () {
                     if (data.cart_id == $(this).attr('data-id')) {
                         let subtotal = parseInt(data.jasa.jasa_price) * parseInt(data.quantity);
+                        total += parseInt(subtotal);
                         $('#subtotal-' + data.cart_id).html('IDR ' + numeral(subtotal).format('0,0'));
                         $('#notes' + data.cart_id).html(data.note);
                     }
@@ -471,6 +474,7 @@
             })
         })
         }
+
         $.getJSON('cart/data', function (data) {
             $.each(data, function (i, data) {
                 $('.parent').each(function () {
@@ -481,31 +485,43 @@
                         })
                         $('#fieldcat' + data.cart_id).on('change', function () {
                             let note = $('#fieldcat' + data.cart_id).val();
-                            let qty = parseInt($('#form-quantity' + data.cart_id).val());
-                            quantity(data.cart_id, qty, note);
+                            notes(data.cart_id, note);
                             $('#catField' + data.cart_id).css('display', 'none');
                             $('#catatan' + data.cart_id).css('display', 'block');
                         })
                         $('#form-quantity' + data.cart_id).keyup(function () {
+                            let id = [];
                             if ($(this).val() == 0) {
                                 $(this).val(1);
                             }
                             quantity(data.cart_id, $(this).val())
+                                $('.sub-check:checked').each(function () {
+                                    id.push($(this).attr('data-id'))
+                                })
+                                total(id)
                         })
                         $('#plus-quantity' + data.cart_id).on('click', function () {
                             if ($('#form-quantity' + data.cart_id).val() >= 1) {
-                                let note = $('#fieldcat' + data.cart_id).val();
+                                let id = [];
                                 let qty = parseInt($('#form-quantity' + data.cart_id).val()) + 1;
                                 $('#form-quantity' + data.cart_id).val(qty);
                                 quantity(data.cart_id, qty)
+                                $('.sub-check:checked').each(function () {
+                                    id.push($(this).attr('data-id'))
+                                })
+                                total(id)
                             }
                         })
                         $('#minus-quantity' + data.cart_id).on('click', function () {
                             if ($('#form-quantity' + data.cart_id).val() > 1) {
-                                let note = $('#fieldcat' + data.cart_id).val();
+                                let id = [];
                                 let qty = parseInt($('#form-quantity' + data.cart_id).val()) - 1;
                                 $('#form-quantity' + data.cart_id).val(qty);
                                 quantity(data.cart_id, qty)
+                                $('.sub-check:checked').each(function () {
+                                    id.push($(this).attr('data-id'))
+                                })
+                                total(id)
                             }
                         })
                         $('#fieldcat' + data.cart_id).keyup(function () {
@@ -517,6 +533,21 @@
                 })
             })
         })
+
+        function total(id) {
+        $.getJSON('cart/data', function (data) {
+            let total = 0;
+                $.each(data, function (i, data) {
+                    $.each(id, function (i, ids) {
+                        if (ids == data.cart_id) {
+                            let subtotal = parseInt(data.jasa.jasa_price) * parseInt(data.quantity);
+                            total += parseInt(subtotal);
+                            $('.buy_price_cart').html('IDR '+numeral(total).format('0,0'));
+                        }
+                    })
+                })
+            })
+        }
         
         function quantity(id, qty) {
             $.ajaxSetup({
@@ -528,7 +559,27 @@
             $.ajax({
                 url: url + 'cart',
                 type: 'PUT',
-                data: {id:id, qty:qty, note:note},
+                data: {id:id, qty:qty},
+                success: function (data) {
+                    reload();
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+                
+            })
+        }
+        function notes(id, note) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Access-Control-Allow-Origin': '*',
+                }
+            });
+            $.ajax({
+                url: url + 'cart',
+                type: 'PUT',
+                data: {id:id, note:note},
                 success: function (data) {
                     reload();
                 },
@@ -540,19 +591,42 @@
         }
 
         $('.sub-check').on('change', function () {
+            let allID = [];
             if ($(this).is(':checked', true)) {
                 $('.delete-cart').css('display', 'block');
+                $('.sub-check:checked').each(function () {
+                allID.push($(this).attr('data-id'))
+                })
+                total(allID);
             } else {
                 $('.delete-cart').css('display', 'none');
+                $('.sub-check:checked').each(function () {
+                allID.push($(this).attr('data-id'))
+            })
+                total(allID);
+            }
+            if (allID == '') {
+                $('.buy_price_cart').html('IDR '+numeral(0).format('0,0'));
             }
         })
         $('.master-check').on('click', function () {
+            let allID = [];
+            let allType = [];
             if ($(this).is(':checked', true)) {
                 $('.sub-check').prop('checked', true);
                 $('.delete-cart').css('display', 'block');
+                $('.sub-check:checked').each(function () {
+                allID.push($(this).attr('data-id'))
+                allType.push($(this).attr('data-type'))
+            })
+            total(allID);
             } else {
                 $('.sub-check').prop('checked', false);
                 $('.delete-cart').css('display', 'none');
+            }
+            total(allID);
+            if (allID == '') {
+                $('.buy_price_cart').html('IDR '+numeral(0).format('0,0'));
             }
         })
 

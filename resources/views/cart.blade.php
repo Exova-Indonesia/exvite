@@ -24,7 +24,7 @@
                                 <div class="product-cart-header">
                                     <div class="cart-bando mb-2">
                                         <div class="float-left">
-                                            <input class="sub-check" data-type="{{ $j->product_type }}" data-id="{{ $j->cart_id }}" type="checkbox">
+                                            <input class="sub-check" data-type="{{ $j->product_type }}" data-id="{{ $j->cart_id }}" id="sub-check{{ $j->cart_id }}" type="checkbox">
                                             <span class="ml-1">Pilih</span>
                                         </div>
                                         <div class="text-right">
@@ -49,14 +49,10 @@
                                 </div>
                                 <div class="product-cart-footer">
                                     <div class="float-left mt-3">
-                                        @if(empty($j->note))
-                                        <div role="button" class="text-primary" id="catatan{{ $j->cart_id }}">Tambahkan catatan</div>
-                                        @else
                                         <div role="button">
+                                            <span class="text-primary" id="catatan{{ $j->cart_id }}">Catatan </span>
                                             <span id="notes{{ $j->cart_id }}"></span>
-                                            <span class="text-primary" id="catatan{{ $j->cart_id }}"> Ubah</span>
                                         </div>
-                                        @endif
                                         <div class="catField" id="catField{{ $j->cart_id }}">
                                             <input class="form-control rounded-pill" id="fieldcat{{ $j->cart_id }}" max="125" type="text">
                                             <small class="text-muted ml-2" id="countstring{{ $j->cart_id }}"></small>
@@ -84,29 +80,19 @@
             <div class="col-lg-4 px-1">
                 <div class="card">
                     <div class="card-header">
-                        Payments Detail
+                        Ringkasan Belanja
                     </div>
                     <div class="card-body">
                         <ul class="list-group">
                             <li class="list-group-item">
-                                <div>
-                                    <span>Metode Pembayaran</span>
-                                    <span class="float-right text-right method">QRIS</span>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
                                 <div class="mb-2">
                                 <span class="text-muted">Total Pembelian</span>
-                                    <span class="float-right text-right buy_price"></span>
-                                </div>
-                                <div class="mt-2">
-                                <span class="text-muted">Biaya Layanan</span>
-                                    <span class="float-right text-right serv_price"></span>
+                                    <span class="float-right text-right buy_price_cart"></span>
                                 </div>
                             </li>
                             <li class="list-group-item">
-                                <strong>Total Pembayaran</strong>
-                                <span class="float-right text-right total"></span>
+                                <strong>Total Harga</strong>
+                                <span class="float-right text-right buy_price_cart"></span>
                             </li>
                             <button type="submit" class="btn btn-success snap">Bayar</button>
                         </ul> 

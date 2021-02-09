@@ -71,7 +71,7 @@ class AuthController extends Controller
                 'provider_id' => $user->id,
                 'id' => $id,
                 'subscription' => 'Newbie',
-                'api_token' => Str::random(64),
+                'api_token' => Str::random(60),
             ]);
             Activity::create([
                 'activity_id' => date('Ymdhis').rand(0, 1000),

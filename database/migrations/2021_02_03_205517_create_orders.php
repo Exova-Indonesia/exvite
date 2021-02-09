@@ -18,7 +18,7 @@ class CreateOrders extends Migration
             $table->bigInteger('product_id')->unsigned();
             $table->bigInteger('customer_id')->unsigned();
             $table->string('type');
-            $table->string('note');
+            $table->string('note')->nullable();
             $table->string('invoice');
             $table->string('status');
             $table->dateTime('deadline');

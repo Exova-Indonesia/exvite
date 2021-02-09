@@ -79,7 +79,7 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
             'avatar' => "http://localhost:8000/images/users/default.png",
             'subscription' => 'Newbie',
-            'api_token' => Str::random(64),
+            'api_token' => Str::random(60),
         ]);
             Wallet::create([
             'wallet_id' => date('Ymd').rand(),

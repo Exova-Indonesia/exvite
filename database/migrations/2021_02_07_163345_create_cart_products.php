@@ -19,7 +19,7 @@ class CreateCartProducts extends Migration
             $table->bigInteger('user_id');
             $table->string('product_type');
             $table->string('quantity');
-            $table->string('note');
+            $table->string('note')->nullable();
             $table->timestamps();
         });
     }

@@ -27,10 +27,15 @@ class CartController extends Controller
         return response()->json(['status' => Lang::get('validation.cart.delete.success')]);
     }
     public function update(Request $request) {
+        if(!empty($request->qty)) {
         Cart::where('cart_id', $request->id)->update([
             'quantity' => $request->qty,
+        ]);
+        } else if(!empty($request->note)) {
+        Cart::where('cart_id', $request->id)->update([
             'note' => $request->note,
         ]);
+        }
         return response()->json(['status' => Lang::get('validation.cart.delete.success')]);
     }
 
