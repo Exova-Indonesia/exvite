@@ -18,7 +18,7 @@ class CartController extends Controller
         return view('/cart', ['balance' => $balance, 'jasa'=> $jasa]);
     }
     public function cart_data() {
-        $jasa = Cart::with('user', 'jasa.seller')->where('user_id', Auth::user()->id)->where('product_type', 'Jasa')->get();
+        $jasa = Cart::where('user_id', Auth::user()->id)->get();
         return response()->json($jasa);
     }
 
@@ -38,14 +38,53 @@ class CartController extends Controller
         }
         return response()->json(['status' => Lang::get('validation.cart.delete.success')]);
     }
-
+    public function finish(Request $request) {
+        $carts = array();
+        foreach($request->cart_id as $c) {
+            $type = Cart::where('cart_id', $c)->first();
+            switch($type->product_type) {
+                case "Jasa" :
+                    $p = Cart::with('user', 'jasa.seller')->where('cart_id', $type->cart_id)->first();
+                    $carts[] = array(
+                    'id'=>$p->cart_id,
+                    'name' => $p->jasa->jasa_name,
+                    'price' => $p->unit_price,
+                    'picture' => $p->jasa->jasa_thumbnail,
+                    'quantity' => $p->quantity,
+                    'category' => 'Subscription',
+                    'type' => $p->product_type,
+                    'note' => $p->note,
+                );
+                break;
+                case "Create" :
+                    // Belum selesai
+                    $p = Cart::with('user', 'jasa.seller')->where('cart_id', $type->cart_id)->first();
+                    $carts[] = array(
+                    'id'=>$p->cart_id,
+                    'name' => $p->jasa->jasa_name,
+                    'price' => $p->unit_price,
+                    'picture' => $p->jasa->jasa_thumbnail,
+                    'quantity' => $p->quantity,
+                    'category' => 'Subscription',
+                    'type' => $p->product_type,
+                    'note' => $p->note,
+                );
+                break;
+            }
+        }
+        return $request->session()->put('cart_shopping', $carts);
+    }
+    public function tes_session(Request $request) {
+        $data = $request->session()->get('cart_shopping');
+        return response()->json($data);
+    }
     public function data($type, $id) {
         Cart::where('product_type', $type)->whereIn('cart_id', explode(",", $id))->delete();
         return response()->json(['status' => Lang::get('validation.cart.delete.success')]);
     }
 
-    public function cart(Request $request, $id) {
-        $data = Subscription::where('plan_id', $id)->first();
+    public function products(Request $request) {
+        $data = Cart::where('plan_id', $id)->first();
             $products = array([
                 'id'=>$data->plan_id,
                 'name' => $data->plan_name,

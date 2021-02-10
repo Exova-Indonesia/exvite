@@ -391,81 +391,14 @@
 
     // Cart
     $(document).ready(function () {
-        reload()
-        //         var mybtn = document.getElementById('catatan');
-        // mybtn.addEventListener('click', function () {
-        //     console.log("testing");
-        // })
-        // let content = `     <li class="list-group-item">
-        //                         <div class="cart-header">
-        //                             <input class="form-check-input master-check" type="checkbox" name="selectAll" onclick="select()">
-        //                             <label class="form-check-label m-0">Pilih Semua</label>
-        //                             <a class="float-right text-danger delete-cart" role="button"><i class="fas fa-trash"></i> Hapus</a>
-        //                         </div>
-        //                     </li>`;
-        // $.getJSON('cart/data', function (data) {
-        //     $.each(data, function (i, data) {      
-        //         content += `
-        //         <li class="list-group-item border-btm">
-        //             <div class="product-cart-header">
-        //                 <div class="cart-bando mb-2">
-        //                     <div class="float-left">
-        //                         <input class="sub-check" data-type="`+data.product_type+`" data-id="`+data.cart_type+`" type="checkbox">
-        //                         <span class="ml-1">Pilih</span>
-        //                     </div>
-        //                     <div class="text-right">
-        //                         <span class="text-muted mr-2">Subtotal</span>
-        //                         <strong class="h5" id="subtotal-cart"> IDR 14,058</strong>
-        //                     </div>
-        //                 </div>
-        //                 <h5 class="m-0"><i class="fas fa-crown align-text-top text-warning"></i> `+data.jasa.seller.name+`</h5>
-        //                 <p class="text-muted">Sidoarjo</p>
-        //             </div>
-        //             <div class="product-cart-body">
-        //                 <div class="row">
-        //                     <div class="ml-2">
-        //                         <img width="70" height="70" src="`+data.jasa.jasa_thumbnail+`" alt="Products Icons">
-        //                     </div>
-        //                     <div class="ml-3">
-        //                         <p class="mb-1">`+data.jasa.jasa_name+`</p>
-        //                         <p class="mb-1"><strong>IDR `+data.jasa.jasa_price+`</strong></p>
-        //                         <p class="mb-1">`+data.jasa.jasa_subcategory+`</p>
-        //                     </div>
-        //                 </div>
-        //             </div>
-        //             <div class="product-cart-footer">
-        //                 <div class="float-left mt-3">
-        //                     <div role="button" class="text-primary" id="catatan">Tambahkan catatan</div>
-        //                     <div id="catField">
-        //                         <input class="form-control rounded-pill" id="fieldcat" type="text">
-        //                         <small class="text-muted ml-2">12/12</small>
-        //                     </div>
-        //                 </div>
-        //                 <div class="float-right mt-3">
-        //                     <div class="row">
-        //                         <div class="addWishlist px-2">
-        //                             <i class="fas fa-heart text-danger"></i>
-        //                         </div>
-        //                         <div class="text-center">
-        //                             <span role="button" class="minus-quantity"><i class="fas fa-minus"></i></span>
-        //                             <input class="form-quantity" type="number" min="1" value="1">
-        //                             <span role="button" class="plus-quantity"><i class="fas fa-plus"></i></span>
-        //                         </div>
-        //                     </div>
-        //                 </div>
-        //             </div>
-        //         </li>
-        //         `;
-        //         $('#data').html(content)
-            // })
-        // })
+    reload()
     function reload() {
         $.getJSON('cart/data', function (data) {
             let total = 0;
             $.each(data, function (i, data) {
                 $('.parent').each(function () {
                     if (data.cart_id == $(this).attr('data-id')) {
-                        let subtotal = parseInt(data.jasa.jasa_price) * parseInt(data.quantity);
+                        let subtotal = parseInt(data.unit_price) * parseInt(data.quantity);
                         total += parseInt(subtotal);
                         $('#subtotal-' + data.cart_id).html('IDR ' + numeral(subtotal).format('0,0'));
                         $('#notes' + data.cart_id).html(data.note);
@@ -473,6 +406,7 @@
                 })
             })
         })
+        $('.next').prop('disabled', true);
         }
 
         $.getJSON('cart/data', function (data) {
@@ -540,14 +474,39 @@
                 $.each(data, function (i, data) {
                     $.each(id, function (i, ids) {
                         if (ids == data.cart_id) {
-                            let subtotal = parseInt(data.jasa.jasa_price) * parseInt(data.quantity);
+                            let subtotal = parseInt(data.unit_price) * parseInt(data.quantity);
                             total += parseInt(subtotal);
                             $('.buy_price_cart').html('IDR '+numeral(total).format('0,0'));
                         }
                     })
                 })
-            })
+        })
+            $('.next').prop('disabled', false);
         }
+
+        $('.next').on('click', function () {
+        let cart = [];
+            $('.sub-check:checked').each(function () {
+             cart.push($(this).attr('data-id'))
+            })
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Access-Control-Allow-Origin': '*',
+                }
+            });
+            $.ajax({
+                url: url + 'cart',
+                type: "POST",
+                data: { cart_id: cart },
+                success: function (data) {
+                    window.location = 'order/details';
+                },
+                error: function () {
+                    //
+                }
+            })
+        })
         
         function quantity(id, qty) {
             $.ajaxSetup({
@@ -564,7 +523,9 @@
                     reload();
                 },
                 error: function (data) {
-                    console.log(data);
+                },
+                beforeSend: function () {
+                    $('#subtotal-' + id).html('Loading...');
                 }
                 
             })
@@ -600,13 +561,15 @@
                 total(allID);
             } else {
                 $('.delete-cart').css('display', 'none');
+                $('.master-check').prop('checked', false);
                 $('.sub-check:checked').each(function () {
                 allID.push($(this).attr('data-id'))
             })
                 total(allID);
             }
             if (allID == '') {
-                $('.buy_price_cart').html('IDR '+numeral(0).format('0,0'));
+                $('.buy_price_cart').html('IDR ' + numeral(0).format('0,0'));
+                $('.next').prop('disabled', true);  
             }
         })
         $('.master-check').on('click', function () {
@@ -626,9 +589,11 @@
             }
             total(allID);
             if (allID == '') {
-                $('.buy_price_cart').html('IDR '+numeral(0).format('0,0'));
+                $('.buy_price_cart').html('IDR ' + numeral(0).format('0,0'));
+                $('.next').prop('disabled', true);
             }
         })
+        $('.buy_price_cart').html('IDR ' + numeral(0).format('0,0'));
 
         $('.delete-cart').on('click', function (event) {
             let allID = [];
@@ -662,6 +627,11 @@
         })
     })
 
+    // Input Price
+    $('input[name=amount]').keyup(function () {
+        $(this).val(numeral($(this).val()).format('0,0'))
+    })
+
 
 })(jQuery);
 
@@ -669,7 +639,7 @@
 
 /* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
 particlesJS.load('particles-js', 'particles.js/particlesjs.json', function() {
-    console.log('callback - particles.js config loaded');
+    //
 });
 /*
 window.onscroll = function() {scrollFunction()};

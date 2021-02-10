@@ -18,6 +18,7 @@ class CreatePaymentsMethod extends Migration
             $table->string('pm_name');
             $table->string('pm_description');
             $table->string('pm_icons');
+            $table->string('pm_price');
             $table->timestamps();
         });
     }

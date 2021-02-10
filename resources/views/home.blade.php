@@ -37,7 +37,7 @@
                         <div class="balance">
                             <div class="left">
                                 <span class="title">Total @lang('home.wallet.balance')</span>
-                                <h1 class="total text-secondary">IDR {{ number_format($balance->balance, 0) }}</h1>
+                                <h1 class="total-balance text-secondary">IDR {{ number_format($balance->balance, 0) }}</h1>
                             </div>
                             <div class="right text-secondary">
                             <span class="title">@lang('home.wallet.code')</span>
@@ -109,7 +109,7 @@
                         <!-- Pricing Table-->
                         <div class="col-lg-4 mb-5 mb-lg-0" data-component="jasa">
                             <div class="bg-white p-5 rounded-lg shadow">
-                            <h1 class="h6 text-secondary text-uppercase font-weight-bold mb-4">Jasa Exova</h1>
+                            <h1 class="h6 text-secondary text-uppercase font-weight-bold mb-4">@lang('home.services.jasatitle')</h1>
                             <img class="rounded-circle" src="{{ Auth::user()->avatar ?? '' }}" width="80px" height="80px" alt="avatar">
                             <div class="custom-separator my-4 mx-auto bg-primary"></div>
                             <ul class="list-unstyled my-5 text-small text-secondary text-left">
@@ -117,14 +117,14 @@
                                     @lang('home.services.jasa.description')
                                 </li>
                             </ul>
-                            <a href="#" class="btn btn-primary btn-block p-2 shadow rounded-pill">@lang('home.services.jasa.button')</a>
+                            <a href="#" class="btn btn-primary btn-block p-2 shadow">@lang('home.services.jasa.button')</a>
                             </div>
                         </div>
                         <!-- END -->
                         <!-- Pricing Table-->
                         <div class="col-lg-4 mb-5 mb-lg-0" data-component="creations">
                             <div class="bg-white p-5 rounded-lg shadow">
-                            <h1 class="h6 text-secondary text-uppercase font-weight-bold mb-4" >Exova Creations</h1>
+                            <h1 class="h6 text-secondary text-uppercase font-weight-bold mb-4" >@lang('home.services.createtitle')</h1>
                             <img class="rounded-circle" src="{{ Auth::user()->avatar ?? '' }}" width="80px" height="80px" alt="avatar">
                             <div class="custom-separator my-4 mx-auto bg-primary"></div>
                             <ul class="list-unstyled my-5 text-small text-secondary text-left font-weight-normal">
@@ -132,7 +132,7 @@
                                     @lang('home.services.creations.description')
                                 </li>
                             </ul>
-                            <a href="#" class="btn btn-primary btn-block p-2 shadow rounded-pill">@lang('home.services.creations.button')</a>
+                            <a href="#" class="btn btn-primary btn-block p-2 shadow">@lang('home.services.creations.button')</a>
                             </div>
                         </div>
                         <!-- END -->
@@ -311,7 +311,7 @@
                 <div class="team-slide wow fadeInUp" data-wow-delay="0.3s">
                     <div class="team-box">
                         <div class="team-image">
-                        <img src="{{ url('images/executive/arthafix.jpg') }}" alt="">
+                        <img src="{{ url('images/executive/arthafix.png') }}" alt="">
                         </div>
                         <h4>Triyana Artha</h4>
                         <h6 class="position">Founder, CEO, & CTO</h6>
@@ -508,7 +508,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">IDR</span>
                                 </div>
-                                <input type="text" id="amoun" name="amount" class="form-control saldo_withdraw form-control-lg" autocomplete="off" placeholder="0">
+                                <input type="text" name="amount" class="form-control saldo_withdraw form-control-lg" autocomplete="off" placeholder="0">
                             </div>
                         </div>
                         <div class="form-group basic">

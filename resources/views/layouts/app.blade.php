@@ -104,6 +104,8 @@
                         @else
                             <li class="nav-item dropdown">
                                 <a class="btn btn-danger m-1 mr-2" href="@if(Request::is('/')) #membership @else {{ url('/#membership') }} @endif"> @lang('layout.header.membership') </a>
+                                <a href="cart" class="text-white h5 mr-1"><i class="fas fa-shopping-cart"></i></a>
+                                <a class="text-white h5 mr-1"><i class="fas fa-bell"></i></a>
                                 <a id="navbarDropdown" class="navbar-brand dropdown-toggle ml-3" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     <img class="rounded-circle" src="{{ Auth::user()->avatar }}" width="40" height="40" alt="avatar">
                                 </a>
@@ -151,7 +153,7 @@
                         <div class="footer-header">
                             <img src="{{ ('https://assets.exova.id/img/logo.png') }}">
                         </div>
-                        <span>@lang('layout.footer.subfooter1.description')</span>
+                        <span>@lang('home.header.description')</span>
                     </div>
                     <div class="col-md-3">
                         <div class="footer-header">

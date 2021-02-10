@@ -44,18 +44,24 @@ Route::post('/wallet/withdraw', [App\Http\Controllers\WalletController::class, '
 Route::get('/history/export', [App\Http\Controllers\WalletController::class, 'export_history']);
 // Route::get('/tests', [App\Http\Controllers\WalletController::class, 'tests']);
 
+// Payments
 Route::get('/payments', [App\Http\Controllers\PaymentsController::class, 'index']);
+Route::post('/payments', [App\Http\Controllers\PaymentsController::class, 'products']);
 Route::get('/data/payments', [App\Http\Controllers\PaymentsController::class, 'data']);
 Route::post('/payments/pay', [App\Http\Controllers\PaymentsController::class, 'pay'])->name('pay');
 Route::get('/payments/handling', [App\Http\Controllers\PaymentsHandling::class, 'handling']);
 
+// Cart
 Route::get('/purchase/{id}/{name}', [App\Http\Controllers\CartController::class, 'cart']);
 Route::get('/cart', [App\Http\Controllers\CartController::class, 'index']);
 Route::delete('/cart', [App\Http\Controllers\CartController::class, 'delete']);
 Route::put('/cart', [App\Http\Controllers\CartController::class, 'update']);
+Route::post('/cart', [App\Http\Controllers\CartController::class, 'finish']);
 Route::get('/cart/data', [App\Http\Controllers\CartController::class, 'cart_data']);
 Route::get('/cart/create', [App\Http\Controllers\CartController::class, 'cart_create']);
+Route::get('/order/details', [App\Http\Controllers\CartController::class, 'tes_session']);
 
+// Highlight
 Route::get('/highlight', [App\Http\Controllers\HighlightController::class, 'index']);
 Route::get('/highlight/all', [App\Http\Controllers\HighlightController::class, 'all']);
 

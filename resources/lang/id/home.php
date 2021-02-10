@@ -2,7 +2,7 @@
 return [
     'header' => [
         'title' => 'Exova Indonesia',
-        'description' => 'Exova Indonesia adalah platform memasarkan produk secara cepat secara cerdas dan modern menggunakan teknologi <i> Smart Digital Marketing</i>',
+        'description' => 'Exova Indonesia adalah platform yang diperuntukkan membuat pemasaran produk/jasa secara cepat, cerdas, dan modern menggunakan teknologi <i> Smart Digital Marketing</i>',
         'search' => 'Apa yang ingin kamu cari?',
     ],
     'wallet' => [
@@ -15,13 +15,15 @@ return [
     ],
     'services' => [
         'title' => 'Layanan Kami',
+        'jasatitle' => 'Exova Jasa',
+        'createtitle' => 'Exove Creations',
         'jasa' => [
             'description' => 'Jasa Exova adalah tempat membeli/menjual jasa seperti photography, design, videography, web apps developing hingga games',
-            'button' => 'Lihat Detail',
+            'button' => 'Lihat Selengkapnya',
         ],
         'creations' => [
             'description' => 'Exova Creations adalah layanan untuk membuat sesuatu seperti undangan online, web portofolio, hingga web company profile dengan cepat',
-            'button' => 'Lihat Detail',
+            'button' => 'Lihat Selengkapnya',
         ],
     ],
     'highlight' => [

@@ -639,7 +639,7 @@ section {
     display: block;
     margin-bottom: 8px;
 }
-.wallet-card .balance .total {
+.wallet-card .balance .total-balance {
     font-weight: 700;
     letter-spacing: -0.01em;
     line-height: 1em;
@@ -683,8 +683,8 @@ section {
 }
 
 /* Cart Start */
-.product-cart-footer i {
-    font-size: 18px;
+.product-cart-footer span {
+    padding: 4px 8px;
 }
 .addWishlist {
     /* border-right: 1px solid #e1e1e1; */
@@ -703,9 +703,9 @@ section {
     padding: 4px 12px 4px 12px;
     border-bottom: 1px solid #e1e1e1;
 }
-.border-btm {
+/* .border-btm {
     border-bottom: 1px solid rgba(0, 0, 0, 0.274) !important;
-}
+} */
 .delete-cart {
     display: none;
 }
