@@ -15,7 +15,8 @@ class CartController extends Controller
     public function index() {
         $balance = WalletController::index()->balance;
         $jasa = Cart::with('user', 'jasa.seller')->where('user_id', Auth::user()->id)->where('product_type', 'Jasa')->get();
-        return view('/cart', ['balance' => $balance, 'jasa'=> $jasa]);
+        return view('/cart', ['balance' => $balance, 'data'=> $jasa]);
+        // return response()->json($jasa);
     }
     public function cart_data() {
         $jasa = Cart::where('user_id', Auth::user()->id)->get();

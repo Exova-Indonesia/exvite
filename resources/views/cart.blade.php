@@ -5,13 +5,14 @@
 <div class="container mb-5">
     <div class="col-lg-12">
         <div class="row">
-            <div class="col-lg-8 px-1">
+            <div class="@if(!empty($data[0])) col-lg-8 @else col-lg-12 @endif px-1">
                 <div class="card mb-2">
                     <div class="card-header">
                         @lang('payments.cart.title')
                     </div>
                     <div class="card-body">
                         <ul class="list-group">
+                        @if(!empty($data[0]))
                             <li class="list-group-item">
                                 <div class="cart-header">
                                     <input class="form-check-input master-check" type="checkbox" name="selectAll">
@@ -19,7 +20,7 @@
                                     <a class="float-right text-danger delete-cart" role="button"><i class="fas fa-trash"></i> @lang('payments.cart.delete')</a>
                                 </div>
                             </li>
-                            @foreach($jasa as $j)
+                            @foreach($data as $j)
                             <li class="list-group-item border-btm parent" data-id="{{ $j->cart_id }}">
                                 <div class="product-cart-header">
                                     <div class="cart-bando mb-2">
@@ -92,6 +93,20 @@
                                 <span class="float-right text-right buy_price_cart"></span>
                             </li>
                             <button type="button" class="btn btn-success next">@lang('payments.cart.next')</button>
+                            @else
+                            <div class="mx-auto">
+                            <div class="row">
+                                <div>
+                                <img width="240px" height="192px" src="{{ asset('/images/icons/shopping_cart.svg') }}" alt="icon">
+                                </div>
+                                <div class="ml-2 my-auto">
+                                <span>
+                                @lang('payments.cart.empty')<br>
+                                <a href="/" class="btn btn-success">@lang('payments.cart.search')</a>
+                                </span>
+                                </div>
+                            </div>
+                            @endif
                         </ul> 
                     </div>
                 </div>

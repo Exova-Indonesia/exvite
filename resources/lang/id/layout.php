@@ -4,7 +4,7 @@ return [
         'home' => 'Beranda',
         'services' => 'Layanan',
         'help' => 'Bantuan',
-        'about' => 'Tentang Kami',
+        'about' => 'Kontak',
         'membership' => 'Go Premium',
         'profile' => [
             'revenue' => 'Pendapatan',

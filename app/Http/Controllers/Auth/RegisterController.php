@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 use Lang;
 use App\Models\Activity;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
+use Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -69,7 +69,7 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(array $data, Request $request)
+    protected function create(array $data)
     {
         $id = date('Ymd').rand();
             $user = User::create([
@@ -89,8 +89,8 @@ class RegisterController extends Controller
             'activity_id' => date('Ymdhis').rand(0, 1000),
             'user_id' => Auth::user()->id ?? '',
             'activity' => Lang::get('activity.user.register'),
-            'ip_address' => $request->ip(),
-            'user_agent' => $request->userAgent(),
+            'ip_address' => Request::ip(),
+            'user_agent' => Request::userAgent(),
         ]);
         return $user;
     }

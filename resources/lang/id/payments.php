@@ -9,6 +9,8 @@ return [
         'chooseall' => 'Pilih Semua',
         'delete' => 'Hapus',
         'choose' => 'Pilih',
+        'search' => 'Cari Produk Sekarang',
+        'empty' => 'Ups, Sepertinya Keranjang Kamu Masih Kosong',
     ],
 ]
 
