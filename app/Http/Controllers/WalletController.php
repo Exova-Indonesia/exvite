@@ -16,11 +16,6 @@ use Illuminate\Support\Facades\Validator;
 
 class WalletController extends Controller
 {
-
-    public function __construct() {
-        $this->middleware('auth');
-    }
-
     public static function index() {
         $balance = Wallet::where('user_id', Auth::user()->id)->first();
         $bank = Bank::where('user_id', Auth::user()->id)->get();

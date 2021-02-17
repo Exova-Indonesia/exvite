@@ -139,6 +139,9 @@ return [
             'success' => 'Berhasil menghapus dari keranjang',
             'failed' => 'Gagal menghapus dari keranjang',
         ],
+        'next' => [
+            'failed' => 'Kamu harus memilih produk dulu sebelum lanjut',
+        ]
     ],
     /*
     |--------------------------------------------------------------------------

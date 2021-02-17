@@ -15,13 +15,10 @@ use Illuminate\Http\Request;
 
 class PaymentsController extends Controller
 {
-    public function __construct() {
-        $this->middleware(['auth', 'cartsession']);
-    }
     public function index(Request $request) {
         // $request->session()->flush();
         $balance = WalletController::index()->balance;
-        return view('/payments', ['balance' => $balance]);
+        return view('buyer.payments', ['balance' => $balance]);
     }
     public function data(Request $request) {
         $data = PayMethod::all();

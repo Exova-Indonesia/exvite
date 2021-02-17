@@ -44,26 +44,26 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('fontawesome/css/all.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('datatables-bs4/css/dataTables.bootstrap4.css') }}">
-    <link rel="stylesheet" href="css/owl.carousel.min.css">
-    <link rel="stylesheet" href="css/linearicons.css">
-    <link rel="stylesheet" href="css/magnific-popup.css">
-    <link rel="stylesheet" href="css/animate.css">
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="tourguide.js/tourguide.css">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/timeline.css">
+    <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/linearicons.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/normalize.css') }}">
+    <link rel="stylesheet" href="{{ asset('tourguide.js/tourguide.css') }}">
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/timeline.css') }}">
     <link rel="stylesheet" href="{{ asset('sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
 
 </head>
-<body data-spy="scroll" data-target=".mainmenu-area" data-component="intro" class="@if(Request::is('/')) @else pt-90 @endif">
+<body data-spy="scroll" data-target=".mainmenu-area" data-component="intro" class="@if(Request::is('/')) @else pt-120 @endif">
     <div id="app">
-        <nav class="navbar mainmenu-area navbar-expand-md fixed-top p-3 @if(Request::is('/')) @else bg-exova @endif" data-spy="affix" data-offset-top="200">
+        <nav class="navbar mainmenu-area navbar-expand-md fixed-top p-3 @if(Request::is('/')) @else bg-white shadow-nav @endif">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand navbar-logo" href="{{ url('/') }}">
                     <img src="{{ ('https://assets.exova.id/img/logo.png') }}" alt="Logo">
                 </a>
-                <button class="navbar-toggler text-white" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                <button class="navbar-toggler @if(Request::is('/')) text-white @else text-secondary @endif" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="fa fa-bars"></span>
                 </button>
                 <div class="collapse navbar-collapse text-white" id="navbarSupportedContent">
@@ -76,15 +76,15 @@
                     <ul class="navbar-nav ml-auto text-center">
                         <!-- Authentication Links -->
                         <li class="nav-item active">
-                            <a class="nav-link" href="@if(Request::is('/')) #dashboard_page @else {{ url('/#dashboard_page') }} @endif">@lang('layout.header.home')<span class="sr-only">(current)</span></a>
+                            <a class="nav-link @if(!Request::is('/')) text-secondary @endif" href="@if(Request::is('/')) #dashboard_page @else {{ url('/#dashboard_page') }} @endif">@lang('layout.header.home')<span class="sr-only">(current)</span></a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link" href="@if(Request::is('/')) #services_page @else {{ url('/#services_page') }} @endif"> @lang('layout.header.services') </a>
+                            <a class="nav-link @if(!Request::is('/')) text-secondary @endif" href="@if(Request::is('/')) #services_page @else {{ url('/#services_page') }} @endif"> @lang('layout.header.services') </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="@if(Request::is('/')) #faq @else {{ url('/#faq') }} @endif"> @lang('layout.header.help') </a>
+                            <a class="nav-link @if(!Request::is('/')) text-secondary @endif" href="@if(Request::is('/')) #faq @else {{ url('/#faq') }} @endif"> @lang('layout.header.help') </a>
                         </li>
-                            <a class="nav-link" href="@if(Request::is('/')) #tentang @else {{ url('/#tentang') }} @endif"> @lang('layout.header.about') </a>
+                            <a class="nav-link @if(!Request::is('/')) text-secondary @endif" href="@if(Request::is('/')) #tentang @else {{ url('/#tentang') }} @endif"> @lang('layout.header.about') </a>
                         </li>
                         @guest
                                 <li class="nav-item">
@@ -104,9 +104,9 @@
                         @else
                             <li class="nav-item dropdown">
                                 <a class="btn btn-danger m-1 mr-2" href="@if(Request::is('/')) #membership @else {{ url('/#membership') }} @endif"> @lang('layout.header.membership') </a>
-                                <a href="cart" class="text-white h5 mr-1"><i class="fas fa-shopping-cart"></i></a>
-                                <a class="text-white h5 mr-1"><i class="fas fa-bell"></i></a>
-                                <a id="navbarDropdown" class="navbar-brand dropdown-toggle ml-3" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                <a href="{{ url('/cart') }}" class="text-white @if(!Request::is('/')) text-secondary @endif align-middle h5 mx-1"><i class="fas fa-shopping-cart"></i></a>
+                                <a class="text-white @if(!Request::is('/')) text-secondary @endif align-middle h5 mx-1"><i class="fas fa-bell"></i></a>
+                                <a id="navbarDropdown" class="navbar-brand dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     <img class="rounded-circle" src="{{ Auth::user()->avatar }}" width="40" height="40" alt="avatar">
                                 </a>
 
@@ -124,7 +124,7 @@
                                         <div class="py-1"><a href="#">@lang('layout.header.profile.revenue')<span class="float-right">IDR {{ number_format($balance->revenue, 0) }}</span></a></div>
                                         <div class="py-1"><a href="#">@lang('layout.header.profile.fund')<span class="float-right">IDR {{ number_format($balance->fund, 0) }}</span></a></div>
                                     </div>
-                                    <a class="btn btn-primary w-100" href="#">
+                                    <a class="btn btn-primary w-100" href="profile">
                                         @lang('layout.header.profile.button')
                                     </a>
 
@@ -138,9 +138,9 @@
                 </div>
             </div>
         </nav>
-        <div class="preloader">
+        <!-- <div class="preloader">
             <span><img width="40px" height="40px" src="{{ ('https://assets.exova.id/img/1.png') }}"></span>
-        </div>
+        </div> -->
         <main>
             @yield('content')
         </main>

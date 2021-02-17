@@ -1,19 +1,19 @@
 @extends('layouts.app')
 @section('content')
-<form action="{{ route('pay') }}" method="POST">
+<form>
     @csrf
 <div class="container mb-5">
     <div class="col-lg-12">
         <div class="row">
             <div class="@if(!empty($data[0])) col-lg-8 @else col-lg-12 @endif px-1">
-                <div class="card mb-2">
-                    <div class="card-header">
-                        @lang('payments.cart.title')
+                <div class="card mb-2 border-0">
+                    <div class="card-header bg-white border-0">
+                        <h5 class="m-0"> @lang('payments.cart.title') </h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body pt-0">
                         <ul class="list-group">
                         @if(!empty($data[0]))
-                            <li class="list-group-item">
+                            <li class="list-group-item border-bottom-0">
                                 <div class="cart-header">
                                     <input class="form-check-input master-check" type="checkbox" name="selectAll">
                                     <label class="form-check-label m-0">@lang('payments.cart.chooseall')</label>
@@ -21,7 +21,7 @@
                                 </div>
                             </li>
                             @foreach($data as $j)
-                            <li class="list-group-item border-btm parent" data-id="{{ $j->cart_id }}">
+                            <li class="list-group-item border-dashed my-2 parent" data-id="{{ $j->cart_id }}">
                                 <div class="product-cart-header">
                                     <div class="cart-bando mb-2">
                                         <div class="float-left">

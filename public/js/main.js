@@ -304,7 +304,7 @@
             $('.buy_price').html('IDR ' + numeral(subtotal).format('0,0'));
             $('.total').html('IDR ' + numeral(total).format('0,0'));
         }
-        $.getJSON('http://localhost:8000/data/payments', function (data) {
+        $.getJSON('http://localhost:8000/payments/data', function (data) {
             let buy_price, subtotal = 0;
             $.each(data[1], function (i, data) {
                 buy_price = parseInt(data.price)
@@ -406,8 +406,7 @@
                 })
             })
         })
-        $('.next').prop('disabled', true);
-        }
+    }
 
         $.getJSON('cart/data', function (data) {
             $.each(data, function (i, data) {
@@ -480,8 +479,7 @@
                         }
                     })
                 })
-        })
-            $('.next').prop('disabled', false);
+            })
         }
 
         $('.next').on('click', function () {
@@ -500,7 +498,14 @@
                 type: "POST",
                 data: { cart_id: cart },
                 success: function (data) {
-                    window.location = 'order/details';
+                    if (data.status) {
+                        Toast.fire({
+                            icon: 'error',
+                            title: data.status,
+                        })
+                    } else {
+                        window.location = 'order';
+                    }
                 },
                 error: function () {
                     //

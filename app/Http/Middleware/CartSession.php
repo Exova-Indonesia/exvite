@@ -18,7 +18,7 @@ class CartSession
     {
         $cart = $request->session()->get('cart_shopping');
         if(empty($cart)) {
-            return redirect('/');
+            return redirect('/cart');
         }
 
         return $next($request);

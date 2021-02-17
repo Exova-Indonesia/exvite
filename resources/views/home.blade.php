@@ -94,7 +94,7 @@
         </div>
     </div>
 </div>
-<section id="services_page" class="py-3 wow fadeInUp pb-5" data-wow-delay="0.4s" data-component="services_page">
+<section id="services_page" class="py-5 wow fadeInUp pb-5" data-wow-delay="0.4s" data-component="services_page">
     <div class="container">
          <div class="row">
             <div class="col-xs-12 col-md-12 col-md-offset-1">
