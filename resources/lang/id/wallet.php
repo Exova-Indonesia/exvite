@@ -25,7 +25,7 @@ return [
         'from' => 'Dari Akun',
     ],
     'withdraw' => [
-        'title' => 'Tarik Dana',
+        'title' => 'Tarik',
         'to' => 'Kepada',
         'bank' => 'Nama Bank',
         'user' => 'Nama Pemilik',
@@ -47,6 +47,12 @@ return [
         'note' => 'Catatan',
         'date' => 'Tanggal',
         'amount' => 'Jumlah',
+    ],
+    'transfer' => [
+        'title' => 'Transfer',
+    ],
+    'topup' => [
+        'title' => 'Top Up',
     ],
 ];
 ?>

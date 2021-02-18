@@ -4,9 +4,9 @@
     <div class="row mb-5">
         <div class="col-md-5 p-2">
             <div class="card mb-3">
-                <div class="card-header">
-                    @lang('wallet.title')
-                    <span class="float-right text-muted">{{ $balance->wallet_id }}</span>
+                <div class="card-header border-0 bg-white">
+                    <h5 class="m-0 d-block">@lang('wallet.title')
+                    <small class="float-right text-muted">{{ $balance->wallet_id }}</small></h5>
                 </div>
                 <div class="card-body">
                     <p>@lang('wallet.withdraw.total')<b class="float-right">IDR {{ number_format($balance->balance, 0) }}</b></p>
@@ -31,15 +31,23 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-12 text-right">
-                            <button type="button" data-target="#withdrawActionSheet" data-toggle="modal" class="btn btn-success">@lang('wallet.withdraw.title')</button>
+                        <div class="m-auto row">
+                            <div class="m-1 text-right">
+                                <button type="button" data-target="#withdrawActionSheet" data-toggle="modal" class="btn btn-danger">@lang('wallet.withdraw.title')</button>
+                            </div>
+                            <div class="m-1 text-right">
+                                <button type="button" data-target="#topupActionSheet" data-toggle="modal" class="btn btn-success">@lang('wallet.topup.title')</button>
+                            </div>
+                            <div class="m-1 text-right">
+                                <button type="button" data-target="#sendActionSheet" data-toggle="modal" class="btn btn-primary">@lang('wallet.transfer.title')</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="card">
-                <div class="card-header">
-                    @lang('wallet.payments')
+                <div class="card-header border-0 bg-white">
+                    <h5 class="m-0">@lang('wallet.payments')</h5>
                 </div>
                 <div class="card-body">
                 @foreach($bank as $b)
@@ -101,8 +109,8 @@
         </div>
         <div class="col-md-7 p-2">
             <div class="card">
-                <div class="card-header">
-                    @lang('wallet.history.title')
+                <div class="card-header border-0 bg-white">
+                    <h5 class="m-0">@lang('wallet.history.title')</h5>
                 </div>
                 <div class="card-body">
                 <div class="text-right">
@@ -196,6 +204,66 @@
     </div>
   </div>
 </div>
+
+<!-- Send Action Sheet -->
+<div class="modal fade" id="sendActionSheet" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@lang('wallet.send.title')</h5>
+            </div>
+            <div class="modal-body">
+                <div class="action-sheet-content">
+                    <form method="POST" action="{{ route('wallet.send') }}">
+                        @csrf
+                        <div class="form-group basic">
+                            <div class="input-wrapper">
+                                <label class="label" for="select_send">@lang('wallet.form.from')</label>
+                                <select type="text" class="form-control" id="select_send" name="trf_from"
+                                    placeholder="@lang('wallet.form.to')">
+                                <option value="dana" selected>Exova Dana - IDR {{ number_format($balance->fund, 0) }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group basic">
+                            <label class="label" for="transfer_to">@lang('wallet.form.to')</label>
+                                <div class="input-group mb-2">
+                                <input type="text" class="form-control" id="transfer_to" name="transfer_to"
+                                    placeholder="@lang('wallet.form.to_place')">
+                                    <div class="input-group-prepend">
+                                    <span class="input-group-text-check" role="button" id="check">check</span>
+                                </div>
+                            </div>
+                            <div id="transfer_user"></div>
+                        </div>
+                        <div class="form-group basic">
+                            <div class="input-wrapper">
+                                <label class="label" for="note">@lang('wallet.form.note')</label>
+                                <input type="text" class="form-control" id="note" name="note"
+                                    placeholder="@lang('wallet.form.note')">
+                            </div>
+                        </div>
+                        <div class="form-group basic">
+                            <label class="label">@lang('wallet.form.amount')</label>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="input14">IDR</span>
+                                </div>
+                                <input type="text" id="amount" name="amount" class="form-control saldo_send form-control-lg" autocomplete="off" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="form-group basic">
+                            <button type="submit" class="btn btn-primary submit-trf btn-block btn-lg" disabled>
+                                @lang('wallet.send.title')
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- * Send Action Sheet -->
 
 <!-- Withdraw Action Sheet -->
 <div class="modal fade" id="withdrawActionSheet" tabindex="-1" role="dialog">

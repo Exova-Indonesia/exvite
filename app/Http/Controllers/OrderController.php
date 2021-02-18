@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Storage;
+use Lang;
 use App\Models\Cart;
 use Illuminate\Http\Request;
 
@@ -51,11 +52,15 @@ class OrderController extends Controller
         $f_name = 'example-from-order-' . $request->id . '-' . Auth::user()->id . '.' . $f->getClientOriginalExtension();
         $r = Storage::putFileAs(Auth::user()->name . '/order/' . 'example/' . $request->id, $f, $f_name);
 
-        Cart::where('cart_id', $request->id)->update([
+        $v = Cart::where('cart_id', $request->id)->update([
             'example' => asset('storage/' . $r),
+            'example_ori' => $f->getClientOriginalName(),
         ]);
-
-        return response()->json(['status' => 'Berhasil Mengunggah File']);
+        if($v) {
+            return response()->json(['status' => Lang::get('validation.cart.upload.success'), 'files' => $f->getClientOriginalName()]);
+        } else {
+            return response()->json(['status' => Lang::get('validation.cart.upload.failed'), 'files' => $f->getClientOriginalName()]);
+        }
     }
 
     /**
@@ -100,10 +105,16 @@ class OrderController extends Controller
                     'note' => $request->content,
                 ]);
                 break;
+            case 'File':
+                Cart::where('cart_id', $request->id)->update([
+                    'example' => '',
+                    'example_ori' => '',
+                ]);
+                    return response()->json(['status' => Lang::get('validation.cart.deletefile.success'), 'type' => 'File']);
+                break;
             default:
             //
         }
-        // return response()->json($request);
     }
 
     /**

@@ -716,13 +716,27 @@ section {
     border-bottom: 1px dotted #dee2e6;
 }
 
-.delete-cart {
-    display: none;
+.del-btn-cart {
+    position: absolute;
+    right: 0.9rem;
+    top: 0.9rem;
 }
 .catField {
     display: none;
 }
-
+.cnotif {
+    content: "";
+    position: absolute;
+    background-color: #479cf7;
+    border-radius: 100%;
+    padding: 3px 0px;
+    right: 7rem;
+    width: 17px;
+    height: 17px;
+    font-size: 10px;
+    top: 0.2rem;
+    color: white !important;
+}
 /* Cart End */
 
 body {

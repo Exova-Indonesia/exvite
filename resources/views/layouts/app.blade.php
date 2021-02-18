@@ -104,8 +104,13 @@
                         @else
                             <li class="nav-item dropdown">
                                 <a class="btn btn-danger m-1 mr-2" href="@if(Request::is('/')) #membership @else {{ url('/#membership') }} @endif"> @lang('layout.header.membership') </a>
-                                <a href="{{ url('/cart') }}" class="text-white @if(!Request::is('/')) text-secondary @endif align-middle h5 mx-1"><i class="fas fa-shopping-cart"></i></a>
-                                <a class="text-white @if(!Request::is('/')) text-secondary @endif align-middle h5 mx-1"><i class="fas fa-bell"></i></a>
+                                <a href="{{ url('/cart') }}" class="text-white @if(!Request::is('/')) text-secondary @endif align-middle h5 mx-1">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    <span class="@if(Request::is('/')) bg-danger @endif cnotif">{{ count(Auth::user()->carts) }}</span>
+                                </a>
+                                <a href="profile/notifications" class="text-white dropdown-toggle @if(!Request::is('/')) text-secondary @endif align-middle h5 mx-1">
+                                    <i class="fas fa-bell"></i>
+                                </a>
                                 <a id="navbarDropdown" class="navbar-brand dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     <img class="rounded-circle" src="{{ Auth::user()->avatar }}" width="40" height="40" alt="avatar">
                                 </a>
@@ -118,7 +123,7 @@
                                             <i role="button" class="fa fa-power-off text-danger" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();"></i>
                                         </h5>
-                                        <span>@if(Auth::user()->subscription !== 'NewBie')<i class="fas fa-crown text-warning"></i> @endif {{ Auth::user()->subscription }} Customer</span>
+                                        <span>@if(Auth::user()->subscription == 'NewBie') @else <i class="fas fa-crown text-warning"></i> @endif {{ Auth::user()->subscription }} Customer</span>
                                     </a>
                                     <div class="border-top py-2">
                                         <div class="py-1"><a href="#">@lang('layout.header.profile.revenue')<span class="float-right">IDR {{ number_format($balance->revenue, 0) }}</span></a></div>

@@ -7,18 +7,34 @@
         <div class="row">
             <div class="col-lg-8 px-1">
                 <div class="card mb-2">
-                    <div class="card-header">
-                        Detail Pesanan | Detail Pembeli
+                    <div class="card-header bg-white border-0">
+                        <h5 class="m-0">Detail Pesanan & Pembeli</h5>
                     </div>
-                    <div class="card-body">
-                        <div class="row products">
-
+                    <div class="card-body row">
+                        <div class="products col-lg-6">
+                            Mohon Tunggu . . .
+                        </div>
+                        <div class="col-lg-6 py-1">
+                            <li class="list-group-item border-dashed my-2">
+                                <div class="product-cart-body">
+                                    <div class="row">
+                                        <div class="ml-3">
+                                            <span> {{ Auth::user()->name }} </span>
+                                            <p class="mb-0 text-muted"> {{ Auth::user()->address->address_name }} </p>
+                                            <p class="mb-0 text-muted"> {{ Auth::user()->address->address }} </p>
+                                            <p class="mb-0 text-muted"> {{ Auth::user()->address->city }} </p>
+                                            <p class="mb-0 text-muted"> {{ Auth::user()->address->state }} </p>
+                                            <p class="mb-0 text-muted"> {{ Auth::user()->phone }} </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
                         </div>
                     </div>
                 </div>
                 <div class="card mb-2">
-                    <div class="card-header">
-                        Metode Pembayaran
+                    <div class="card-header bg-white border-0">
+                        <h5 class="m-0">Metode Pembayaran</h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -71,8 +87,8 @@
             </div>
             <div class="col-lg-4 px-1">
                 <div class="card">
-                    <div class="card-header">
-                        Payments Detail
+                    <div class="card-header bg-white border-0">
+                        <h5 class="m-0">Payments Detail</h5>
                     </div>
                     <div class="card-body">
                         <ul class="list-group">

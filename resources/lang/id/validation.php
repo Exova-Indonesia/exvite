@@ -141,6 +141,14 @@ return [
         ],
         'next' => [
             'failed' => 'Kamu harus memilih produk dulu sebelum lanjut',
+        ],
+        'upload' => [
+            'success' => 'Berhasil Mengunggah File',
+            'failed' => 'Gagal Mengunggah File',
+        ],
+        'deletefile' => [
+            'success' => 'Berhasil menghapus file',
+            'failed' => 'Gagal menghapus file',
         ]
     ],
     /*

@@ -310,29 +310,21 @@
                 buy_price = parseInt(data.price)
                 subtotal += buy_price;
                 products += `
-                <div class="col-lg-6 py-1">
-                    <div class="row">
-                        <div class="mx-2 border p-2">
-                            <img width="80" height="80" src="https://assets.exova.id/img/1.png">
-                        </div>
-                        <div class="mx-2">
-                            <div class="">
-                                <h5 class="m-0">`+data.name+`</h5>
-                            </div>
-                            <div class="">
-                                <span>IDR `+numeral(buy_price).format('0,0')+`</span>
-                            </div>
-                            <div class="">
-                                <span>Quantity : `+data.quantity+`</span>
-                            </div>
-                            <div class="">
-                                <span>SubTotal : IDR `+numeral(data.price * data.quantity).format('0,0')+`</span>
-                            </div>
-                            <div class="">
-                                <span>`+data.note+`</span>
+                <div class="col-lg-12 py-1">
+                    <li class="list-group-item border-dashed my-2">
+                        <div class="product-cart-body">
+                            <div class="row">
+                                <div class="ml-2">
+                                    <img width="70" height="70" src="`+data.picture+`" alt="Products Icons">
+                                </div>
+                                <div class="ml-3">
+                                    <p class="mb-1">`+data.name+`</p>
+                                    <p class="mb-1"><strong>IDR `+numeral(data.price).format(0,0)+`</strong></p>
+                                    <p class="mb-1">`+data.type+`</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </li>
                 </div>
                 `;
                 $('.products').html(products);
@@ -467,25 +459,19 @@
             })
         })
 
-        function total(id) {
         $.getJSON('cart/data', function (data) {
             let total = 0;
                 $.each(data, function (i, data) {
-                    $.each(id, function (i, ids) {
-                        if (ids == data.cart_id) {
-                            let subtotal = parseInt(data.unit_price) * parseInt(data.quantity);
-                            total += parseInt(subtotal);
-                            $('.buy_price_cart').html('IDR '+numeral(total).format('0,0'));
-                        }
-                    })
+                    let subtotal = parseInt(data.unit_price) * parseInt(data.quantity);
+                    total += parseInt(subtotal);
+                    $('.buy_price_cart').html('IDR ' + numeral(total).format('0,0'));
                 })
             })
-        }
 
         $('.next').on('click', function () {
         let cart = [];
-            $('.sub-check:checked').each(function () {
-             cart.push($(this).attr('data-id'))
+            $('.parent').each(function () {
+                cart.push($(this).attr('data-id'))
             })
             $.ajaxSetup({
                 headers: {
@@ -512,101 +498,8 @@
                 }
             })
         })
-        
-        function quantity(id, qty) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                    'Access-Control-Allow-Origin': '*',
-                }
-            });
-            $.ajax({
-                url: url + 'cart',
-                type: 'PUT',
-                data: {id:id, qty:qty},
-                success: function (data) {
-                    reload();
-                },
-                error: function (data) {
-                },
-                beforeSend: function () {
-                    $('#subtotal-' + id).html('Loading...');
-                }
-                
-            })
-        }
-        function notes(id, note) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                    'Access-Control-Allow-Origin': '*',
-                }
-            });
-            $.ajax({
-                url: url + 'cart',
-                type: 'PUT',
-                data: {id:id, note:note},
-                success: function (data) {
-                    reload();
-                },
-                error: function (data) {
-                    console.log(data);
-                }
-                
-            })
-        }
-
-        $('.sub-check').on('change', function () {
-            let allID = [];
-            if ($(this).is(':checked', true)) {
-                $('.delete-cart').css('display', 'block');
-                $('.sub-check:checked').each(function () {
-                allID.push($(this).attr('data-id'))
-                })
-                total(allID);
-            } else {
-                $('.delete-cart').css('display', 'none');
-                $('.master-check').prop('checked', false);
-                $('.sub-check:checked').each(function () {
-                allID.push($(this).attr('data-id'))
-            })
-                total(allID);
-            }
-            if (allID == '') {
-                $('.buy_price_cart').html('IDR ' + numeral(0).format('0,0'));
-                $('.next').prop('disabled', true);  
-            }
-        })
-        $('.master-check').on('click', function () {
-            let allID = [];
-            let allType = [];
-            if ($(this).is(':checked', true)) {
-                $('.sub-check').prop('checked', true);
-                $('.delete-cart').css('display', 'block');
-                $('.sub-check:checked').each(function () {
-                allID.push($(this).attr('data-id'))
-                allType.push($(this).attr('data-type'))
-            })
-            total(allID);
-            } else {
-                $('.sub-check').prop('checked', false);
-                $('.delete-cart').css('display', 'none');
-            }
-            total(allID);
-            if (allID == '') {
-                $('.buy_price_cart').html('IDR ' + numeral(0).format('0,0'));
-                $('.next').prop('disabled', true);
-            }
-        })
-        $('.buy_price_cart').html('IDR ' + numeral(0).format('0,0'));
 
         $('.delete-cart').on('click', function (event) {
-            let allID = [];
-            let allType = [];
-            $('.sub-check:checked').each(function () {
-                allID.push($(this).attr('data-id'))
-                allType.push($(this).attr('data-type'))
-            })
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
@@ -616,7 +509,7 @@
             $.ajax({
                 url: url + 'cart',
                 type: 'DELETE',
-                data: 'id='+allID.join(','),
+                data: 'id=' + $(this).attr('data-id'),
                 success: function (data) {
                     Toast.fire({
                     icon: 'success',

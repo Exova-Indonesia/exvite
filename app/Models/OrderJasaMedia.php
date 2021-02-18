@@ -5,19 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OrderJasa extends Model
+class OrderJasaMedia extends Model
 {
     use HasFactory;
-    protected $table = 'jasa_orders';
+    protected $table = 'jasa_orders_media';
     protected $fillable = [
+        'jasa_order_media_id',
         'order_id',
-        'product_id',
-        'customer_id',
-        'type',
-        'note',
-        'invoice',
-        'status',
-        'deadline',
         'example',
+        'example_ori',
+        'result',
+        'revision',
     ];
 }

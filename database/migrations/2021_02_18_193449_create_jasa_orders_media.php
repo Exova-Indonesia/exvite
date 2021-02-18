@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOrdersDetails extends Migration
+class CreateJasaOrdersMedia extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,14 @@ class CreateOrdersDetails extends Migration
      */
     public function up()
     {
-        Schema::create('orders_details', function (Blueprint $table) {
-            $table->id('orders_details_id');
+        Schema::create('jasa_orders_media', function (Blueprint $table) {
+            $table->id('jasa_order_media_id');
             $table->bigInteger('order_id')->unsigned();
             $table->foreign('order_id')->references('order_id')->on('jasa_orders')->onDelete('cascade');
-            $table->string('quantity');
-            $table->string('unit_price');
-            $table->string('discount');
-            $table->string('admin_fee');
-            $table->string('total_price');
-            $table->string('payment_type');
-            $table->string('status');
+            $table->text('example');
+            $table->text('example_ori');
+            $table->text('result');
+            $table->text('revision');
             $table->timestamps();
         });
     }
@@ -35,6 +32,6 @@ class CreateOrdersDetails extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('orders_details');
+        Schema::dropIfExists('jasa_orders_media');
     }
 }

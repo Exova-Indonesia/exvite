@@ -66,7 +66,7 @@ Route::middleware('auth')->prefix('cart')->group(function() {
     Route::get('/', [App\Http\Controllers\CartController::class, 'index']);
     Route::delete('/', [App\Http\Controllers\CartController::class, 'delete']);
     Route::put('/', [App\Http\Controllers\CartController::class, 'update']);
-    Route::post('/', [App\Http\Controllers\CartController::class, 'finish']);
+    Route::post('/', [App\Http\Controllers\CartController::class, 'finish'])->name('cart.finish');
     Route::get('/data', [App\Http\Controllers\CartController::class, 'cart_data']);
     Route::get('/create', [App\Http\Controllers\CartController::class, 'cart_create']);
 });

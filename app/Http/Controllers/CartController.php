@@ -19,7 +19,7 @@ class CartController extends Controller
 
     public function index() {
         $balance = WalletController::index()->balance;
-        $jasa = Cart::with('user', 'jasa.seller')->where('user_id', Auth::user()->id)->where('product_type', 'Jasa')->get();
+        $jasa = Cart::with('user', 'jasa.seller')->where('user_id', Auth::user()->id)->get();
         return view('buyer.cart', ['balance' => $balance, 'data'=> $jasa]);
         // return response()->json($jasa);
     }
@@ -33,16 +33,7 @@ class CartController extends Controller
         return response()->json(['status' => Lang::get('validation.cart.delete.success')]);
     }
     public function update(Request $request) {
-        if(!empty($request->qty)) {
-        Cart::where('cart_id', $request->id)->update([
-            'quantity' => $request->qty,
-        ]);
-        } else if(!empty($request->note)) {
-        Cart::where('cart_id', $request->id)->update([
-            'note' => $request->note,
-        ]);
-        }
-        return response()->json(['status' => Lang::get('validation.cart.delete.success')]);
+        //
     }
     public function finish(Request $request) {
         if(empty($request->cart_id)) {
@@ -64,6 +55,9 @@ class CartController extends Controller
                         'category' => $p->jasa->jasa_subcategory,
                         'type' => $p->product_type,
                         'note' => $p->note,
+                        'deadline' => $p->deadline,
+                        'example' => $p->example,
+                        'example_ori' => $p->example_ori,
                     );
                     break;
 
@@ -76,7 +70,7 @@ class CartController extends Controller
                         'price' => $p->unit_price,
                         'picture' => $p->jasa->jasa_thumbnail,
                         'quantity' => $p->quantity,
-                        'category' => 'Subscription',
+                        'category' => $p->jasa->jasa_subcategory,
                         'type' => $p->product_type,
                         'note' => $p->note,
                     );
