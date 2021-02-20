@@ -18,6 +18,8 @@ class CreateUsersTable extends Migration
             $table->string('name')->unique();
             $table->string('email')->unique();
             $table->char('phone', 13)->nullable();
+            $table->string('sex')->nullable()->unsigned();
+            $table->foreign('sex')->references('sex_id')->on('user_sex')->onDelete('cascade');
             $table->longText('avatar')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
@@ -26,6 +28,7 @@ class CreateUsersTable extends Migration
             $table->string('provider_id')->nullable();
             $table->rememberToken();
             $table->string('subscription')->nullable();
+            $table->string('birthday')->nullable();
             $table->timestamps();
             $table->string('suspended', 12)->nullable();
         });

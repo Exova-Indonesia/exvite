@@ -1,431 +1,488 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Document</title>
-
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
-    <style>
-
-        body{
-            margin-bottom: 20px;
-        }
-        #fotoprofile{
-            width: 190px;
-            border: 4px solid deepskyblue;
-        }
-
-        #profiledua {
-            width: 120px; 
-            border: 2px solid deepskyblue; 
-            margin:auto;
-        }
-
-        #container {
-            border-radius: 40px;
-            box-sizing: border-box;
-        }
-
-        #navigator {
-            border-radius: 20px;
-            display: flex;
-            justify-content: center;
-        }
-
-        #premium {
-            width: 80px; height: 
-            30px; 
-            border: 2px solid deepskyblue;  
-            border-radius: 5px;
-            line-height: 25px;
-            margin-right: -25px;
-        }
-
-        #userprofile{
-            margin-left: 20px;
-        }
-
-        #userhelo1{
-            font-size: 25px;
-        }
-
-        #userhelo2{
-            font-size: 40px;
-        }
-
-
-        #isicon {
-            display: flex;
-            justify-content: center;
-        }
-
-        #navigator button.active{
-            background-color: orange;
-            
-        }
-
-        #akundua{
-            display: flex;
-        }
-
-        #garis{
-                width:125px; 
-                height:5px; 
-                background-color: #eee;
-                border-radius: 2px;
-                margin-top: 17px;
-                margin-left: 10px;
-            }
-        
-
-
-        
-        @media only screen and (max-width: 600px) {
-            #userhelo{
-                font-size: 35px;
-            }
-
-            #akundua{
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            #fotoprofile{
-                width: 160px;
-                border: 4px solid deepskyblue;
-                margin-top: 10px;
-            }
-
-            #userhelo1{
-                font-size: 153%;
-            }
-
-            #userhelo2{
-                font-size: 220%;
-            }
-            #isi{
-                padding-bottom: 50px;
-            }
-            #ontentifikasi{
-                margin-bottom: 15px;
-                order: 2;
-                margin-top: -25px;
-            }
-
-            #navigator{
-                display: flex;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-
-            #navigator button.active{
-                background-color: orange;
-                
-            }
-
-            #akun {
-                order: 1;
-            }
-
-            #notifikasi {
-                order: 4;
-            }
-
-
-            #exwallet {
-                order: 3;
-                margin-bottom: 10px;
-            }
-
-            #garis {
-                width: 93px;
-                
-            }
-
-            
-           
-        }
-
-
-      
-
-        /* Medium devices (landscape tablets, 768px and up) */
-        @media only screen and (width: 768px) {
-            #userprofile {
-                margin-left: 150px;
-            }
-
-            #userhelo{
-                font-size: 25px;
-            }
-
-            #userhelo1{
-                font-size: 20px;
-            }
-            #profiledua {
-                width: 90px;
-            }
-
-            #userhelo2{
-                font-size: 25px;
-                margin-top: 10px;
-            }
-
-            #garis{
-                margin-top: 13px;
-                width: 100px;
-            }
-
-           
-        }
-
-        /* Large devices (laptops/desktops, 992px and up) */
-        @media only screen and (width: 992px) {
-           
-
-        }
-
-        /* Extra large devices (large laptops and desktops, 1200px and up) */
-        @media only screen and (width: 1200px) {
-
-        }
-
-        
-    </style>
-
-</head>
-<body>
-
-    <div class="container" id="container">
-        <div class=" col-lg-11 col-md-12 col-sm-11 d-flex flex-wrap justify-content-center shadow p-3 bg-white mt-2" style="margin:auto;border-radius: 40px;
-            box-sizing: border-box;">
-              <div class="d-flex col-lg-3 col-md-2 col-sm-3">
-                    <div class="text-center mt-1" id="premium">PREMIUM</div>
-                    <img src="{{ ('img/joker.jpg') }}" alt="" class="rounded-circle"  id="fotoprofile">
-                </div>
-                <div class="column col-lg-4 col-md-5  col-sm-4 mt-2" id="userprofile">
-                    <div class="row mt-5">
-                        <p id="userhelo1">USER PROFILE</p> 
-                        <div id="garis"></div>
+@extends('layouts.app')
+@section('content')
+    <div class="container">
+        <div class="col-lg-12">
+            <div class="rounded-exova shadow d-flex p-4">
+                <div class="m-auto">
+                    <div class="row">
+                        <div class="user-profile-picture">
+                            <img class="profile-picture" src="" alt="Profile Picture">
+                        </div>
+                        <div class="mx-3 my-auto text-profile">
+                            <div class="user-profile-title text-muted">User Profile</div>
+                            <div class="user-profile-content name-banner"></div>
+                        </div>
                     </div>
-                    <div style="margin-top: -30px;" class="row">
-                        <p id="userhelo2">HI,PARA BUJANG</p>
-                    </div>  
                 </div>
+            </div>
+        </div>
+        <div class="col-lg-12 my-3">
+            <div class="row">
+                <div class="col-lg-3 p-2">
+                    <div class="card">
+                        <div class="card-header text-white bg-exova">
+                            Last Activity
+                        </div>
+                        <div class="card-body p-0">
+                            <ul class="list-group text-responsive">
+                                @foreach($user->activity->slice(0, 10) as $u)
+                                <li class="list-group-item">
+                                    <span>{{ $u->activity }} <strong class="float-right">{{ date('h:i a', strtotime($u->created_at)) }}</strong></span>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 p-2">
+                    <div class="card">
+                        <div class="card-header text-white bg-exova">
+                            Profil Akun
+                        </div>
+                        <div class="alert alert-primary m-2 text-center">
+                            Tingkatkan ke akun premium
+                            <a href="membership" class="btn-sm btn-danger">Sekarang</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-7 p-1">
+                                    <div class="profile-bar">
+                                        <div class="user-profile-picture-bar">
+                                            <img class="profile-picture" src="" alt="Profile Picture">
+                                        </div>
+                                        <div class="profile-describe">
+                                            <div class="edit-profile-btn">
+                                                <label role="button" for="editPhoto" class="btn-sm btn-primary rounded-pill">Edit Photo</label>
+                                                <input type="file" id="editPhoto" class="d-none">
+                                            </div>
+                                            <div class="profile status">
+                                                <div class="text-responsive"><span>Bergabung Sejak</span><strong class="float-right">{{ date('F j, Y', strtotime($user->created_at)) }}</strong></div>
+                                                <div class="text-responsive"><span>Exova Points</span><strong class="float-right">1390</strong></div>
+                                                <div class="text-responsive"><span>Status</span><strong class="float-right">{{ $user->subscription }}</strong></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5 p-1">
+                                    <ul class="list-group">
+                                        <li class="list-group-item"> <span id="name"></span> 
+                                            <span id="name-btn" role="button" data-title="Ganti Nama" data-label="Nama" data-target="#Modal" data-toggle="modal">
+                                                <i class="fas fa-edit text-primary"></i>
+                                            </span>
+                                        </li>
+                                        <div id="birthday">
+                                        </div>
+                                        <li class="list-group-item">
+                                            <span id="address"></span>
+                                            <span role="button" data-title="Ganti Alamat" data-label="Alamat" data-target="#ModalAddress" data-toggle="modal">
+                                                <i class="fas fa-edit text-primary"></i>
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 p-2">
+                    <div class="card">
+                        <div class="card-header text-white bg-exova">
+                            Pengaturan
+                        </div>
+                        <div class="card-body p-0">
+                            <ul class="list-group">
+                                <li class="list-group-item" role="button">
+                                    <div data-target="#notifikasicollapse" data-toggle="collapse" aria-expanded="false" aria-controls="notifikasicollapse">Notifikasi <span class="float-right"><i class="fas fa-angle-down"></i></span></div>
+                                    <div class="collapse" id="notifikasicollapse">
+                                        <div class="sub-collapse">
+                                            <div class="text-responsive">
+                                                Pembelian
+                                                <span class="float-right">
+                                                    <input id="penjualan" type="checkbox">
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="sub-collapse">
+                                            <div class="text-responsive">
+                                                Penjualan
+                                                <span class="float-right">
+                                                    <input id="penjualan" type="checkbox">
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item" role="button">
+                                    <div data-target="#kontakcollapse" data-toggle="collapse" aria-expanded="false" aria-controls="kontakcollapse">Kontak <span class="float-right"><i class="fas fa-angle-down"></i></span></div>
+                                    <div class="collapse" id="kontakcollapse">
+                                        <div class="sub-collapse">
+                                            <div class="text-responsive" id="email" data-title="Ganti Email" data-label="Email" data-target="#Modal" data-toggle="modal">
+                                                Ganti Email
+                                            </div>
+                                        </div>
+                                        <div class="sub-collapse">
+                                            <div class="text-responsive" id="phone" data-title="Ganti No. Telepon" data-label="Phone" data-target="#Modal" data-toggle="modal">
+                                                Ganti No. Telepon
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item" role="button">
+                                    Ganti Password
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <!-- <div class="container p-2 mt-2 d-flex justify-content-center">
-        <div class="col-lg-9 col-md-10 col-sm-10 pt-1 pb-1 bg-white shadow" id="navigator">
-            <button class="tablinks ml-2 btn btn-primary btn-sm" onclick="openCity(event, 'akun')" id="defaultOpen">Akun premium</button>
-            <button class="tablinks ml-2 btn btn-primary btn-sm" onclick="openCity(event, 'ontentifikasi')">Ontentifikasi</button>
-            <button class="tablinks ml-2 btn btn-primary btn-sm" onclick="openCity(event, 'exwallet')">Exwallet</button>
-            <button class="tablinks ml-2 btn btn-primary btn-sm" onclick="openCity(event, 'notifikasi')">Pengaturan</button> 
-        </div>
-    </div> -->
-    <div class="container" id="isicon">
-        <div class="col-lg-12 col-md-12 col-sm-10 mt-2 d-flex flex-wrap justify-content-center pt-1">
-            <div class="col-lg-2 col-md-4 col-sm-2 overflow-auto tabcontent p-0 shadow" id="ontentifikasi" style="height: 400px;">
-                <div class="card">
-                    <div class="card-header text-center font-weight-bold" style="background-color: deepskyblue;">
-                    Aktivasi Akun
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Cras justo odio</li>
-                        <li class="list-group-item">Dapibus ac facilisis in</li>
-                        <li class="list-group-item">Vestibulum at eros</li>
-                        <li class="list-group-item">Cras justo odio</li>
-                        <li class="list-group-item">Dapibus ac facilisis in</li>
-                        <li class="list-group-item">Vestibulum at eros</li>
-                        <li class="list-group-item">Cras justo odio</li>
-                        <li class="list-group-item">Dapibus ac facilisis in</li>
-                        <li class="list-group-item">Vestibulum at eros</li>
-                        <li class="list-group-item">Cras justo odio</li>
-                        <li class="list-group-item">Dapibus ac facilisis in</li>
-                        <li class="list-group-item">Vestibulum at eros</li>
-
-                    </ul>
+    <!-- Modal -->
+    <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalLabel"></h5>
+                    <button type="button" class="close" id="closeModal" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="modal-body-content">
                 </div>
             </div>
-
-            <div class="col-lg-4 col-md-6 col-sm-4  p-0 tabcontent mb-5 shadow" id="akun" style="min-height: 400px;">
-                <div class="card-header text-center font-weight-bold" style="background-color: deepskyblue;">
-                    Tingkatkan Akun Anda Ke premium sekarang! <button type="button" class="btn btn-outline-warning btn-sm">gaskeun</button>
-                </div>
-                <div class="col-lg-11 col-md-12 col-sm-12 mt-2" id="akundua">
-                    <div class="d-flex flex-column col-lg-6 col-md-6 col-sm-6 bg-white shadow text-center " style="border-radius: 3px;">
-                            <img src="{{ ('img/joker.jpg') }}" class="rounded-circle mt-2" alt=""  id="profiledua">
-                            <button  type="button"  class="btn btn-primary btn-sm mt-2" style="margin: auto;">Upload</button>
-                        <div class="d-flex justify-content-between">
-                            <p>xxxxx</p>
-                            <p>xxxxx</p>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <p>xxxxx</p>
-                            <p>xxxxx</p>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <p>xxxxx</p>
-                            <p>xxxxx</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-7 col-md-6 col-sm-4 ml-1 shadow mb-4">
-                        <form action="" class="mb-3">
-                            <input class="form-control form-control-sm mt-2" type="text" placeholder="xxxx">
-                            <input class="form-control form-control-sm mt-2" type="text" placeholder="xxxx">
-                            <input class="form-control form-control-sm mt-2" type="text" placeholder="xxxxxx">
-                            <input class="form-control form-control-sm mt-2" type="text" placeholder="xxxxxx">
-                            <input class="form-control form-control-sm mt-2" type="text" placeholder="xxxxxxx">
-                            <input class="form-control form-control-sm mt-2" type="text" placeholder="xxxxxxxx">
-                        </form>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="col-lg-3 col-md-5 col-sm-3  ml-1 p-0 bg-white shadow tabcontent overflow-auto" id="exwallet" style="height: 400px;">
-                <div class="card-header text-center font-weight-bold" style="background-color: deepskyblue;">
-                    Exova Wallet!
-                </div>
-                <div class="d-flex col-lg-12 col-md-12 col-sm-12">
-                    <div class="col-lg-6 col-md-6 col-sm-6" style="border-radius: 3px;">
-                        <p style="font-size: 12px;" class="font-weight-bold">Pendapatan</p>
-                        <p style="font-size: 12px; margin-top:-15px">Rp.100.000.000</p>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6" style="border-radius: 3px;">
-                        <p style="font-size: 12px;" class="font-weight-bold">Dana</p>
-                        <p style="font-size: 12px; margin-top:-15px">Rp.100.000.000</p>
-                    </div>
-                </div>
-                <div class="d-flex col-lg-12 col-md-12 col-sm-12">
-                    <div class="col-md-8 shadow" style="border-radius: 4px;">
-                        <p style="font-size: 12px;" class="font-weight-bold">Rekening Bank</p>
-                        <p style="font-size: 12px; margin-top:-15px">BCA  | 190xxxxx|  takikun</p>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4 shadow overflow-auto" style="border-radius: 4px;">
-                        <p style="font-size: 10px;" class="font-weight-bold">Exwalet</p>
-                        <p style="font-size: 8px; margin-top:-15px">Rp.100.000.000.000</p>
-                    </div>
-                </div>
-                <div class="d-flex col-lg-12 col-md-12 col-sm-12 justify-content-center">
-                    <div>
-                        <p style="font-size: 15px;" class="font-weight-bold text-center">Total Saldo</p>
-                        <p style="font-size: 20px; margin-top:-20px" class="text-center">xxxxxxxxx</p>
-                    </div>
-                </div>
-                <div class="d-flex col-lg-12 col-md-12 col-sm-12 justify-content-center mb-5">
-                    <div class="col-md-10 shadow">
-                        <p class="font-weight-bold">Riwayat transaksi</p>
-                        <hr>
-                        <hr>
-                        <hr>
-                        <hr>
-                        <hr>
-                        <hr>
-                        <hr>
-                        <hr>
-                        <hr>
-                        <hr>
-                        <hr>
-                        <hr>
-                        <hr>
-                        <hr>
-                        <hr>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-2 col-md-5 col-sm-2 bg-white shadow ml-2 p-0 tabcontent" id="notifikasi" style="height: 400px">
-                <div class="card-header text-center font-weight-bold" style="background-color: deepskyblue;">
-                    Pengaturan
-                </div>
-                <div class="col-lg-12 col-md-12 col-sm-12">
-                    <div class="d-flex justify-content-between">
-                        <p  style="font-size: 15px;">Notifikasi</p>
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="customSwitch1">
-                            <label class="custom-control-label" for="customSwitch1"></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-12 col-md-12 col-sm-12">
-                    <div class="d-flex justify-content-between">
-                        <input class="form-control form-control-sm mt-2 " type="text" placeholder="ann">    
-                        <div class="custom-control custom-switch mt-2 ml-3">
-                            <input type="checkbox" class="custom-control-input" id="customSwitch2">
-                            <label class="custom-control-label" for="customSwitch2"></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-12 col-md-12 col-sm-12">
-                    <div class="d-flex justify-content-between">
-                        <p  style="font-size: 15px;">Ganti password set up email</p>
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="customSwitch3">
-                            <label class="custom-control-label" for="customSwitch3"></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-12 col-md-12 col-sm-12">
-                    <div class="d-flex justify-content-between">
-                        <input class="form-control form-control-sm mt-2" type="text" placeholder="">    
-                        <div class="custom-control custom-switch mt-2 ml-3">
-                            <input type="checkbox" class="custom-control-input" id="customSwitch4">
-                            <label class="custom-control-label" for="customSwitch4"></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-12 col-md-12 col-sm-12">
-                    <div class="d-flex justify-content-between">
-                        <p  style="font-size: 15px;">Auntifikasi 2 faktor</p>
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="customSwitch5">
-                            <label class="custom-control-label" for="customSwitch5"></label>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
         </div>
     </div>
 
-    
-
-    
-</body>
-<script>
-
-function myFunction(x) {
-  if (x.matches) { 
-
-    function openCity(evt, cityName) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
+    <!-- Modal Address -->
+    <div class="modal fade" id="ModalAddress" tabindex="-1" role="dialog" aria-labelledby="ModalLabelAddress" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ModalLabelAddress"></h5>
+                    <button type="button" class="close" id="closeModal" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label id="label">Provinsi</label>
+                        <select type="text" class="form-control" id="province">
+                            <option selected disabled hidden >Pilih Alamat</option>
+                            @foreach($state->provinsi as $s)
+                                <option value="{{ $s->id }}">{{ $s->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label id="label">Kabupaten/Kota</label>
+                            <select type="text" class="form-control city" value="">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label id="label">Kecamatan</label>
+                            <select type="text" class="form-control" id="district" value="">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label id="label">Alamat Lengkap</label>
+                        <textarea type="text" class="form-control address"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label id="label">Nama Alamat</label>
+                        <textarea type="text" class="form-control nameaddress"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary saveaddress">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    let ReloadAll = () => {
+        let reloadProfile = (data) => {
+            let content = ``;
+            $('.profile-picture').attr('src', data.avatar);
+            $('#name-btn').attr('data-content', data.name);
+            $('#email').attr('data-content', data.email);
+            $('#phone').attr('data-content', data.phone);
+            $('#name').html(data.name);
+            $('.name-banner').html('Hi, ' + data.name);
+            if(data.birthday) {
+                let d = new Date(data.birthday)
+                content += `
+                    <li class="list-group-item border-bottom">`+d.toDateString()+`</li>
+                `;
+            } else {
+                content += `
+                    <li role="button" class="list-group-item border-bottom text-exova" data-title="Tambahkan Tanggal Lahir" data-label="Tanggal Lahir" data-target="#Modal" data-toggle="modal">
+                        Tambahkan Tanggal Lahir
+                    </li>
+                `;
             }
-            tablinks = document.getElementsByClassName("tablinks");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            if(data.sex) {
+                content += `
+                    <li class="list-group-item border-bottom">`+data.sex_type.value+`</li>
+                `;
+            } else {
+                content += `
+                    <li role="button" class="list-group-item text-exova border-bottom" data-title="Tambahkan Jenis Kelamin" data-label="Jenis Kelamin" data-target="#Modal" data-toggle="modal">
+                        Tambahkan Jenis Kelamin
+                    </li>
+                `;
             }
-                document.getElementById(cityName).style.display = "block";
-                evt.currentTarget.className += " active";
-             }
-           
-    
-  } else {
-   document.body.style.backgroundColor = ;
-  }
-}
-    
-var x = window.matchMedia("(min-width: 600px)")
-    myFunction(x)
-    x.addListener(myFunction)
+            $('#birthday').html(content);
 
- document.getElementById("defaultOpen").click(); 
-    
-</script>
-</html>
+            $('#address').html(data.address.address + ', ' + data.address.district + ', ' + data.address.city + ', ' + data.address.state);
+        }
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'Access-Control-Allow-Origin': '*',
+            }
+        });
+        $.ajax({
+            url: "{{ route('profile.data') }}",
+            type: "GET",
+            success: function (data) {
+                reloadProfile(data);
+            },
+            error: function () {
+                //
+            },
+            beforeSend: function() {
+                $('.profile-picture').attr('src', `{{ asset('images/icons/loader.gif') }}`);
+                $('.name-banner').html('Loading...');
+                $('#birthday').html(`<li class="list-group-item">Loading...</li>`);
+                $('#name').html('Loading...');
+                $('#address').html('Loading...');
+            },
+        })
+    }
+
+    $(document).ready(function() {
+
+        $('#province').on('change', () => {
+            let content = ``;
+            let state = $('#province').val();
+            $.getJSON('https://dev.farizdotid.com/api/daerahindonesia/kota?id_provinsi=' + state, function(data) {
+                $.each(data.kota_kabupaten, function(i, index) {
+                    content += `
+                        <option value="` + index.id + `">`+ index.nama +`</option>
+                    `;
+                    $('.city').html(content);
+                });
+            });
+        })
+
+        $('.city').on('change', () => {
+            let content = ``;
+            let city = $('.city').val();
+            $.getJSON('https://dev.farizdotid.com/api/daerahindonesia/kecamatan?id_kota=' + city, function(data) {
+                $.each(data.kecamatan, function(i, index) {
+                    content += `
+                        <option value="` + index.id + `">`+ index.nama +`</option>
+                    `;
+                    $('#district').html(content);
+                });
+            });
+        })
+
+        const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000
+        });
+
+        $('#ModalAddress').on('show.bs.modal', function(event) {
+            let button, title, label, modal, content;
+                button = $(event.relatedTarget);
+                title = button.data('title');
+                label = button.data('label');
+                modal = $(this);
+                modal.find('.modal-title').html(title);
+
+            $('.saveaddress').on('click', () => {
+                let province, city, district, address;
+                province = $('#province').val();
+                city = $('.city').val();
+                district = $('#district').val();
+                address = $('.address').val();
+                name = $('.nameaddress').val();
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Access-Control-Allow-Origin': '*',
+                    }
+                });
+                $.ajax({
+                    url: "{{ route('profile.update', 1) }}",
+                    type: "PUT",
+                    data: { type:label, province:province,
+                        city:city, district:district, 
+                        address:address, name:name },
+                    success: function (data) {
+                        ReloadAll();
+                        Toast.fire({
+                        icon: 'success',
+                        title: data.status,
+                        })
+                    },
+                    error: function (data) {
+                        console.log(data)
+                    },
+                })
+            })
+        });
+
+        $('#Modal').on('show.bs.modal', function(event) {
+            let button, title, label, modal, content;
+            button = $(event.relatedTarget);
+            title = button.data('title');
+            label = button.data('label');
+            content = button.data('content');
+            modal = $(this);
+            if(label == 'Tanggal Lahir') {
+                content = `
+                    <div class="modal-body">
+                        <div id="form-group" class="form-group">
+                            <label id="label">`+label+`</label>
+                            <input id="content" type="date" class="form-control content">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary save">Simpan</button>
+                    </div>
+                `;
+                $('#modal-body-content').html(content);
+            } else if(label == 'Jenis Kelamin') {
+                content = `
+                    <div class="modal-body">
+                        <div id="form-group" class="form-group d-flex">
+                            <select name="content" class="form-control content">
+                                <option value="1">Pria</option>
+                                <option value="2">Wanita</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary save">Simpan</button>
+                    </div>
+                `;
+                $('#modal-body-content').html(content);
+            } else if(label == 'Nama') {
+                content = `
+                    <div class="modal-body">
+                        <div id="form-group" class="form-group">
+                            <label id="label">`+label+`</label>
+                            <input type="text" class="form-control content" value="`+content+`">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary save">Simpan</button>
+                    </div>
+                `;
+                $('#modal-body-content').html(content);
+            } else if(label == 'Email') {
+                content = `
+                    <div class="modal-body">
+                        <div id="form-group" class="form-group">
+                            <label id="label">`+label+`</label>
+                            <input type="email" class="form-control content email" value="`+content+`">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary save" disabled>Simpan</button>
+                    </div>
+                `;
+                $('#modal-body-content').html(content);
+            } else if(label == 'Phone') {
+                content = `
+                    <div class="modal-body">
+                        <div id="form-group" class="form-group">
+                            <label id="label">`+label+`</label>
+                            <input type="text" class="form-control content phone" value="`+content+`">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary save">Simpan</button>
+                    </div>
+                `;
+                $('#modal-body-content').html(content);
+            }
+            modal.find('.modal-title').html(title);
+
+            $('.email').on('keyup', () => {
+                let _interval = null;
+                let content = $('.email').val();
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Access-Control-Allow-Origin': '*',
+                    }
+                });
+                clearInterval(_interval)
+                _interval = setInterval(function() {
+                    $.ajax({
+                        url: "{{ route('profile.check', 1) }}",
+                        type: "PUT",
+                        data: { type:label, content:content },
+                        success: function (data) {
+                            if(data.code == 200) {
+                                Toast.fire({
+                                icon: 'success',
+                                title: data.status,
+                                })
+                                $('.save').attr('disabled', false);
+                            } else if(data.code == 400) {
+                                Toast.fire({
+                                icon: 'error',
+                                title: data.status,
+                                })
+                                $('.save').attr('disabled', true);
+                            }
+                        },
+                        error: function (data) {
+                            // console.log(data)
+                        },
+                    })
+                    clearInterval(_interval)
+                }, 1000)
+            })
+
+            $('.save').on('click', () => {
+                let content = $('.content').val();
+                console.log(content)
+                console.log(label)
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Access-Control-Allow-Origin': '*',
+                    }
+                });
+                $.ajax({
+                    url: "{{ route('profile.update', 1) }}",
+                    type: "PUT",
+                    data: { type:label, content:content },
+                    success: function (data) {
+                        ReloadAll();
+                        Toast.fire({
+                        icon: 'success',
+                        title: data.status,
+                        })
+                    },
+                    error: function (data) {
+                        // console.log(data)
+                    },
+                })
+            })
+        });
+    });
+
+    ReloadAll();
+
+
+    </script>
+@endsection

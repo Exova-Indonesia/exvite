@@ -16,6 +16,7 @@ class CreateActivitiesTable extends Migration
         Schema::create('snap_activity', function (Blueprint $table) {
             $table->id('activity_id');
             $table->bigInteger('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('activity');
             $table->ipAddress('ip_address');
             $table->text('user_agent');

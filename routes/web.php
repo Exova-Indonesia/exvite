@@ -1,5 +1,8 @@
 <?php
 
+// namespace App\Http\Controllers; 
+// use Auth;
+
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -18,10 +21,10 @@ Route::get('/welcome', function () {
     return view('welcome');
 });
 
-Route::domain('localhost:8080/profile')->group(function() {
-    Route::get('/profile', function () {
-        return view('profile');
-    });
+Route::middleware('auth')->group(function() {
+    Route::put('/profile/check/{id}', [App\Http\Controllers\ProfileController::class, 'check'])->name('profile.check');
+    Route::get('/profile/data', [App\Http\Controllers\ProfileController::class, 'data'])->name('profile.data');
+    Route::resource('/profile', App\Http\Controllers\ProfileController::class);
 });
 
 Auth::routes(['verify' => true]);

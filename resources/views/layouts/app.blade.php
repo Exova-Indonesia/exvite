@@ -60,7 +60,7 @@
     <div id="app">
         <nav class="navbar mainmenu-area navbar-expand-md fixed-top p-3 @if(Request::is('/')) @else bg-white shadow-nav @endif">
             <div class="container">
-                <a class="navbar-brand navbar-logo" href="{{ url('/') }}">
+                <a class="navbar-logo" href="{{ url('/') }}">
                     <img src="{{ ('https://assets.exova.id/img/logo.png') }}" alt="Logo">
                 </a>
                 <button class="navbar-toggler @if(Request::is('/')) text-white @else text-secondary @endif" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
