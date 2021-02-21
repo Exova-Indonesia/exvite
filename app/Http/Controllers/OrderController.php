@@ -50,7 +50,7 @@ class OrderController extends Controller
     {
         $f = $request->file('example');
         $f_name = 'example-from-order-' . $request->id . '-' . Auth::user()->id . '.' . $f->getClientOriginalExtension();
-        $r = Storage::putFileAs(Auth::user()->name . '/order/' . 'example/' . $request->id, $f, $f_name);
+        $r = Storage::putFileAs(Auth::user()->id . '/order/' . 'example/' . $request->id, $f, $f_name);
 
         $v = Cart::where('cart_id', $request->id)->update([
             'example' => asset('storage/' . $r),

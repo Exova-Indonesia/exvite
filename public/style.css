@@ -244,6 +244,7 @@ h3 {
 }
 .mainmenu-area .navbar-brand img {
     height: 40px;
+    object-fit: cover;
 }
 .page-title .title {
     position: relative;

@@ -112,12 +112,12 @@
                                     <i class="fas fa-bell"></i>
                                 </a>
                                 <a id="navbarDropdown" class="navbar-brand dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    <img class="rounded-circle" src="{{ Auth::user()->avatar }}" width="40" height="40" alt="avatar">
+                                    <img class="rounded-circle" src="{{ Auth::user()->avatar->small }}" width="40" height="40" alt="avatar">
                                 </a>
 
                                 <div class="dropdown-menu profile-drop dropdown-menu-right p-3" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item text-center pb-3">
-                                        <img class="rounded-circle" src="{{ Auth::user()->avatar }}" width="80" height="80" alt="avatar">
+                                        <img class="rounded-circle user-profile-picture" src="{{ Auth::user()->avatar->large }}" width="80" height="80" alt="avatar">
                                         <h5 class="text-uppercase m-2">
                                             {{ Auth::user()->name }}
                                             <i role="button" class="fa fa-power-off text-danger" onclick="event.preventDefault();

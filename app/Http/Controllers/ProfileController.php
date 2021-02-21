@@ -3,13 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Avatar;
 use App\Models\State;
 use Illuminate\Http\Request;
 use Auth;
 use DB;
+use Storage;
+use Image;
+use File;
 
 class ProfileController extends Controller
 {
+
+    public function __construct() {
+        $this->dimensions = ['75', '240', '480'];
+    }
     /**
      * Display a listing of the resource.
      *
@@ -24,7 +32,7 @@ class ProfileController extends Controller
     }
     public function data()
     {
-        $user = User::with('address', 'sexType')->first();
+        $user = User::with('address', 'sexType', 'avatar')->where('id', Auth::user()->id)->first();
         return response()->json($user);
     }
 
@@ -46,7 +54,40 @@ class ProfileController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $path = base_path('../assets/' . Auth::user()->id . '/profile/avatar');
+        $pathDB = asset('storage/' . Auth::user()->id . '/profile/avatar');
+        $avatar =  Avatar::where('user_id', Auth::user()->id);
+        $f = $request->file('content');
+        $f_name = 'user-profile-' . date('Ymdhis') . '-' . Auth::user()->id . '.' . $f->getClientOriginalExtension();
+
+        if (!File::isDirectory($path)) {
+            File::makeDirectory($path, 0755, true);
+        }
+
+        foreach($this->dimensions as $row) {
+            $resize = Image::make($f)->resize($row, $row, function($constraint) {
+                $constraint->aspectRatio();
+            });
+            if (!File::isDirectory($path . '/' . $row)) {
+                File::makeDirectory($path . '/' . $row);
+            }
+            $resize->save($path . '/' . $row . '/' . $f_name);
+            if($row == 75) {
+                $avatar->update([
+                'small' =>  $pathDB . '/' . $row . '/' . $f_name,
+                ]);
+            } else if ($row == 240) {
+                $avatar->update([
+                'medium' => $pathDB . '/' . $row . '/' . $f_name,
+                ]);
+            } else {
+                $avatar->update([
+                'large' => $pathDB . '/' . $row . '/' . $f_name,
+                ]);
+            }
+        }
+        // $r = Storage::putFileAs(Auth::user()->id . '/profile' . '/', $f, $f_name);
+        return response()->json(['status' => 'Berhsil Mengubah Foto Profil']);
     }
 
     /**
@@ -140,6 +181,15 @@ class ProfileController extends Controller
                     'phone' => $request->content,
                 ]);
                 return response()->json(['status' => 'Berhail Mengubah No. Telepon']);
+                break;
+            case 'File':
+                $f = $request->file('content');
+                $f_name = 'user-profile-' . date('Ymdhi') . '-' . Auth::user()->id . '.' . $f->getClientOriginalExtension();
+                $r = Storage::putFileAs(Auth::user()->id . '/profile/', $f, $f_name);
+                $update->update([
+                    'avatar' => asset('storage/' . $r),
+                ]);
+                return response()->json(['status' => 'Berhsil Mengubah Foto Profil']);
                 break;
             default:
             //

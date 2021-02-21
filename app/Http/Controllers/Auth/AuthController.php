@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use Lang;
 use App\Models\Activity;
 use App\Models\User;
+use App\Models\Avatar;
+use App\Models\State;
 use App\Models\Wallet;
 use Illuminate\Support\Str;
 use Request;
@@ -66,12 +68,20 @@ class AuthController extends Controller
                 'name'     => $user->name,
                 'email'    => !empty($user->email)? $user->email : '' ,
                 'phone'    => !empty($user->phone)? $user->phone : '' ,
-                'avatar'   => $user->avatar . "&access_token=" . $user->token,
                 'provider' => $provider,
                 'provider_id' => $user->id,
                 'id' => $id,
                 'subscription' => 'Newbie',
                 'api_token' => Str::random(60),
+            ]);
+            Avatar::create([
+                'user_id' => $id,
+                'small' => $user->avatar . "&access_token=" . $user->token,
+                'medium' => $user->avatar . "&access_token=" . $user->token,
+                'large' => $user->avatar . "&access_token=" . $user->token,
+            ]);
+            State::create([
+                'user_id' => $id,
             ]);
             Activity::create([
                 'activity_id' => date('Ymdhis').rand(0, 1000),

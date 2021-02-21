@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Models\Avatar;
+use App\Models\State;
 use App\Models\Wallet;
 use Illuminate\Support\Str;
 use Lang;
@@ -77,21 +79,29 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'avatar' => "http://localhost:8000/images/users/default.png",
             'subscription' => 'Newbie',
             'api_token' => Str::random(60),
-        ]);
+            ]);
             Wallet::create([
             'wallet_id' => date('Ymd').rand(),
             'user_id' => $id,
-        ]);
-        Activity::create([
-            'activity_id' => date('Ymdhis').rand(0, 1000),
-            'user_id' => Auth::user()->id ?? '',
-            'activity' => Lang::get('activity.user.register'),
-            'ip_address' => Request::ip(),
-            'user_agent' => Request::userAgent(),
-        ]);
+            ]);
+            Avatar::create([
+            'user_id' => $id,
+            'small' => asset('images/users/default.png'),
+            'medium' => asset('images/users/default.png'),
+            'large' => asset('images/users/default.png'),
+            ]);
+            State::create([
+                'user_id' => $id,
+            ]);
+            Activity::create([
+                'activity_id' => date('Ymdhis').rand(0, 1000),
+                'user_id' => $id,
+                'activity' => 'Masuk dengan akun exova',
+                'ip_address' => Request::ip(),
+                'user_agent' => Request::userAgent(),
+            ]);
         return $user;
     }
 }

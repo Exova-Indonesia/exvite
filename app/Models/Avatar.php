@@ -5,17 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class State extends Model
+class Avatar extends Model
 {
     use HasFactory;
-    protected $table = 'user_address';
+    protected $table = 'user_avatar';
     protected $fillable = [
         'user_id',
-        'address',
-        'address_name',
-        'city',
-        'state',
-        'district',
-        'postal',
+        'medium',
+        'small',
+        'large',
     ];
+    protected $guarded = [];
 }

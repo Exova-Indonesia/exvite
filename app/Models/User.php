@@ -62,5 +62,8 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sexType() {
         return $this->belongsTo(Sex::class, 'sex');
     }
+    public function avatar() {
+        return $this->hasOne(Avatar::class, 'user_id');
+    }
 
 }

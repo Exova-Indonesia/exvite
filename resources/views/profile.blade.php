@@ -52,8 +52,12 @@
                                         </div>
                                         <div class="profile-describe">
                                             <div class="edit-profile-btn">
+                                                <form id="editphotoSend" type="POST" enctype="multipart/form-data">
                                                 <label role="button" for="editPhoto" class="btn-sm btn-primary rounded-pill">Edit Photo</label>
-                                                <input type="file" id="editPhoto" class="d-none">
+                                                <p class="text-muted profile-picture-label m-0"></p>
+                                                    @csrf
+                                                    <input type="file" id="editPhoto" name="content" class="d-none">
+                                                </form>
                                             </div>
                                             <div class="profile status">
                                                 <div class="text-responsive"><span>Bergabung Sejak</span><strong class="float-right">{{ date('F j, Y', strtotime($user->created_at)) }}</strong></div>
@@ -72,11 +76,9 @@
                                         </li>
                                         <div id="birthday">
                                         </div>
-                                        <li class="list-group-item">
-                                            <span id="address"></span>
-                                            <span role="button" data-title="Ganti Alamat" data-label="Alamat" data-target="#ModalAddress" data-toggle="modal">
-                                                <i class="fas fa-edit text-primary"></i>
-                                            </span>
+                                        <li class="list-group-item border-bottom">
+                                            <div id="add_address">
+                                            </div>
                                         </li>
                                     </ul>
                                 </div>
@@ -202,10 +204,18 @@
     let ReloadAll = () => {
         let reloadProfile = (data) => {
             let content = ``;
-            $('.profile-picture').attr('src', data.avatar);
+            $('.profile-picture').attr('src', data.avatar['large']);
             $('#name-btn').attr('data-content', data.name);
-            $('#email').attr('data-content', data.email);
-            $('#phone').attr('data-content', data.phone);
+            if(data.email) {
+                $('#email').attr('data-content', data.email);
+            } else {
+                $('#email').attr('data-content', '');
+            }
+            if(data.phone) {
+                $('#phone').attr('data-content', data.phone);
+            } else {
+                $('#phone').attr('data-content', '');
+            }
             $('#name').html(data.name);
             $('.name-banner').html('Hi, ' + data.name);
             if(data.birthday) {
@@ -232,8 +242,16 @@
                 `;
             }
             $('#birthday').html(content);
-
-            $('#address').html(data.address.address + ', ' + data.address.district + ', ' + data.address.city + ', ' + data.address.state);
+            if(data.address.address || data.address.district || data.address.city || data.address.state) {
+                $('#add_address').html(`<span>`+ data.address.address + ', ' + data.address.district + ', ' + data.address.city + ', ' + data.address.state +`</span>
+                <span role="button" data-title="Ganti Alamat" data-label="Alamat" data-target="#ModalAddress" data-toggle="modal">
+                    <i class="fas fa-edit text-primary"></i>
+                </span>`);
+            } else {
+                $('#add_address').html(`<span role="button" class="text-exova" data-title="Ganti Alamat" data-label="Alamat" data-target="#ModalAddress" data-toggle="modal">
+                    Tambahkan Alamat
+                </span>`);
+            }
         }
         $.ajaxSetup({
             headers: {
@@ -479,6 +497,41 @@
                 })
             })
         });
+        $('#editphotoSend').on('change', function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: "{{ route('profile.store') }}",
+                type: "POST",
+                data: new FormData(this),
+                cache: false,
+                processData: false,
+                contentType: false,
+                enctype: 'multipart/form-data',
+                dataType: 'json',
+                xhr: function() {
+                    let xhr = $.ajaxSettings.xhr();
+                    xhr.upload.addEventListener('progress', function(event) {
+                        if(event.lengthComputable) {
+                            let percent = Math.ceil(event.loaded / event.total * 100);
+                            $('.profile-picture').attr('src', `{{ asset('images/icons/loader.gif') }}`);
+                            $('.profile-picture-label').html('Mengupload ' + percent + '%');
+                        }
+                    }, true)
+                    return xhr;
+                },
+                success: function (data) {
+                    ReloadAll();
+                    Toast.fire({
+                    icon: 'success',
+                    title: data.status,
+                    });
+                    $('.profile-picture-label').html('');
+                },
+                error: function (data) {
+                    console.log(data)
+                },
+            })
+        })
     });
 
     ReloadAll();
