@@ -15,6 +15,7 @@ class Activity extends Model
         'activity',
         'ip_address',
         'user_agent',
+        'availability',
     ];
     public function users() {
         $this->belongsTo(User::class, 'user_id');

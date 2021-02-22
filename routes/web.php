@@ -21,6 +21,12 @@ Route::get('/welcome', function () {
     return view('welcome');
 });
 
+Route::post('/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+
+    return back()->with('message', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
 Route::middleware('auth')->group(function() {
     Route::put('/profile/check/{id}', [App\Http\Controllers\ProfileController::class, 'check'])->name('profile.check');
     Route::get('/profile/data', [App\Http\Controllers\ProfileController::class, 'data'])->name('profile.data');

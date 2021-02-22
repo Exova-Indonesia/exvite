@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use App\Models\Avatar;
+use App\Models\UserNotif;
 use App\Models\State;
 use App\Models\Wallet;
 use Illuminate\Support\Str;
@@ -59,7 +60,7 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255', 'unique:users'],
+            'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
@@ -95,8 +96,10 @@ class RegisterController extends Controller
             State::create([
                 'user_id' => $id,
             ]);
+            UserNotif::create([
+                'user_id' => $id,
+            ]);
             Activity::create([
-                'activity_id' => date('Ymdhis').rand(0, 1000),
                 'user_id' => $id,
                 'activity' => 'Masuk dengan akun exova',
                 'ip_address' => Request::ip(),

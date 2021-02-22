@@ -94,10 +94,10 @@ return [
     'not_in' => 'The selected :attribute is invalid.',
     'not_regex' => 'The :attribute format is invalid.',
     'numeric' => 'The :attribute must be a number.',
-    'password' => 'The password is incorrect.',
+    'password' => 'Password salah.',
     'present' => 'The :attribute field must be present.',
     'regex' => 'The :attribute format is invalid.',
-    'required' => 'The :attribute field is required.',
+    'required' => ':attribute tidak boleh kosong.',
     'required_if' => 'The :attribute field is required when :other is :value.',
     'required_unless' => 'The :attribute field is required unless :other is in :values.',
     'required_with' => 'The :attribute field is required when :values is present.',
@@ -151,6 +151,28 @@ return [
             'failed' => 'Gagal menghapus file',
         ]
     ],
+    'user' => [
+        'profile' => [
+            'success' => [
+                'name' => 'Berhasil mengubah nama akun menjadi ',
+                'changepic' => 'Berhasil mengubah foto profil akun',
+                'birthday' => 'Berhasil menambahkan tanggal lahir',
+                'sex' => 'Berhasil menambahkan jenis kelamin',
+                'address' => 'Berhasil mengubah alamat',
+                'email' => 'Berhasil mengubah alamat email',
+                'phone' => 'Berhasil mengubah nomor telepon',
+                'delAktivitas' => 'Berhasil menghapus riwayat aktivitas',
+                'pembelian' => 'Berhasil mengubah pengaturan notifikasi pembelian',
+                'penjualan' => 'Berhasil mengubah pengaturan notifikasi penjualan',
+                'promo' => 'Berhasil mengubah pengaturan notifikasi promo',
+                'pengingat' => 'Berhasil mengubah pengaturan notifikasi pengingat',
+                'aktivitas' => 'Berhasil mengubah pengaturan riwayat aktivitas',
+            ],
+            'failed' => [
+                'uniqueEmail' => 'Email telah digunakan',
+            ],
+        ]
+    ],
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
@@ -179,6 +201,10 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'name' => 'Nama',
+        'password' => 'Password',
+        'email' => 'Email',
+    ],
 
 ];

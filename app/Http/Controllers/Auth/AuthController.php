@@ -6,6 +6,7 @@ use Lang;
 use App\Models\Activity;
 use App\Models\User;
 use App\Models\Avatar;
+use App\Models\UserNotif;
 use App\Models\State;
 use App\Models\Wallet;
 use Illuminate\Support\Str;
@@ -47,14 +48,14 @@ class AuthController extends Controller
      */
     public function findOrCreateUser($user, $provider)
     {
-        $authUser = User::where('provider_id', $user->id)->first();
+        $authUser = User::with('notif')->where('provider_id', $user->id)->first();
         if ($authUser) {
             Activity::create([
-                'activity_id' => date('Ymdhis').rand(0, 1000),
                 'user_id' => $authUser->id,
                 'activity' => Lang::get('activity.user.with').$provider,
                 'ip_address' => Request::ip(),
                 'user_agent' => Request::userAgent(),
+                'availability' => ($authUser->notif->aktivitas == 1) ? 1 : 0,
             ]);
             return $authUser;
         }
@@ -83,8 +84,10 @@ class AuthController extends Controller
             State::create([
                 'user_id' => $id,
             ]);
+            UserNotif::create([
+                'user_id' => $id,
+            ]);
             Activity::create([
-                'activity_id' => date('Ymdhis').rand(0, 1000),
                 'user_id' => $id,
                 'activity' => Lang::get('activity.user.with').$provider,
                 'ip_address' => Request::ip(),

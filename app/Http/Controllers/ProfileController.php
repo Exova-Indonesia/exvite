@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\UserNotif;
 use App\Models\Avatar;
+use App\Models\Activity;
 use App\Models\State;
 use Illuminate\Http\Request;
 use Auth;
+use Lang;
 use DB;
 use Storage;
 use Image;
@@ -86,8 +89,15 @@ class ProfileController extends Controller
                 ]);
             }
         }
+        Activity::create([
+            'user_id' => Auth::user()->id,
+            'activity' => Lang::get('activity.user.profile.changepic'),
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'availability' => (Auth::user()->notif->aktivitas == 1) ? 1 : 0,
+        ]);
         // $r = Storage::putFileAs(Auth::user()->id . '/profile' . '/', $f, $f_name);
-        return response()->json(['status' => 'Berhsil Mengubah Foto Profil']);
+        return response()->json(['status' => Lang::get('validation.user.profile.success.changepic')]);
     }
 
     /**
@@ -116,9 +126,9 @@ class ProfileController extends Controller
     {
         $user = User::where('email', $request->content)->whereNotIn('id', [Auth::user()->id])->first();
         if($user) {
-            return response()->json(['status' => 'Email telah digunakan', 'code' => 400]);
+            return response()->json(['status' => Lang::get('validation.user.profile.failed.uniqueEmail'), 'code' => 400]);
         } else {
-            return response()->json(['status' => 'Email belum digunakan', 'code' => 200]);
+            return response()->json(['code' => 200]);
         }
     }
 
@@ -132,26 +142,51 @@ class ProfileController extends Controller
     public function update(Request $request, $id)
     {
         $update =  User::where('id', Auth::user()->id);
+        $notif =  UserNotif::where('user_id', Auth::user()->id);
         $address =  State::where('user_id', Auth::user()->id);
         switch($request->type) {
             case 'Tanggal Lahir':
                $update->update([
                     'birthday' => $request->content,
                     ]);
-                return response()->json(['status' => 'Berhail Mengubah Tanggal Lahir']);
+                Activity::create([
+                    'user_id' => Auth::user()->id,
+                    'activity' => Lang::get('activity.user.profile.birthday'),
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                    'availability' => (Auth::user()->notif->aktivitas == 1) ? 1 : 0,
+                ]);
+                return response()->json(['status' => Lang::get('validation.user.profile.success.birthday')]);
             break;
+
             case 'Nama':
                 $update->update([
                     'name' => $request->content,
                 ]);
-                return response()->json(['status' => 'Berhail Mengubah Nama']);
+                Activity::create([
+                    'user_id' => Auth::user()->id,
+                    'activity' => Lang::get('activity.user.profile.name') . $request->content,
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                    'availability' => (Auth::user()->notif->aktivitas == 1) ? 1 : 0,
+                ]);
+                return response()->json(['status' => Lang::get('validation.user.profile.success.name') . $request->content]);
                 break;
+
             case 'Jenis Kelamin':
                 $update->update([
                     'sex' => $request->content,
                 ]);
-                return response()->json(['status' => 'Berhail Mengubah Jenis Kelamin']);
+                Activity::create([
+                    'user_id' => Auth::user()->id,
+                    'activity' => Lang::get('activity.user.profile.sex'),
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                    'availability' => (Auth::user()->notif->aktivitas == 1) ? 1 : 0,
+                ]);
+                return response()->json(['status' => Lang::get('validation.user.profile.success.sex')]);
                 break;
+
             case 'Alamat':
                 $state = file_get_contents("https://dev.farizdotid.com/api/daerahindonesia/provinsi/" . $request->province);
                 $city = file_get_contents("https://dev.farizdotid.com/api/daerahindonesia/kota/" . $request->city);
@@ -163,25 +198,49 @@ class ProfileController extends Controller
                     'district' => json_decode($disrict)->nama,
                     'address_name' => $request->name,
                 ]);
-                return response()->json(['status' => 'Berhail Mengubah Alamat']);
+                Activity::create([
+                    'user_id' => Auth::user()->id,
+                    'activity' => Lang::get('activity.user.profile.address'),
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                    'availability' => (Auth::user()->notif->aktivitas == 1) ? 1 : 0,
+                ]);
+                return response()->json(['status' => Lang::get('validation.user.profile.success.address')]);
                 break;
+
             case 'Email':
                 $check = User::where('email', $request->content)->whereNotIn('id', [Auth::user()->id])->first();
                 if($check) {
-                    return response()->json(['status' => 'Email telah digunakan']);
+                    return response()->json(['status' => Lang::get('validation.user.profile.failed.uniqueEmail'), 'code' => 400]);
                 } else {
                     $update->update([
                         'email' => $request->content,
                     ]);
-                    return response()->json(['status' => 'Berhail Mengubah Email']);
+                    return response()->json(['status' => Lang::get('validation.user.profile.success.email')]);
                 }
+                Activity::create([
+                    'user_id' => Auth::user()->id,
+                    'activity' => Lang::get('activity.user.profile.email'),
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                    'availability' => (Auth::user()->notif->aktivitas == 1) ? 1 : 0,
+                ]);
                 break;
+
             case 'Phone':
                 $update->update([
                     'phone' => $request->content,
                 ]);
-                return response()->json(['status' => 'Berhail Mengubah No. Telepon']);
+                Activity::create([
+                    'user_id' => Auth::user()->id,
+                    'activity' => Lang::get('activity.user.profile.phone'),
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                    'availability' => (Auth::user()->notif->aktivitas == 1) ? 1 : 0,
+                ]);
+                return response()->json(['status' => Lang::get('validation.user.profile.success.phone')]);
                 break;
+
             case 'File':
                 $f = $request->file('content');
                 $f_name = 'user-profile-' . date('Ymdhi') . '-' . Auth::user()->id . '.' . $f->getClientOriginalExtension();
@@ -189,7 +248,85 @@ class ProfileController extends Controller
                 $update->update([
                     'avatar' => asset('storage/' . $r),
                 ]);
-                return response()->json(['status' => 'Berhsil Mengubah Foto Profil']);
+                return response()->json(['status' => Lang::get('validation.user.profile.success.changepic')]);
+                break;
+
+            case 'pembelian':
+                $notif->update([
+                    'pembelian' => $request->content,
+                ]);
+                Activity::create([
+                    'user_id' => Auth::user()->id,
+                    'activity' => Lang::get('activity.user.profile.pembelian'),
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                    'availability' => (Auth::user()->notif->aktivitas == 1) ? 1 : 0,
+                ]);
+                break;
+
+            case 'penjualan':
+                $notif->update([
+                    'penjualan' => $request->content,
+                ]);
+                Activity::create([
+                    'user_id' => Auth::user()->id,
+                    'activity' => Lang::get('activity.user.profile.penjualan'),
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                    'availability' => (Auth::user()->notif->aktivitas == 1) ? 1 : 0,
+                ]);
+                break;
+
+            case 'promo':
+                $notif->update([
+                    'promo' => $request->content,
+                ]);
+                Activity::create([
+                    'user_id' => Auth::user()->id,
+                    'activity' => Lang::get('activity.user.profile.promo'),
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                    'availability' => (Auth::user()->notif->aktivitas == 1) ? 1 : 0,
+                ]);
+                break;
+
+            case 'pengingat':
+                $notif->update([
+                    'pengingat' => $request->content,
+                ]);
+                Activity::create([
+                    'user_id' => Auth::user()->id,
+                    'activity' => Lang::get('activity.user.profile.pengingat'),
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                    'availability' => (Auth::user()->notif->aktivitas == 1) ? 1 : 0,
+                ]);
+                break;
+
+            case 'aktivitas':
+                $notif->update([
+                    'aktivitas' => $request->content,
+                ]);
+                Activity::create([
+                    'user_id' => Auth::user()->id,
+                    'activity' => Lang::get('activity.user.profile.aktivitas'),
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                    'availability' => (Auth::user()->notif->aktivitas == 1) ? 1 : 0,
+                ]);
+                break;
+
+            case 'deleteAktivitas':
+                Activity::where('user_id', Auth::user()->id)->update([
+                    'availability' => $request->content,
+                ]);
+                Activity::create([
+                    'user_id' => Auth::user()->id,
+                    'activity' => Lang::get('activity.user.profile.delAktivitas'),
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                    'availability' => (Auth::user()->notif->aktivitas == 1) ? 1 : 0,
+                ]);
                 break;
             default:
             //

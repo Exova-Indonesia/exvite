@@ -65,5 +65,8 @@ class User extends Authenticatable implements MustVerifyEmail
     public function avatar() {
         return $this->hasOne(Avatar::class, 'user_id');
     }
+    public function notif() {
+        return $this->hasOne(UserNotif::class, 'user_id');
+    }
 
 }

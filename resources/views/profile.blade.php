@@ -1,6 +1,20 @@
 @extends('layouts.app')
 @section('content')
     <div class="container">
+        @if(empty(Auth::user()->email_verified_at))
+        <div class="d-flex">
+            <div class="m-auto">
+                <div class="alert text-center alert-danger">
+                    Ups, Sepertinya kamu belum aktivasi email. Yuk aktivasi sekarang! Atau belum mendapat email aktivasi? 
+                    <a class="btn btn-exova" onclick="event.preventDefault();
+                    document.getElementById('verify-form').submit();">Kirim Ulang Email Aktivasi</a>
+                    <form id="verify-form" action="{{ route('verification.send') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </div>
+            </div>
+        </div>    
+        @endif
         <div class="col-lg-12">
             <div class="rounded-exova shadow d-flex p-4">
                 <div class="m-auto">
@@ -25,11 +39,16 @@
                         </div>
                         <div class="card-body p-0">
                             <ul class="list-group text-responsive">
-                                @foreach($user->activity->slice(0, 10) as $u)
+                                @forelse($user->activity->sortByDesc('created_at')->where('availability', 0)->take(10) as $u)
                                 <li class="list-group-item">
                                     <span>{{ $u->activity }} <strong class="float-right">{{ date('h:i a', strtotime($u->created_at)) }}</strong></span>
                                 </li>
-                                @endforeach
+                                @empty
+                                    <div class="p-5 text-center">
+                                        <img class="my-2" src="{{ asset('images/icons/noactivity.svg') }}" alt="No Activity">
+                                        <span class="text-muted">Tidak ada aktivitas apapun</span>
+                                    </div>
+                                @endforelse
                             </ul>
                         </div>
                     </div>
@@ -96,25 +115,45 @@
                                 <li class="list-group-item" role="button">
                                     <div data-target="#notifikasicollapse" data-toggle="collapse" aria-expanded="false" aria-controls="notifikasicollapse">Notifikasi <span class="float-right"><i class="fas fa-angle-down"></i></span></div>
                                     <div class="collapse" id="notifikasicollapse">
-                                        <div class="sub-collapse">
-                                            <div class="text-responsive">
-                                                Pembelian
-                                                <span class="float-right">
-                                                    <input id="penjualan" type="checkbox">
-                                                </span>
+                                        <form id="notifications">
+                                            @csrf
+                                            <input type="hidden" name="type" value="Notif">
+                                            <div class="sub-collapse">
+                                                <div class="text-responsive">
+                                                    Pembelian
+                                                    <span class="float-right">
+                                                        <input class="notifications" data-label="pembelian" name="pembelian" type="checkbox" @if( Auth::user()->notif->pembelian == 0) value="1" checked @else value="0" @endif>
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="sub-collapse">
-                                            <div class="text-responsive">
-                                                Penjualan
-                                                <span class="float-right">
-                                                    <input id="penjualan" type="checkbox">
-                                                </span>
+                                            <div class="sub-collapse">
+                                                <div class="text-responsive">
+                                                    Penjualan
+                                                    <span class="float-right">
+                                                        <input class="notifications" data-label="penjualan" name="penjualan" type="checkbox" @if( Auth::user()->notif->penjualan == 0) value="1" checked @else value="0" @endif>
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
+                                            <div class="sub-collapse">
+                                                <div class="text-responsive">
+                                                    Pengingat
+                                                    <span class="float-right">
+                                                        <input class="notifications" data-label="pengingat" name="pengingat" type="checkbox" @if( Auth::user()->notif->pengingat == 0) value="1" checked @else value="0" @endif>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="sub-collapse">
+                                                <div class="text-responsive">
+                                                    Promo
+                                                    <span class="float-right">
+                                                        <input class="notifications" data-label="promo" name="promo" type="checkbox" @if( Auth::user()->notif->promo == 0) value="1" checked @else value="0" @endif>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </li>
-                                <li class="list-group-item" role="button">
+                                <li class="list-group-item bg-transparent" role="button">
                                     <div data-target="#kontakcollapse" data-toggle="collapse" aria-expanded="false" aria-controls="kontakcollapse">Kontak <span class="float-right"><i class="fas fa-angle-down"></i></span></div>
                                     <div class="collapse" id="kontakcollapse">
                                         <div class="sub-collapse">
@@ -129,7 +168,25 @@
                                         </div>
                                     </div>
                                 </li>
-                                <li class="list-group-item" role="button">
+                                <li class="list-group-item bg-transparent" role="button">
+                                    <div data-target="#historycollapse" data-toggle="collapse" aria-expanded="false" aria-controls="historycollapse">Riwayat Aktivitas <span class="float-right"><i class="fas fa-angle-down"></i></span></div>
+                                    <div class="collapse" id="historycollapse">
+                                        <div class="sub-collapse">
+                                            <div class="text-responsive">
+                                                Riwayat Aktivitas
+                                                <span class="float-right">
+                                                    <input class="notifications" data-label="aktivitas" name="aktivitas" type="checkbox" @if( Auth::user()->notif->aktivitas == 0) value="1" checked @else value="0" @endif>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="sub-collapse">
+                                            <div class="text-responsive deleteAktivitas" data-label="deleteAktivitas">
+                                                Hapus Riwayat Aktivitas
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item" role="button" data-target="#ResetPassword" data-toggle="modal">
                                     Ganti Password
                                 </li>
                             </ul>
@@ -150,6 +207,48 @@
                     </button>
                 </div>
                 <div id="modal-body-content">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Reset Password -->
+    <div class="modal fade" id="ResetPassword" tabindex="-1" role="dialog" aria-labelledby="ResetPassword" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ResetPassword">Reset Password</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ route('password.email') }}">
+                        @csrf
+                        <div class="form-group row">
+                            <label for="email" class="col-md-2 col-form-label text-md-right">{{ __('Email') }}</label>
+
+                            <div class="col-md-10">
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+
+                                @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                    <div class="modal-footer">
+                        <div class="form-group row mb-0">
+                            <div class="col-md-12 offset-md-12">
+                                <button type="submit" class="btn btn-primary">
+                                    {{ __('Kirim Link Reset Password') }}
+                                </button>
+                            </div>
+                        </div>
+                    </form>                        
+                    </div>
                 </div>
             </div>
         </div>
@@ -449,10 +548,6 @@
                         data: { type:label, content:content },
                         success: function (data) {
                             if(data.code == 200) {
-                                Toast.fire({
-                                icon: 'success',
-                                title: data.status,
-                                })
                                 $('.save').attr('disabled', false);
                             } else if(data.code == 400) {
                                 Toast.fire({
@@ -472,8 +567,7 @@
 
             $('.save').on('click', () => {
                 let content = $('.content').val();
-                console.log(content)
-                console.log(label)
+
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
@@ -486,10 +580,17 @@
                     data: { type:label, content:content },
                     success: function (data) {
                         ReloadAll();
-                        Toast.fire({
-                        icon: 'success',
-                        title: data.status,
-                        })
+                        if(data.code == 400) {
+                            Toast.fire({
+                            icon: 'error',
+                            title: data.status,
+                            })
+                        } else {
+                            Toast.fire({
+                            icon: 'success',
+                            title: data.status,
+                            })
+                        } 
                     },
                     error: function (data) {
                         // console.log(data)
@@ -532,6 +633,54 @@
                 },
             })
         })
+        $('.notifications').on('change', function(event) {
+                let label, content;
+                label = $(this).attr('data-label');
+                if($(this).is(':checked')) {
+                    content = 0;
+                } else {
+                    content = 1;
+                }
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Access-Control-Allow-Origin': '*',
+                    }
+                });
+                $.ajax({
+                    url: "{{ route('profile.update', 1) }}",
+                    type: "PUT",
+                    data: { type:label, content:content },
+                    success: function (data) {
+                        //
+                    },
+                    error: function (data) {
+                        console.log(data)
+                    },
+            })
+        });
+        $('.deleteAktivitas').on('click', function(event) {
+                let label, content;
+                label = $(this).attr('data-label');
+                content = 1;
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Access-Control-Allow-Origin': '*',
+                    }
+                });
+                $.ajax({
+                    url: "{{ route('profile.update', 1) }}",
+                    type: "PUT",
+                    data: { type:label, content:content },
+                    success: function (data) {
+                        window.location = window.location;
+                    },
+                    error: function (data) {
+                        console.log(data)
+                    },
+            })
+        });
     });
 
     ReloadAll();

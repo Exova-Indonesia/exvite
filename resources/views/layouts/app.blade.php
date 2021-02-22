@@ -56,9 +56,9 @@
     <link rel="stylesheet" href="{{ asset('sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
 
 </head>
-<body data-spy="scroll" data-target=".mainmenu-area" data-component="intro" class="@if(Request::is('/')) @else pt-120 @endif">
+<body data-spy="scroll" data-target=".mainmenu-area" data-component="intro" class="@if(Request::is('/')) @else pt-105 @endif">
     <div id="app">
-        <nav class="navbar mainmenu-area navbar-expand-md fixed-top p-3 @if(Request::is('/')) @else bg-white shadow-nav @endif">
+        <nav class="navbar mainmenu-area navbar-expand-md fixed-top p-2 @if(Request::is('/')) @else bg-white shadow-nav @endif">
             <div class="container">
                 <a class="navbar-logo" href="{{ url('/') }}">
                     <img src="{{ ('https://assets.exova.id/img/logo.png') }}" alt="Logo">
@@ -69,7 +69,7 @@
                 <div class="collapse navbar-collapse text-white" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto ">
-
+                        
                     </ul>
 
                     <!-- Right Side Of Navbar -->
