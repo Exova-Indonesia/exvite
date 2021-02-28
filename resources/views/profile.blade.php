@@ -1,20 +1,8 @@
 @extends('layouts.app')
 @section('content')
     <div class="container">
-        @if(empty(Auth::user()->email_verified_at))
-        <div class="d-flex">
-            <div class="m-auto">
-                <div class="alert text-center alert-danger">
-                    Ups, Sepertinya kamu belum aktivasi email. Yuk aktivasi sekarang! Atau belum mendapat email aktivasi? 
-                    <a class="btn btn-exova" onclick="event.preventDefault();
-                    document.getElementById('verify-form').submit();">Kirim Ulang Email Aktivasi</a>
-                    <form id="verify-form" action="{{ route('verification.send') }}" method="POST" class="d-none">
-                        @csrf
-                    </form>
-                </div>
-            </div>
+        <div class="alert-top">
         </div>    
-        @endif
         <div class="col-lg-12">
             <div class="rounded-exova shadow d-flex p-4">
                 <div class="m-auto">
@@ -23,7 +11,7 @@
                             <img class="profile-picture" src="" alt="Profile Picture">
                         </div>
                         <div class="mx-3 my-auto text-profile">
-                            <div class="user-profile-title text-muted">User Profile</div>
+                            <div class="user-profile-title text-muted">@lang('profile.title')</div>
                             <div class="user-profile-content name-banner"></div>
                         </div>
                     </div>
@@ -35,7 +23,7 @@
                 <div class="col-lg-3 p-2">
                     <div class="card">
                         <div class="card-header text-white bg-exova">
-                            Last Activity
+                            @lang('profile.card-1.title')
                         </div>
                         <div class="card-body p-0">
                             <ul class="list-group text-responsive">
@@ -56,11 +44,11 @@
                 <div class="col-lg-6 p-2">
                     <div class="card">
                         <div class="card-header text-white bg-exova">
-                            Profil Akun
+                            @lang('profile.card-2.title')
                         </div>
                         <div class="alert alert-primary m-2 text-center">
-                            Tingkatkan ke akun premium
-                            <a href="membership" class="btn-sm btn-danger">Sekarang</a>
+                            @lang('profile.card-2.membership')
+                            <a href="membership" class="btn-sm btn-danger">@lang('profile.card-2.button.membership')</a>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -72,16 +60,16 @@
                                         <div class="profile-describe">
                                             <div class="edit-profile-btn">
                                                 <form id="editphotoSend" type="POST" enctype="multipart/form-data">
-                                                <label role="button" for="editPhoto" class="btn-sm btn-primary rounded-pill">Edit Photo</label>
+                                                <label role="button" for="editPhoto" class="btn-sm btn-primary rounded-pill">@lang('profile.card-2.button.editprofil')</label>
                                                 <p class="text-muted profile-picture-label m-0"></p>
                                                     @csrf
                                                     <input type="file" id="editPhoto" name="content" class="d-none">
                                                 </form>
                                             </div>
                                             <div class="profile status">
-                                                <div class="text-responsive"><span>Bergabung Sejak</span><strong class="float-right">{{ date('F j, Y', strtotime($user->created_at)) }}</strong></div>
-                                                <div class="text-responsive"><span>Exova Points</span><strong class="float-right">1390</strong></div>
-                                                <div class="text-responsive"><span>Status</span><strong class="float-right">{{ $user->subscription }}</strong></div>
+                                                <div class="text-responsive"><span>@lang('profile.card-2.since')</span><strong class="float-right">{{ date('F j, Y', strtotime($user->created_at)) }}</strong></div>
+                                                <div class="text-responsive"><span>@lang('profile.card-2.points')</span><strong class="float-right">1390</strong></div>
+                                                <div class="text-responsive"><span>@lang('profile.card-2.status')</span><strong class="float-right">{{ $user->subs->plan->plan_name ?? 'NewBie' }}</strong></div>
                                             </div>
                                         </div>
                                     </div>
@@ -108,19 +96,19 @@
                 <div class="col-lg-3 p-2">
                     <div class="card">
                         <div class="card-header text-white bg-exova">
-                            Pengaturan
+                            @lang('profile.card-3.title')
                         </div>
                         <div class="card-body p-0">
                             <ul class="list-group">
                                 <li class="list-group-item" role="button">
-                                    <div data-target="#notifikasicollapse" data-toggle="collapse" aria-expanded="false" aria-controls="notifikasicollapse">Notifikasi <span class="float-right"><i class="fas fa-angle-down"></i></span></div>
+                                    <div data-target="#notifikasicollapse" data-toggle="collapse" aria-expanded="false" aria-controls="notifikasicollapse">@lang('profile.card-3.notifikasi.title') <span class="float-right"><i class="fas fa-angle-down"></i></span></div>
                                     <div class="collapse" id="notifikasicollapse">
                                         <form id="notifications">
                                             @csrf
                                             <input type="hidden" name="type" value="Notif">
                                             <div class="sub-collapse">
                                                 <div class="text-responsive">
-                                                    Pembelian
+                                                    @lang('profile.card-3.notifikasi.pembelian')
                                                     <span class="float-right">
                                                         <input class="notifications" data-label="pembelian" name="pembelian" type="checkbox" @if( Auth::user()->notif->pembelian == 0) value="1" checked @else value="0" @endif>
                                                     </span>
@@ -128,7 +116,7 @@
                                             </div>
                                             <div class="sub-collapse">
                                                 <div class="text-responsive">
-                                                    Penjualan
+                                                    @lang('profile.card-3.notifikasi.penjualan')
                                                     <span class="float-right">
                                                         <input class="notifications" data-label="penjualan" name="penjualan" type="checkbox" @if( Auth::user()->notif->penjualan == 0) value="1" checked @else value="0" @endif>
                                                     </span>
@@ -136,7 +124,7 @@
                                             </div>
                                             <div class="sub-collapse">
                                                 <div class="text-responsive">
-                                                    Pengingat
+                                                    @lang('profile.card-3.notifikasi.pengingat')
                                                     <span class="float-right">
                                                         <input class="notifications" data-label="pengingat" name="pengingat" type="checkbox" @if( Auth::user()->notif->pengingat == 0) value="1" checked @else value="0" @endif>
                                                     </span>
@@ -144,7 +132,7 @@
                                             </div>
                                             <div class="sub-collapse">
                                                 <div class="text-responsive">
-                                                    Promo
+                                                    @lang('profile.card-3.notifikasi.promo')
                                                     <span class="float-right">
                                                         <input class="notifications" data-label="promo" name="promo" type="checkbox" @if( Auth::user()->notif->promo == 0) value="1" checked @else value="0" @endif>
                                                     </span>
@@ -154,26 +142,26 @@
                                     </div>
                                 </li>
                                 <li class="list-group-item bg-transparent" role="button">
-                                    <div data-target="#kontakcollapse" data-toggle="collapse" aria-expanded="false" aria-controls="kontakcollapse">Kontak <span class="float-right"><i class="fas fa-angle-down"></i></span></div>
+                                    <div data-target="#kontakcollapse" data-toggle="collapse" aria-expanded="false" aria-controls="kontakcollapse">@lang('profile.card-3.kontak.title') <span class="float-right"><i class="fas fa-angle-down"></i></span></div>
                                     <div class="collapse" id="kontakcollapse">
                                         <div class="sub-collapse">
-                                            <div class="text-responsive" id="email" data-title="Ganti Email" data-label="Email" data-target="#Modal" data-toggle="modal">
-                                                Ganti Email
+                                            <div class="text-responsive email" data-title="Ganti Email" data-label="Email" data-target="#Modal" data-toggle="modal">
+                                                @lang('profile.card-3.kontak.email')
                                             </div>
                                         </div>
                                         <div class="sub-collapse">
                                             <div class="text-responsive" id="phone" data-title="Ganti No. Telepon" data-label="Phone" data-target="#Modal" data-toggle="modal">
-                                                Ganti No. Telepon
+                                                @lang('profile.card-3.kontak.phone')
                                             </div>
                                         </div>
                                     </div>
                                 </li>
                                 <li class="list-group-item bg-transparent" role="button">
-                                    <div data-target="#historycollapse" data-toggle="collapse" aria-expanded="false" aria-controls="historycollapse">Riwayat Aktivitas <span class="float-right"><i class="fas fa-angle-down"></i></span></div>
+                                    <div data-target="#historycollapse" data-toggle="collapse" aria-expanded="false" aria-controls="historycollapse">@lang('profile.card-3.aktivitas.title') <span class="float-right"><i class="fas fa-angle-down"></i></span></div>
                                     <div class="collapse" id="historycollapse">
                                         <div class="sub-collapse">
                                             <div class="text-responsive">
-                                                Riwayat Aktivitas
+                                                @lang('profile.card-3.aktivitas.title')
                                                 <span class="float-right">
                                                     <input class="notifications" data-label="aktivitas" name="aktivitas" type="checkbox" @if( Auth::user()->notif->aktivitas == 0) value="1" checked @else value="0" @endif>
                                                 </span>
@@ -181,13 +169,31 @@
                                         </div>
                                         <div class="sub-collapse">
                                             <div class="text-responsive deleteAktivitas" data-label="deleteAktivitas">
-                                                Hapus Riwayat Aktivitas
+                                                @lang('profile.card-3.aktivitas.delete')
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item bg-transparent" role="button">
+                                    <div data-target="#searchcollapse" data-toggle="collapse" aria-expanded="false" aria-controls="searchcollapse">@lang('profile.card-3.search.title') <span class="float-right"><i class="fas fa-angle-down"></i></span></div>
+                                    <div class="collapse" id="searchcollapse">
+                                        <div class="sub-collapse">
+                                            <div class="text-responsive">
+                                                @lang('profile.card-3.search.title')
+                                                <span class="float-right">
+                                                    <input class="notifications" data-label="aktivitas" name="aktivitas" type="checkbox" @if( Auth::user()->notif->aktivitas == 0) value="1" checked @else value="0" @endif>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="sub-collapse">
+                                            <div class="text-responsive deletePencarian" data-label="deletePencarian">
+                                                @lang('profile.card-3.search.delete')
                                             </div>
                                         </div>
                                     </div>
                                 </li>
                                 <li class="list-group-item" role="button" data-target="#ResetPassword" data-toggle="modal">
-                                    Ganti Password
+                                    @lang('profile.card-3.password.title')
                                 </li>
                             </ul>
                         </div>
@@ -230,12 +236,6 @@
 
                             <div class="col-md-10">
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
                             </div>
                         </div>
 
@@ -305,10 +305,40 @@
             let content = ``;
             $('.profile-picture').attr('src', data.avatar['large']);
             $('#name-btn').attr('data-content', data.name);
+            if(data.email == '') {
+                let email;
+                email = `
+                <div class="d-flex">
+                    <div class="m-auto">
+                        <div class="alert text-center alert-danger">
+                                @lang('profile.email.title')
+                            <a class="btn btn-exova email" data-title="Ganti Email" data-label="Email" data-target="#Modal" data-toggle="modal">@lang('profile.email.button.email')</a>
+                        </div>
+                    </div>
+                </div>
+                `;
+                $('.alert-top').html(email);
+            } else if(data.email_verified_at == null) {
+                email = `
+                <div class="d-flex">
+                    <div class="m-auto">
+                        <div class="alert text-center alert-danger">
+                                @lang('profile.verify.title')
+                            <a class="btn btn-exova" onclick="event.preventDefault();
+                            document.getElementById('verify-form').submit();">@lang('profile.verify.button.verify')</a>
+                            <form id="verify-form" action="{{ route('verification.resend') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </div>
+                    </div>
+                </div>  
+                `;
+                $('.alert-top').html(email);
+            }
             if(data.email) {
-                $('#email').attr('data-content', data.email);
+                $('.email').attr('data-content', data.email);
             } else {
-                $('#email').attr('data-content', '');
+                $('.email').attr('data-content', '');
             }
             if(data.phone) {
                 $('#phone').attr('data-content', data.phone);
@@ -342,7 +372,7 @@
             }
             $('#birthday').html(content);
             if(data.address.address || data.address.district || data.address.city || data.address.state) {
-                $('#add_address').html(`<span>`+ data.address.address + ', ' + data.address.district + ', ' + data.address.city + ', ' + data.address.state +`</span>
+                $('#add_address').html(`<strong> `+ data.address.address_name +` </strong> <br> <span> ` + data.address.address + ', ' + data.address.district + ', ' + data.address.city + ', ' + data.address.state +`</span>
                 <span role="button" data-title="Ganti Alamat" data-label="Alamat" data-target="#ModalAddress" data-toggle="modal">
                     <i class="fas fa-edit text-primary"></i>
                 </span>`);
@@ -411,6 +441,13 @@
         showConfirmButton: false,
         timer: 3000
         });
+
+        @error('email')
+            Toast.fire({
+            icon: 'error',
+            title: '{{ $message }}',
+            })
+        @enderror
 
         $('#ModalAddress').on('show.bs.modal', function(event) {
             let button, title, label, modal, content;
@@ -507,7 +544,7 @@
                     <div class="modal-body">
                         <div id="form-group" class="form-group">
                             <label id="label">`+label+`</label>
-                            <input type="email" class="form-control content email" value="`+content+`">
+                            <input type="email" class="form-control content emails" value="`+content+`">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -531,9 +568,9 @@
             }
             modal.find('.modal-title').html(title);
 
-            $('.email').on('keyup', () => {
+            $('.emails').on('keyup', () => {
                 let _interval = null;
-                let content = $('.email').val();
+                let content = $('.emails').val();
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
@@ -593,7 +630,7 @@
                         } 
                     },
                     error: function (data) {
-                        // console.log(data)
+                        console.log(data)
                     },
                 })
             })
@@ -627,6 +664,7 @@
                     title: data.status,
                     });
                     $('.profile-picture-label').html('');
+                    $('#editphotoSend').val('');
                 },
                 error: function (data) {
                     console.log(data)

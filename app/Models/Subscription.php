@@ -9,4 +9,5 @@ class Subscription extends Model
 {
     use HasFactory;
     protected $table = 'subscription_plan';
+    protected $primaryKey = 'plan_id';
 }

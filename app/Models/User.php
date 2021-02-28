@@ -68,5 +68,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function notif() {
         return $this->hasOne(UserNotif::class, 'user_id');
     }
+    public function subs() {
+        return $this->belongsTo(UserSubscription::class, 'subscription');
+    }
+    public function transaction() {
+        return $this->hasOne(Wallet::class, 'user_id');
+    }
 
 }

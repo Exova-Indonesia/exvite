@@ -238,11 +238,17 @@ h3 {
 .mainmenu-area ul.nav.navbar-nav li.active a {
     border-bottom-color: #fff;
 }
-.mainmenu-area .navbar-brand {
+/* .mainmenu-area .navbar-brand {
     height: auto;
     padding: 0 15px;
-}
+} */
 .mainmenu-area .navbar-brand img {
+    padding: 0.25rem 0.75rem;
+}
+.back-icon {
+    padding: 0.25rem 0.75rem;
+}
+.mainmenu-area .navbar-profile img {
     height: 40px;
     object-fit: cover;
 }

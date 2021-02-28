@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="preloader">
+    <span><img width="40px" height="40px" src="{{ ('https://assets.exova.id/img/1.png') }}"></span>
+</div>
 <div class="home-area overlay" id="dashboard_page">
     <div class="container">
         <div id="particles-js"></div>
@@ -94,7 +97,7 @@
         </div>
     </div>
 </div>
-<section id="services_page" class="py-5 wow fadeInUp pb-5" data-wow-delay="0.4s" data-component="services_page">
+<section id="services_page" class="py-5 wow fadeInUp pb-5" data-wow-delay="0.5s" data-component="services_page">
     <div class="container">
          <div class="row">
             <div class="col-xs-12 col-md-12 col-md-offset-1">
@@ -117,7 +120,7 @@
                                     @lang('home.services.jasa.description')
                                 </li>
                             </ul>
-                            <a href="#" class="btn btn-primary btn-block p-2 shadow">@lang('home.services.jasa.button')</a>
+                            <a href="#" class="btn btn-exova-grad btn-block p-2 shadow">@lang('home.services.jasa.button')</a>
                             </div>
                         </div>
                         <!-- END -->
@@ -132,7 +135,7 @@
                                     @lang('home.services.creations.description')
                                 </li>
                             </ul>
-                            <a href="#" class="btn btn-primary btn-block p-2 shadow">@lang('home.services.creations.button')</a>
+                            <a href="#" class="btn btn-exova-grad btn-block p-2 shadow">@lang('home.services.creations.button')</a>
                             </div>
                         </div>
                         <!-- END -->
@@ -225,8 +228,8 @@
                                 @endforeach
                                 </ul>
                             </div>
-                            <div class="price-button">
-                                <a href="/purchase/{{ $s->plan_id }}/{{ strtolower($s->plan_name) }}">@lang('home.membership.buy')</a>
+                            <div role="button" class="price-button add_cart" data-id="{{ $s->plan_id }}" data-label="Subscription">
+                                <a class="text-white">@lang('home.membership.buy')</a>
                             </div>
                         </div>
                     </div>
@@ -441,7 +444,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="input14">IDR</span>
                                 </div>
-                                <input type="text" id="amount" name="amount" class="form-control saldo_send form-control-lg" autocomplete="off" placeholder="0">
+                                <input type="text" name="amount" class="form-control saldo_send form-control-lg" autocomplete="off" placeholder="0">
                             </div>
                         </div>
                         <div class="form-group basic">
@@ -522,6 +525,28 @@
         </div>
     </div>
 </div>
+</div>
 <!-- * Withdraw Action Sheet -->
+    <!-- Modal -->
+    <button type="button" class="d-none" id="cart_add" data-toggle="modal" data-target="#add_cart"></button>
+    <div class="modal fade" id="add_cart" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add_cart_title">Berhasil ditambahkan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <a role="button" class="btn btn-danger" data-dismiss="modal">Lanjut Belanja</a>
+                <a role="button" href="{{ url('cart') }}" class="btn btn-success">Lihat Keranjang</a>
+            </div>
+            </div>
+        </div>
+    </div>
 @endguest
 @endsection

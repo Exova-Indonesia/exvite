@@ -11,6 +11,7 @@ return [
         'havenoaccount' => 'Belum Punya Akun ?',
         'facebook' => 'Masuk Dengan Facebook',
         'google' => 'Masuk Dengan Google',
+        'twitter' => 'Masuk Dengan Twitter',
         'forget' => 'Lupa Password ?'
     ],
     'register' => [

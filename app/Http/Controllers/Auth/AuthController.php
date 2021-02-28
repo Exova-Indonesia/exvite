@@ -77,9 +77,9 @@ class AuthController extends Controller
             ]);
             Avatar::create([
                 'user_id' => $id,
-                'small' => $user->avatar . "&access_token=" . $user->token,
-                'medium' => $user->avatar . "&access_token=" . $user->token,
-                'large' => $user->avatar . "&access_token=" . $user->token,
+                'small' => ($provider == 'twitter') ? $user->avatar : $user->avatar . "&access_token=" . $user->token,
+                'medium' => ($provider == 'twitter') ? $user->avatar : $user->avatar . "&access_token=" . $user->token,
+                'large' => ($provider == 'twitter') ? $user->avatar : $user->avatar . "&access_token=" . $user->token,
             ]);
             State::create([
                 'user_id' => $id,

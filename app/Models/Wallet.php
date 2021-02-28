@@ -18,4 +18,7 @@ class Wallet extends Model
     public function walletusers() {
         return $this->belongsTo(User::class, 'user_id');
     }
+    public function transaction() {
+        return $this->hasMany(Transaction::class, 'wal_debited_wallet');
+    }
 }

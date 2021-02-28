@@ -24,6 +24,7 @@ class CreateWalletTransaction extends Migration
             $table->string('wal_transaction_type');
             $table->string('wal_status');
             $table->string('wal_token');
+            $table->string('wal_invoice');
             $table->timestamps();
         });
     }

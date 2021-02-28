@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Auth;
 use Lang;
 use PDF;
+use Storage;
 use App\Models\Wallet;
 use App\Models\Bank;
 use App\Models\Activity;
@@ -13,6 +14,7 @@ use App\Models\SnapTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
+use App\Notifications\TransactionMail;
 
 class WalletController extends Controller
 {
@@ -125,9 +127,35 @@ class WalletController extends Controller
         }
     }
 
+    public function create_withdraw($id, $token, $ip, $agent, $request, $user) {
+        $invoice = Auth::user()->id . '/wallet/transactions/' . 'withdraw/' . date('Y-m') . '/withdraw-' . date('d') . '-' . $id .'.pdf';
+        Transaction::create([
+            'wal_transaction_id' =>  $id,
+            'wal_reference_id' =>  $request['withdraw_from'],
+            'wal_credited_wallet' => $user['wallet_id'],
+            'wal_debited_wallet' => $user['wallet_id'],
+            'wal_debited_bank' => $request['withdraw_to'],
+            'wal_description' => $request['note'],
+            'wal_amount' => preg_replace(['/[,.]/'],'',$request['amount']),
+            'wal_transaction_type' => 'WITHDRAW',
+            'wal_status' => 'pending',
+            'wal_token' => $token,
+            'wal_invoice' => $invoice,
+        ]);
+        Activity::create([
+            'user_id' => Auth::user()->id,
+            'activity' => Lang::get('activity.transaction.withdraw.' . $request['withdraw_from']),
+            'ip_address' => $ip,
+            'user_agent' => $agent,
+        ]);
+        $details = Transaction::where('wal_transaction_id', $id)->first();
+        $pdf = PDF::loadview('exports.transaction', ['details' => $details])->setPaper('a4', 'potrait');
+        Storage::put($invoice, $pdf->output());
+    }
+
     public function withdraw(Request $request) {
         $user = WalletController::index()->balance;
-        $id_transaction = date('mdhi').rand();
+        $id_transaction = date('Yhis').rand(0, 9999);
         $token = hash('sha512', $user->wallet_id.'pending'.preg_replace(['/[,.]/'],'',$request->amount));
         $validator = Validator::make($request->all(), [
             'withdraw_from' => ['required', 'string'],
@@ -137,90 +165,36 @@ class WalletController extends Controller
         if($validator->fails()) {
             return back()->with(['error' => Lang::get('validation.withdraw.required')]);
         }
+        $ip = $request->ip();
+        $agent = $request->userAgent();
         switch($request->withdraw_from) {
             case "pendapatan":
                 if(($user->revenue < preg_replace(['/[,.]/'],'',$request->amount)) || ($user->revenue == 0)) {
                     return back()->with(['error'=> Lang::get('validation.balance')]);
                 }
-                Transaction::create([
-                    'wal_transaction_id' =>  $id_transaction,
-                    'wal_reference_id' =>  'Pendapatan',
-                    'wal_credited_wallet' => $user->wallet_id,
-                    'wal_debited_wallet' => $user->wallet_id,
-                    'wal_debited_bank' => $request->withdraw_to,
-                    'wal_description' => $request->note,
-                    'wal_amount' => preg_replace(['/[,.]/'],'',$request->amount),
-                    'wal_transaction_type' => 'WITHDRAW',
-                    'wal_status' => 'pending',
-                    'wal_token' => $token,
-                ]);
-                SnapTransaction::create([
-                    'snap_transaction_id' =>  $id_transaction,
-                    'snap_reference_id' =>  'Pendapatan',
-                    'snap_credited_wallet' => $user->wallet_id,
-                    'snap_debited_wallet' => $user->wallet_id,
-                    'snap_debited_bank' => $request->withdraw_to,
-                    'snap_description' => $request->note,
-                    'snap_amount' => preg_replace(['/[,.]/'],'',$request->amount),
-                    'snap_transaction_type' => 'WITHDRAW',
-                    'snap_status' => 'pending',
-                    'snap_token' => $token,
-                ]);
+
+                WalletController::create_withdraw($id_transaction, $token, $ip, $agent, $request->all(), $user);
+
                 Wallet::where('wallet_id', $user->wallet_id)->update([
                     'revenue' => $user->revenue - preg_replace(['/[,.]/'],'',$request->amount),
                     'balance' => $user->balance - preg_replace(['/[,.]/'],'',$request->amount),
                 ]);
-                Activity::create([
-                    'activity_id' => date('Ymdhis').rand(0, 1000),
-                    'user_id' => Auth::user()->id,
-                    'activity' => Lang::get('activity.transaction.withdraw.revenue'),
-                    'ip_address' => $request->ip(),
-                    'user_agent' => $request->userAgent(),
-                ]);
-                // $response = Http::post('http://localhost:8080/api/withdraw/status/send', array($withdraw));
+
                 return back()->with(['status' => Lang::get('validation.withdraw.revenue')]);
-                //return response()->json($withdraw);
                 break;
 
             case "dana":
                 if(($user->fund < preg_replace(['/[,.]/'],'',$request->amount)) || ($user->fund == 0)) {
                     return back()->with(['error'=> Lang::get('validation.balance')]);
                 }
-                Transaction::create([
-                    'wal_transaction_id' =>  $id_transaction,
-                    'wal_reference_id' =>  'Dana',
-                    'wal_credited_wallet' => $user->wallet_id,
-                    'wal_debited_wallet' => $user->wallet_id,
-                    'wal_debited_bank' => $request->withdraw_to,
-                    'wal_description' => $request->note,
-                    'wal_amount' => preg_replace(['/[,.]/'],'',$request->amount),
-                    'wal_transaction_type' => 'WITHDRAW',
-                    'wal_status' => 'pending',
-                    'wal_token' => $token,
-                ]);
-                SnapTransaction::create([
-                    'snap_transaction_id' =>  $id_transaction,
-                    'snap_reference_id' =>  'Dana',
-                    'snap_credited_wallet' => $user->wallet_id,
-                    'snap_debited_wallet' => $user->wallet_id,
-                    'snap_debited_bank' => $request->withdraw_to,
-                    'snap_description' => $request->note,
-                    'snap_amount' => preg_replace(['/[,.]/'],'',$request->amount),
-                    'snap_transaction_type' => 'WITHDRAW',
-                    'snap_status' => 'pending',
-                    'snap_token' => $token,
-                ]);
+
+                WalletController::create_withdraw($id_transaction, $token, $ip, $agent, $request->all(), $user);
+
                 Wallet::where('wallet_id', $user->wallet_id)->update([
                     'fund' => $user->fund - preg_replace(['/[,.]/'],'',$request->amount),
                     'balance' => $user->balance - preg_replace(['/[,.]/'],'',$request->amount),
                 ]);
-                Activity::create([
-                    'activity_id' => date('Ymdhis').rand(0, 1000),
-                    'user_id' => Auth::user()->id,
-                    'activity' => Lang::get('activity.transaction.withdraw.fund'),
-                    'ip_address' => $request->ip(),
-                    'user_agent' => $request->userAgent(),
-                ]);
+
                 return back()->with(['status' => Lang::get('validation.withdraw.fund')]);
                 break;
 
@@ -228,30 +202,9 @@ class WalletController extends Controller
                 if(($user->balance < preg_replace(['/[,.]/'],'',$request->amount)) || ($user->balance == 0)) {
                     return back()->with(['error'=> Lang::get('validation.balance')]);
                 }
-                Transaction::create([
-                    'wal_transaction_id' =>  $id_transaction,
-                    'wal_reference_id' =>  'Balance',
-                    'wal_credited_wallet' => $user->wallet_id,
-                    'wal_debited_wallet' => $user->wallet_id,
-                    'wal_debited_bank' => $request->withdraw_to,
-                    'wal_description' => $request->note,
-                    'wal_amount' => preg_replace(['/[,.]/'],'',$request->amount),
-                    'wal_transaction_type' => 'WITHDRAW',
-                    'wal_status' => 'pending',
-                    'wal_token' => $token,
-                ]);
-                SnapTransaction::create([
-                    'snap_transaction_id' =>  $id_transaction,
-                    'snap_reference_id' =>  'Balance',
-                    'snap_credited_wallet' => $user->wallet_id,
-                    'snap_debited_wallet' => $user->wallet_id,
-                    'snap_debited_bank' => $request->withdraw_to,
-                    'snap_description' => $request->note,
-                    'snap_amount' => preg_replace(['/[,.]/'],'',$request->amount),
-                    'snap_transaction_type' => 'WITHDRAW',
-                    'snap_status' => 'pending',
-                    'snap_token' => $token,
-                ]);
+
+                WalletController::create_withdraw($id_transaction, $token, $ip, $agent, $request->all(), $user);
+
                 $fund = $user->fund - preg_replace(['/[,.]/'],'',$request->amount);
                 $sisafund = $fund;
                 if($sisafund <= 0) {
@@ -266,44 +219,50 @@ class WalletController extends Controller
                     'revenue' => $revenue,
                     'balance' => $balance,
                 ]);
-                Activity::create([
-                    'activity_id' => date('Ymdhis').rand(0, 1000),
-                    'user_id' => Auth::user()->id,
-                    'activity' => Lang::get('activity.transaction.withdraw.balance'),
-                    'ip_address' => $request->ip(),
-                    'user_agent' => $request->userAgent(),
-                ]);
+
                 return back()->with(['status' => Lang::get('validation.withdraw.balance')]);
                 break;
 
             default:
                 return back()->with(['error' => Lang::get('validation.withdraw.failed')]);
                 break;
-
         }
     }
 
     public function send(Request $request) {
         $debited = Wallet::where('user_id', Auth::user()->id)->first();
-        if(($debited->fund < preg_replace(['/[,.]/'],'',$request->amount)) || ($debited->fund == 0)) {
+
+        $validator = Validator::make($request->all(), [
+        'wallet_id' => ['required', 'string'],
+        'transfer_to' => ['required', 'integer'],
+        'amount' => ['required'],
+        ]);
+
+        if($validator->fails()) {
+            return back()->with(['error' => Lang::get('validation.withdraw.required')]);
+        } else if(($debited->fund < preg_replace(['/[,.]/'],'',$request->amount)) || ($debited->fund == 0)) {
             return redirect()->back()->with(['error'=> Lang::get('validation.fund')]);
         } else if($request->transfer_to == $debited->wallet_id) {
             return redirect()->back()->with(['error'=> Lang::get('validation.sendself')]);
         } else {
-
-        $token = hash('sha512', $debited->wallet_id.'pending'.preg_replace(['/[,.]/'],'',$request->amount));
+            $token = hash('sha512', $debited->wallet_id. date('Yhmdhis') . rand() .'failed'.preg_replace(['/[,.]/'],'',$request->amount));
+            $id = date('Yhis').rand(0, 9999);
+            $invoice = Auth::user()->id . '/wallet/transactions/' . 'transfer/' . date('Y-m') . '/transfer-' . date('d') . '-' . $id .'.pdf';
         $send = Transaction::create([
-            'wal_transaction_id' =>  date('mdhi').rand(),
+            'wal_transaction_id' =>  $id,
             'wal_reference_id' =>  'Dana',
             'wal_credited_wallet' => $debited->wallet_id,
             'wal_debited_wallet' => $request->transfer_to,
             'wal_description' => $request->note,
             'wal_amount' => preg_replace(['/[,.]/'],'',$request->amount),
             'wal_transaction_type' => 'TRANSFER',
-            'wal_status' => 'pending',
+            'wal_status' => 'failed',
             'wal_token' => $token,
+            'wal_invoice' => $invoice,
         ]);
-
+        $details = Transaction::where('wal_transaction_id', $id)->first();
+        $pdf = PDF::loadview('exports.transaction', ['details' => $details])->setPaper('a4', 'potrait');
+        Storage::put($invoice, $pdf->output());
         $url = 'http://localhost:8080/api/wallet/status/send';
         // $ch = curl_init($url);
         // $payload = json_encode(array($send));
@@ -313,16 +272,33 @@ class WalletController extends Controller
         // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         // $result = curl_exec($ch);
         // curl_close($ch);
-        $response = Http::put('http://localhost:8080/api/wallet/status/send', array($send));
-        return redirect()->back();
+        $response = Http::put($url, array($send));
+        // $response = Http::put('https://webhook.site/4c021b54-1fdf-4c96-a1e7-76dcfaa868e9', array($send));
+        $details = Transaction::with('debitedwallet.walletusers')
+        ->where('wal_transaction_id', $id)
+        ->first();
+        Auth::user()->notify(new TransactionMail($details));
+        return redirect('/wallet/redirect/' . base64_encode($id) . '/' . 'transfer');
         }
     }
+
+    public function redirectTransaction($id, $type) {
+        $balance = Wallet::where('user_id', Auth::user()->id)->first();
+        $details = Transaction::with('debitedwallet.walletusers')
+        ->where('wal_transaction_id', base64_decode($id))
+        ->orWhere('wal_debited_wallet', Auth::user()->id)
+        ->orWhere('wal_credited_wallet', Auth::user()->id)
+        ->first();
+        return view('transaction-redirect', ['details' => $details, 'balance' => $balance]);
+    }
+
     public function sendstatus(Request $request) {
         $data = $request->json()->all();
         $token = $data[0]['wal_token'];
         $id = $data[0]['wal_transaction_id'];
+        $cre = Wallet::where('wallet_id', $data[0]['wal_credited_wallet'])->first();
         $status = Transaction::where('wal_transaction_id', $id)->first();
-    if(($token == $status->wal_token) && ($data[0]['wal_status'] !== 'success')) {
+    if(($token == $status->wal_token) && ($data[0]['wal_status'] !== 'success') && $cre->fund >= $data[0]['wal_amount']) {
             Transaction::where('wal_transaction_id', $id)->update([
                 'wal_status' => 'success',
                 'wal_token' => $token,
@@ -338,12 +314,14 @@ class WalletController extends Controller
                 'balance' => $debited->balance + $data[0]['wal_amount'],
             ]);
             Activity::create([
-                'activity_id' => date('Ymdhis').rand(0, 1000),
-                'user_id' => Auth::user()->id,
+                'user_id' => $status->debitedwallet->walletusers->id,
                 'activity' => Lang::get('activity.transaction.send.fund'),
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
             ]);
+            $details = Transaction::where('wal_transaction_id', $id)->first();
+            $pdf = PDF::loadview('exports.transaction', ['details' => $details])->setPaper('a4', 'potrait');
+            Storage::put($status->debitedwallet->walletusers->id . '/wallet/transactions/' . 'transfer/' . date('Y-m') . '/transfer-' . date('d') . '-' . $id .'.pdf', $pdf->output());
         }
     }
 

@@ -18,11 +18,17 @@
                                 <div class="product-cart-body">
                                     <div class="row">
                                         <div class="ml-2">
-                                            <img width="70" height="70" src="{{ $j->jasa->jasa_thumbnail }}" alt="Products Icons">
+                                            <img width="70" height="70" src="@if($j->product_type == 'Jasa') $j->jasa->jasa_thumbnail @elseif($j->product_type == 'Subscription') https://assets.exova.id/img/1.png @endif" alt="Products Icons">
                                         </div>
                                         <div class="ml-3">
-                                            <p class="mb-1">{{ $j->jasa->jasa_name }}</p>
-                                            <p class="mb-1"><strong>IDR {{ number_format($j->jasa->jasa_price, 0) }}</strong></p>
+                                            <p class="mb-1"> 
+                                                @if($j->product_type == 'Jasa') 
+                                                    {{ $j->jasa->jasa_name }}
+                                                @elseif($j->product_type == 'Subscription') 
+                                                    {{ $j->plan->plan_name }}
+                                                @endif
+                                            </p>
+                                            <p class="mb-1"><strong>IDR {{ number_format($j->unit_price, 0) }}</strong></p>
                                             <p class="mb-1">{{ $j->product_type }}</p>
                                         </div>
                                     </div>

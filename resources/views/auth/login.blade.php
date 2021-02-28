@@ -73,6 +73,7 @@
 					</div>
                         <a href="{{ url('/auth/facebook') }}" class="btn btn-primary facebook w-100 m-2 text-white text-decoration-none"> @lang('authuser.login.facebook') <i class="fas fa-facebook"></i> </a>
                         <a href="{{ url('/auth/google') }}" class="btn btn-danger google w-100 m-2 text-white text-decoration-none"> @lang('authuser.login.google') <i class="fas fa-google"></i> </a>
+                        <a href="{{ url('/auth/twitter') }}" class="btn btn-info twitter w-100 m-2 text-white text-decoration-none"> @lang('authuser.login.twitter') <i class="fas fa-twitter"></i> </a>
 					<div class="w-full text-center"> @lang('authuser.login.havenoaccount') 
 						<a href="{{ route('register') }}">
 							@lang('authuser.login.register')

@@ -28,13 +28,20 @@
                                 <div class="form-group p-0 col-md-12">
                                     <div class="mb-2"><strong>Pesanan <?php echo $i++ ?></strong></div>
                                     <div class="mb-3">
-                                        <h5 class="m-0"> {{ $o->jasa->seller->name }} </h5>
-                                        <small> {{ $o->jasa->seller->address->city }} </small>
+                                        <h5 class="m-0"> @if($o->product_type == 'Jasa') 
+                                            {{ $o->jasa->seller->name }}
+                                        @elseif($o->product_type == 'Create') @else @endif </h5>
+                                        <small> @if($o->product_type == 'Jasa') 
+                                            {{ $o->jasa->seller->address->city }}
+                                        @elseif($o->product_type == 'Create') @else @endif </small>
                                     </div>
                                     <div class="row mb-3">
-                                        <div><img class="mx-2 border p-2" width="70px" height="70px" src="{{ $o->jasa->jasa_thumbnail }}" alt="Thumbnail"></div>
+                                        <div><img class="mx-2 border p-2" width="70px" height="70px" src="@if($o->product_type == 'Jasa') $o->jasa->jasa_thumbnail 
+                                        @elseif($o->product_type == 'Subscription') https://assets.exova.id/img/1.png @endif" alt="Thumbnail"></div>
                                         <div class="ml-3">
-                                            <p class="m-0"> {{ $o->jasa->jasa_name }}</p>
+                                            <p class="m-0"> @if($o->product_type == 'Jasa') 
+                                            {{ $o->jasa->seller->name }}
+                                            @elseif($o->product_type == 'Create') @else {{ $o->plan->plan_name }} @endif</p>
                                             <p class="m-0"><small>Tipe Pesanan : {{ $o->product_type }}</small></p>
                                             <p class="m-0"><span><strong>IDR {{ number_format($o->unit_price, 0) }}</strong></span></p>
                                         </div>

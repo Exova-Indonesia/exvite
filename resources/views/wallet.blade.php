@@ -114,7 +114,7 @@
                 </div>
                 <div class="card-body">
                 <div class="text-right">
-                    <a href="{{ url('history/export') }}" class="btn btn-success m-1">Export Riwayat</a>
+                    <a href="{{ route('transaction.all') }}" class="btn btn-success m-1">Export Riwayat</a>
                 </div>
                     <div class="table-responsive my-4">
                         <table class="table" id="history_transaction">
@@ -136,7 +136,7 @@
                                 @elseif($c->creditedwallet->walletusers['id'] == Auth::user()->id)
                                 <td>{{ $c->debitedwallet->walletusers['name'] }}</td>
                                 @else
-                                <td>{{ $c->creditedwallet->walletusers['name'] }}</td>
+                                <td>{{ $c->debitedwallet->walletusers['name'] }}</td>
                                 @endif
                                 <td>{{ $c->wal_transaction_type }}</td>
                                 @if($c->creditedwallet->walletusers['id'] == Auth::user()->id && $c->wal_credited_wallet !== $c->wal_debited_wallet)
@@ -144,7 +144,9 @@
                                 @else
                                 <td class="text-danger"> - IDR {{ number_format($c->wal_amount, 0) }}</td>
                                 @endif
-                                <td>{{ $c->wal_status }}</td>
+                                <td class="@if($c->wal_status == 'success') text-success 
+                                    @elseif($c->wal_status == 'pending') text-warning 
+                                    @else text-danger @endif">{{ $c->wal_status }}</td>
                             </tr>
                             @endforeach
                             </tbody>
@@ -157,7 +159,7 @@
 </div>
 <!-- Modals Detail Transaction -->
 <div class="modal fade" id="detailtransaksi" tabindex="-1" role="dialog" aria-labelledby="Modal Detail Transaksi" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header"><h5 class="modal-title">@lang('wallet.modal.title')</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -197,9 +199,14 @@
         </ul>
     </div>
     <div class="modal-footer border-0">
-        <button class="btn btn-success w-100" type="button" data-dismiss="modal">
+        <a class="btn btn-success w-100" role="button" onclick="event.preventDefault();
+            document.getElementById('download-form').submit();">
             Download
-        </button>
+        </a>
+        <form id="download-form" method="POST" action="{{ route('download') }}">
+            @csrf
+            <input type="hidden" name="invoice" class="invoice">
+        </form>
       </div>
     </div>
   </div>
@@ -352,11 +359,12 @@
             $('.to').html(data.debitedwallet.walletusers.name);
         } else {
             $('.id').html("****"+data.wal_debited_wallet.substr(-4))
-            $('.to').html(data.creditedwallet.walletusers.name);
+            $('.to').html(data.debitedwallet.walletusers.name);
         }
         
         $('.type').html(data.wal_transaction_type)
         $('.note').html(data.wal_description)
+        $('.invoice').val(data.wal_invoice)
         $('.date').html(new Date(data.updated_at).toUTCString())
     }
 

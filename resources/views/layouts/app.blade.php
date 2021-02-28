@@ -60,13 +60,13 @@
     <div id="app">
         <nav class="navbar mainmenu-area navbar-expand-md fixed-top p-2 @if(Request::is('/')) @else bg-white shadow-nav @endif">
             <div class="container">
-                <a class="navbar-logo" href="{{ url('/') }}">
-                    <img src="{{ ('https://assets.exova.id/img/logo.png') }}" alt="Logo">
+                <a class="navbar-brand" href="{{ url('/') }}">
+                @if(Request::is('/')) <img src="{{ ('https://assets.exova.id/img/logo.png') }}" alt="Logo"> @else <i class="fas back-icon fa-arrow-left"></i> @endif
                 </a>
                 <button class="navbar-toggler @if(Request::is('/')) text-white @else text-secondary @endif" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="fa fa-bars"></span>
                 </button>
-                <div class="collapse navbar-collapse text-white" id="navbarSupportedContent">
+                <div class="collapse navbar-collapse @if(Request::is('/')) navbar-collapse-sm @endif text-white" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto ">
                         
@@ -106,12 +106,11 @@
                                 <a class="btn btn-danger m-1 mr-2" href="@if(Request::is('/')) #membership @else {{ url('/#membership') }} @endif"> @lang('layout.header.membership') </a>
                                 <a href="{{ url('/cart') }}" class="text-white @if(!Request::is('/')) text-secondary @endif align-middle h5 mx-1">
                                     <i class="fas fa-shopping-cart"></i>
-                                    <span class="@if(Request::is('/')) bg-danger @endif cnotif">{{ count(Auth::user()->carts) }}</span>
                                 </a>
                                 <a href="profile/notifications" class="text-white dropdown-toggle @if(!Request::is('/')) text-secondary @endif align-middle h5 mx-1">
                                     <i class="fas fa-bell"></i>
                                 </a>
-                                <a id="navbarDropdown" class="navbar-brand dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                <a id="navbarDropdown" class="navbar-profile dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     <img class="rounded-circle" src="{{ Auth::user()->avatar->small }}" width="40" height="40" alt="avatar">
                                 </a>
 
@@ -123,13 +122,13 @@
                                             <i role="button" class="fa fa-power-off text-danger" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();"></i>
                                         </h5>
-                                        <span>@if(Auth::user()->subscription == 'NewBie') @else <i class="fas fa-crown text-warning"></i> @endif {{ Auth::user()->subscription }} Customer</span>
+                                        <span>{{ (Auth::user()->subscription == 0) ? 'Standard Customer' : Auth::user()->subs->plan->plan_name . ' Customer' }}</span>
                                     </a>
                                     <div class="border-top py-2">
                                         <div class="py-1"><a href="#">@lang('layout.header.profile.revenue')<span class="float-right">IDR {{ number_format($balance->revenue, 0) }}</span></a></div>
                                         <div class="py-1"><a href="#">@lang('layout.header.profile.fund')<span class="float-right">IDR {{ number_format($balance->fund, 0) }}</span></a></div>
                                     </div>
-                                    <a class="btn btn-primary w-100" href="profile">
+                                    <a class="btn btn-exova-grad w-100" href="profile">
                                         @lang('layout.header.profile.button')
                                     </a>
 
@@ -204,6 +203,7 @@
             </div>
         </div>
     </footer>
+
     <script>
     $(function() {
     const Toast = Swal.mixin({

@@ -1,10 +1,18 @@
 <?php
 
-// namespace App\Http\Controllers; 
+// namespace App\Http\Controllers;
 // use Auth;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use App\Models\User;
+use App\Mail\InvoiceMail;
+use App\Exports\Transactions;
+use App\Models\Transaction;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\MailResetPasswordNotification;
+use App\Notifications\TransactionMail;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,14 +26,21 @@ use Illuminate\Http\Request;
 */
 
 Route::get('/welcome', function () {
-    return view('welcome');
+    return response()->json(Auth::user()->subs->plan->plan_name);
 });
 
-Route::post('/verification-notification', function (Request $request) {
-    $request->user()->sendEmailVerificationNotification();
+Route::get('/transaksi', function () {
+    $details = Transaction::with('debitedwallet.walletusers')
+    ->where('wal_transaction_id', 2241039626085026)
+    ->first();
+    return view('exports.transaction', ['details' => $details]);
+});
 
-    return back()->with('message', 'Verification link sent!');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+// Route::post('/verification-notification', function (Request $request) {
+//     $request->user()->sendEmailVerificationNotification();
+
+//     return back()->with('message', 'Verification link sent!');
+// })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 Route::middleware('auth')->group(function() {
     Route::put('/profile/check/{id}', [App\Http\Controllers\ProfileController::class, 'check'])->name('profile.check');
@@ -55,9 +70,11 @@ Route::middleware(['auth'])->prefix('wallet')->group(function() {
     Route::post('/send', [App\Http\Controllers\WalletController::class, 'send'])->name('wallet.send');
     Route::post('/status/send', [App\Http\Controllers\WalletController::class, 'sendstatus']);
     Route::post('/withdraw', [App\Http\Controllers\WalletController::class, 'withdraw'])->name('wallet.withdraw');
+    Route::get('/redirect/{id}/{type}', [App\Http\Controllers\WalletController::class, 'redirectTransaction']);
 });
 
-Route::get('/history/export', [App\Http\Controllers\WalletController::class, 'export_history']);
+Route::get('/history/export/all', [App\Http\Controllers\ExportController::class, 'tes'])->name('transaction.all');
+Route::post('/download', [App\Http\Controllers\ExportController::class, 'download'])->name('download');
 // Route::get('/tests', [App\Http\Controllers\WalletController::class, 'tests']);
 
 // Payments
@@ -75,11 +92,12 @@ Route::middleware('auth')->prefix('cart')->group(function() {
     Route::get('/', [App\Http\Controllers\CartController::class, 'index']);
     Route::delete('/', [App\Http\Controllers\CartController::class, 'delete']);
     Route::put('/', [App\Http\Controllers\CartController::class, 'update']);
+    Route::post('/add', [App\Http\Controllers\CartController::class, 'add']);
     Route::post('/', [App\Http\Controllers\CartController::class, 'finish'])->name('cart.finish');
     Route::get('/data', [App\Http\Controllers\CartController::class, 'cart_data']);
     Route::get('/create', [App\Http\Controllers\CartController::class, 'cart_create']);
 });
-Route::get('/purchase/{id}/{name}', [App\Http\Controllers\CartController::class, 'cart']);
+Route::get('/purchase/{id}/{name}', [App\Http\Controllers\CartController::class, 'products']);
 
 // Highlight
 Route::get('/highlight', [App\Http\Controllers\HighlightController::class, 'index']);
@@ -91,7 +109,24 @@ Route::middleware('auth', 'cartsession')->group(function() {
 
 
 Route::get('/send', function() {
-    $name = Auth::user()->name;
-    auth()->user()->notify(new \App\Notifications\MailResetPasswordNotification($name));
-    return redirect('/');
+    // $data = User::whereHas('subs', function($q) {
+    //     $q->where('plan_id', 1);
+    // })->get();
+    $name = User::where('id', Auth::user()->id)->first();
+    $details = Transaction::with('debitedwallet.walletusers')
+    ->where('wal_transaction_id', 20210224302018)
+    ->first();
+    // $pdf = PDF::loadview('exports.transaction', ['details' => $details])->setPaper('a4', 'potrait');
+    // Storage::put('invoice.pdf', $pdf->output());
+    // return $pdf->store(Lang::get('wallet.history.title').'.pdf');
+    // return Excel::store(new Transactions(2241039626085026), 'trans.xlsx');
+    // return response()->json($details);
+    // auth()->user()->notify(new \App\Notifications\MailResetPasswordNotification($name));
+    // return redirect('/');
+    
+    // $name->notify(new TransactionMail($name->name, $details));
+    // auth()->user()->notify(new TransactionMail($details));
+    // Notification::send($name, new TransactionMail($details));
+    // Mail::to(Auth::user())->send(new InvoiceMail($details));
+
 });

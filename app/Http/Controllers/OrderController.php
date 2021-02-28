@@ -22,7 +22,7 @@ class OrderController extends Controller
         foreach($request->session()->get('cart_shopping') as $d) {
             $arr[] = $d['id'];
         }
-        $order = Cart::with('user', 'jasa.seller.address')
+        $order = Cart::with('user', 'jasa.seller.address', 'plan')
         ->whereIn('cart_id', $arr)
         ->where('user_id', Auth::user()->id)->get();
         // $order = Cart::with('user', 'jasa.seller')->whereIn('cart_id', $arr)->first();

@@ -57,8 +57,8 @@ class ProfileController extends Controller
      */
     public function store(Request $request)
     {
-        $path = base_path('../assets/' . Auth::user()->id . '/profile/avatar');
-        $pathDB = asset('storage/' . Auth::user()->id . '/profile/avatar');
+        $path = base_path('../assets/' . Auth::user()->id . '/profile/avatar/' . date('Y-m'));
+        $pathDB = asset('storage/' . Auth::user()->id . '/profile/avatar') . '/' . date('Y-m');
         $avatar =  Avatar::where('user_id', Auth::user()->id);
         $f = $request->file('content');
         $f_name = 'user-profile-' . date('Ymdhis') . '-' . Auth::user()->id . '.' . $f->getClientOriginalExtension();
@@ -125,10 +125,10 @@ class ProfileController extends Controller
     public function check(Request $request, $id)
     {
         $user = User::where('email', $request->content)->whereNotIn('id', [Auth::user()->id])->first();
-        if($user) {
-            return response()->json(['status' => Lang::get('validation.user.profile.failed.uniqueEmail'), 'code' => 400]);
+        if(!empty($user)) {
+            return response()->json(['status' => Lang::get('validation.user.profile.failed.uniqueEmail'), 'code' => 400, ]);
         } else {
-            return response()->json(['code' => 200]);
+            return response()->json(['code' => 200, 'content' => $request->content]);
         }
     }
 
@@ -215,7 +215,9 @@ class ProfileController extends Controller
                 } else {
                     $update->update([
                         'email' => $request->content,
+                        'email_verified_at' => NULL,
                     ]);
+                    $request->user()->sendEmailVerificationNotification();
                     return response()->json(['status' => Lang::get('validation.user.profile.success.email')]);
                 }
                 Activity::create([
@@ -325,7 +327,7 @@ class ProfileController extends Controller
                     'activity' => Lang::get('activity.user.profile.delAktivitas'),
                     'ip_address' => $request->ip(),
                     'user_agent' => $request->userAgent(),
-                    'availability' => (Auth::user()->notif->aktivitas == 1) ? 1 : 0,
+                    'availability' => 1,
                 ]);
                 break;
             default:

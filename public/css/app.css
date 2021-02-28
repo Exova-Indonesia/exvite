@@ -240,7 +240,7 @@ section {
 canvas {
     display: block;
     vertical-align: bottom;
-    background-color: rgb(94, 136, 252);
+    background-image: linear-gradient(-708deg, #150180, #479cf7);
 }
 .phone-home-img {
     width: 200px;
@@ -321,6 +321,30 @@ canvas {
     z-index: 10;
 }
 .ribbon-wrapper .ribbon {
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    font-size: 0.8rem;
+    line-height: 100%;
+    padding: 0.875rem 0;
+    position: relative;
+    right: 0px;
+    text-align: center;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
+    text-transform: uppercase;
+    top: 13px;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    width: 140px;
+}
+.ribbon-carts {
+    height: 100px;
+    overflow: hidden;
+    position: absolute;
+    right: 15px;
+    top: 0px;
+    width: 100px;
+    z-index: 10;
+}
+.ribbon-carts .carts {
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
     font-size: 0.8rem;
     line-height: 100%;
@@ -2962,8 +2986,10 @@ pre code {
     .pt-105 {
         padding-top: 75px !important;
     }
-    .navbar-collapse {
-        background-color: rgb(94, 136, 252);
+    .navbar-collapse-sm {
+        /* background-color: rgb(94, 136, 252);
+         */
+        background-image: linear-gradient(-708deg, #150180, #479cf7);
     }
 }
 
@@ -3682,7 +3708,32 @@ fieldset:disabled a.btn {
     background-color: #479cf7;
     border-color: #479cf7;
 }
+.btn-exova-grad {
+    color: #fff;
+    background-image: linear-gradient(-708deg, #150180, #479cf7);
+    border-color: #fff;
+}
 
+.btn-exova-grad:hover {
+    color: #fff;
+    background-color: #479cf7;
+    border-color: #479cf7;
+}
+
+.btn-exova-grad:focus,
+.btn-exova-grad.focus {
+    color: #fff;
+    background-color: #479cf7;
+    border-color: #479cf7;
+    box-shadow: 0 0 0 0.2rem rgba(82, 161, 225, 0.5);
+}
+
+.btn-exova-grad.disabled,
+.btn-exova-grad:disabled {
+    color: #fff;
+    background-color: #479cf7;
+    border-color: #479cf7;
+}
 .btn-exova:hover {
     color: #fff;
     background-color: #479cf7;
@@ -4480,6 +4531,9 @@ input[type="button"].btn-block {
         right: 0;
         left: auto;
     }
+    .dropdown-menu {
+        width: 20rem;
+    }
 }
 
 @media (min-width: 1200px) {
@@ -4603,7 +4657,7 @@ input[type="button"].btn-block {
     font-weight: 400;
     color: #212529;
     text-align: inherit;
-    white-space: nowrap;
+    /* white-space: nowrap; */
     background-color: transparent;
     border: 0;
 }

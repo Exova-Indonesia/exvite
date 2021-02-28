@@ -2,8 +2,8 @@
 return [
     'transaction' => [
         'withdraw' => [
-            'revenue' => 'Melakukan penarikan dari akun Pendapatan Exova',
-            'fund' => 'Melakukan penarikan dari akun Dana Exova',
+            'pendapatan' => 'Melakukan penarikan dari akun Pendapatan Exova',
+            'dana' => 'Melakukan penarikan dari akun Dana Exova',
             'balance' => 'Melakukan penarikan dari Total Saldo Exova',
         ],
         'send' => [
