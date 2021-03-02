@@ -6,6 +6,7 @@ use Auth;
 use Lang;
 use PDF;
 use Storage;
+use Mail;
 use App\Models\Wallet;
 use App\Models\Bank;
 use App\Models\Activity;
@@ -137,7 +138,7 @@ class WalletController extends Controller
             'wal_debited_bank' => $request['withdraw_to'],
             'wal_description' => $request['note'],
             'wal_amount' => preg_replace(['/[,.]/'],'',$request['amount']),
-            'wal_transaction_type' => 'WITHDRAW',
+            'wal_transaction_type' => 'Penarikan',
             'wal_status' => 'pending',
             'wal_token' => $token,
             'wal_invoice' => $invoice,
@@ -151,12 +152,14 @@ class WalletController extends Controller
         $details = Transaction::where('wal_transaction_id', $id)->first();
         $pdf = PDF::loadview('exports.transaction', ['details' => $details])->setPaper('a4', 'potrait');
         Storage::put($invoice, $pdf->output());
+        Auth::user()->notify(new TransactionMail($details));
+        // Auth::user()->notify(new TransactionToAdmin($details));
     }
 
     public function withdraw(Request $request) {
         $user = WalletController::index()->balance;
         $id_transaction = date('Yhis').rand(0, 9999);
-        $token = hash('sha512', $user->wallet_id.'pending'.preg_replace(['/[,.]/'],'',$request->amount));
+        $token = hash('sha512', $user->wallet_id . $id_transaction .'failed' . rand() . preg_replace(['/[,.]/'],'',$request->amount));
         $validator = Validator::make($request->all(), [
             'withdraw_from' => ['required', 'string'],
             'withdraw_to' => ['required', 'integer'],
@@ -165,6 +168,7 @@ class WalletController extends Controller
         if($validator->fails()) {
             return back()->with(['error' => Lang::get('validation.withdraw.required')]);
         }
+
         $ip = $request->ip();
         $agent = $request->userAgent();
         switch($request->withdraw_from) {
@@ -198,7 +202,7 @@ class WalletController extends Controller
                 return back()->with(['status' => Lang::get('validation.withdraw.fund')]);
                 break;
 
-            case "balance":
+            case "saldo":
                 if(($user->balance < preg_replace(['/[,.]/'],'',$request->amount)) || ($user->balance == 0)) {
                     return back()->with(['error'=> Lang::get('validation.balance')]);
                 }
@@ -233,9 +237,8 @@ class WalletController extends Controller
         $debited = Wallet::where('user_id', Auth::user()->id)->first();
 
         $validator = Validator::make($request->all(), [
-        'wallet_id' => ['required', 'string'],
-        'transfer_to' => ['required', 'integer'],
-        'amount' => ['required'],
+            'transfer_to' => ['required', 'integer'],
+            'amount' => ['required'],
         ]);
 
         if($validator->fails()) {
@@ -255,7 +258,7 @@ class WalletController extends Controller
             'wal_debited_wallet' => $request->transfer_to,
             'wal_description' => $request->note,
             'wal_amount' => preg_replace(['/[,.]/'],'',$request->amount),
-            'wal_transaction_type' => 'TRANSFER',
+            'wal_transaction_type' => 'Transfer',
             'wal_status' => 'failed',
             'wal_token' => $token,
             'wal_invoice' => $invoice,

@@ -149,7 +149,14 @@ return [
         'deletefile' => [
             'success' => 'Berhasil menghapus file',
             'failed' => 'Gagal menghapus file',
-        ]
+        ],
+        'add' > [
+            'success' => 'Berhasil menambah ke keranjang',
+            'limit' => 'Kamu hanya bisa membeli 1 produk langganan',
+        ],
+        'note' => [
+            'membership' => 'Langganan',
+        ],
     ],
     'user' => [
         'profile' => [

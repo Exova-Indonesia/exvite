@@ -64,7 +64,7 @@ Route::middleware(['auth'])->prefix('wallet')->group(function() {
     Route::get('/', [App\Http\Controllers\WalletController::class, 'index']);
     Route::post('/pendapatan', [App\Http\Controllers\WalletController::class, 'cekpendapatan']);
     Route::post('/dana', [App\Http\Controllers\WalletController::class, 'cekdana']);
-    Route::post('/balance', [App\Http\Controllers\WalletController::class, 'cekbalance']);
+    Route::post('/saldo', [App\Http\Controllers\WalletController::class, 'cekbalance']);
     Route::post('/minimum', [App\Http\Controllers\WalletController::class, 'cekminimum']);
     Route::post('/cekuser', [App\Http\Controllers\WalletController::class, 'cekuser']);
     Route::post('/send', [App\Http\Controllers\WalletController::class, 'send'])->name('wallet.send');

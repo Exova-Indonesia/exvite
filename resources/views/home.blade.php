@@ -477,7 +477,7 @@
                                 <select type="text" class="form-control" id="select_form" name="withdraw_from">
                                 <option value="pendapatan" selected>@lang('wallet.withdraw.revenue') - IDR {{ number_format($balance->revenue, 0) }}</option>
                                 <option value="dana">@lang('wallet.withdraw.fund') - IDR {{ number_format($balance->fund, 0) }}</option>
-                                <option value="balance">@lang('wallet.withdraw.total') - IDR {{ number_format($balance->balance, 0) }}</option>
+                                <option value="saldo">@lang('wallet.withdraw.total') - IDR {{ number_format($balance->balance, 0) }}</option>
                                 </select>
                             </div>
                         </div>
@@ -527,26 +527,26 @@
 </div>
 </div>
 <!-- * Withdraw Action Sheet -->
-    <!-- Modal -->
-    <button type="button" class="d-none" id="cart_add" data-toggle="modal" data-target="#add_cart"></button>
-    <div class="modal fade" id="add_cart" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="add_cart_title">Berhasil ditambahkan</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <a role="button" class="btn btn-danger" data-dismiss="modal">Lanjut Belanja</a>
-                <a role="button" href="{{ url('cart') }}" class="btn btn-success">Lihat Keranjang</a>
-            </div>
-            </div>
+<!-- Modal Cart -->
+<button type="button" class="d-none" id="cart_add" data-toggle="modal" data-target="#add_cart"></button>
+<div class="modal fade" id="add_cart" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="add_cart_title">Berhasil ditambahkan</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body m-auto">
+            <img class="p-3" width="250" height="80" src="{{ asset('/images/icons/shopping_cart.svg') }}" alt="Logo">
+        </div>
+        <div class="modal-footer">
+            <a role="button" class="btn btn-danger" data-dismiss="modal">Lanjut Belanja</a>
+            <a role="button" href="{{ url('cart') }}" class="btn btn-success">Lihat Keranjang</a>
+        </div>
         </div>
     </div>
+</div>
 @endguest
 @endsection

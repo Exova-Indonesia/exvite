@@ -104,7 +104,7 @@ class CartController extends Controller
             case "Subscription":
                 $check = Cart::where('user_id', Auth::user()->id)->where('product_type', $request->type)->first();
                 if(!empty($check)) {
-                    return response()->json(['status' => 'Kamu hanya bisa menambahkan hanya 1 produk langganan', 'code' => 400]);
+                    return response()->json(['status' => Lang::get('validation.cart.add.limit'), 'code' => 400]);
                 }
 
                 $data = Subscription::where('plan_id', $request->id)->first();
@@ -114,12 +114,12 @@ class CartController extends Controller
                     'product_type' => $request->type,
                     'unit_price' => $data->price_per_year,
                     'quantity' => 1,
-                    'note' => 'Langganan membership',
+                    'note' => Lang::get('validation.cart.note.membership'),
                 ]);
                 break;
                 //
         }
-        return response()->json(['status' => 'Berhasil menambah ke keranjang']);
+        return response()->json(['status' => Lang::get('validation.cart.add.success')]);
     }
 
     public function products(Request $request) {

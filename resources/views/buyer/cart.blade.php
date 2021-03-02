@@ -64,7 +64,7 @@
                             <div class="mx-auto">
                             <div class="row">
                                 <div>
-                                <img width="240px" height="192px" src="{{ asset('/images/icons/shopping_cart.svg') }}" alt="icon">
+                                <img width="240px" height="192px" src="{{ asset('/images/icons/empty_cart.svg') }}" alt="icon">
                                 </div>
                                 <div class="ml-2 my-auto">
                                 <span>

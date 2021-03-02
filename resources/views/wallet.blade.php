@@ -132,7 +132,7 @@
                             <tr data-target="#detailtransaksi" data-toggle="modal" role="button" data-trans="{{ $c->wal_transaction_id }}">   
                                 <td>{{ $c->created_at }}</td>
                                 @if($c->wal_credited_wallet == $c->wal_debited_wallet)
-                                <td>{{ $c->withdraw['bank_user'] }}</td>
+                                <td>{{ $c->debitedwallet->walletusers['name'] }}</td>
                                 @elseif($c->creditedwallet->walletusers['id'] == Auth::user()->id)
                                 <td>{{ $c->debitedwallet->walletusers['name'] }}</td>
                                 @else
@@ -289,7 +289,7 @@
                                 <select type="text" class="form-control" id="select_form" name="withdraw_from">
                                 <option value="pendapatan" selected>@lang('wallet.withdraw.revenue') - IDR {{ number_format($balance->revenue, 0) }}</option>
                                 <option value="dana">@lang('wallet.withdraw.fund') - IDR {{ number_format($balance->fund, 0) }}</option>
-                                <option value="balance">@lang('wallet.withdraw.total') - IDR {{ number_format($balance->balance, 0) }}</option>
+                                <option value="saldo">@lang('wallet.withdraw.total') - IDR {{ number_format($balance->balance, 0) }}</option>
                                 </select>
                             </div>
                         </div>
@@ -352,8 +352,9 @@
             $('.amount').html(`<span class="float-right text-right text-danger">- IDR `+numeral(data.wal_amount).format('0,0'))+`</span>`
         }
         if(data.wal_credited_wallet == data.wal_debited_wallet) {
-            $('.to').html(data.withdraw.bank_user);
-            $('.id').html("****"+atob(data.withdraw.bank_account).substr(-4))
+            $('.to').html(data.debitedwallet.walletusers.name);
+            // $('.id').html("****"+atob(data.withdraw.bank_account).substr(-4))
+            $('.id').html("****"+data.wal_credited_wallet.substr(-4))
         } else if(data.creditedwallet.walletusers.id == <?php echo Auth::user()->id ?>) {
             $('.id').html("****"+data.wal_credited_wallet.substr(-4))
             $('.to').html(data.debitedwallet.walletusers.name);

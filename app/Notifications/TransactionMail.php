@@ -45,10 +45,11 @@ class TransactionMail extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
+        ->bcc('finance@exova.id')
         ->markdown('emails.transaction', ['details' => $this->details])
-        ->subject('Rincian Transfer Dana Antar Exova Wallet')
+        ->subject('Rincian '. ucwords($this->details['wal_transaction_type']) . ' ' . ucwords($this->details['wal_reference_id']))
         ->greeting('Halo, ' . $this->details['debitedwallet']['walletusers']['name'])
-        ->line('Berikut Kami lampirkan rincian transaksi kamu')
+        ->line('Berikut Kami lampirkan rincian ' . lcfirst($this->details['wal_transaction_type']) . ' kamu')
         ->attach(base_path('../assets' . '/' . $this->details['wal_invoice']));
     }
 

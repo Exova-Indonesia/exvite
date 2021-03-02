@@ -40,11 +40,23 @@
         </tr>
         <tr>
             <td>Kepada</td>
-            <td class="text-right font-weight-bold">{{ $details->creditedwallet['walletusers']['name'] }}</td>
+            <td class="text-right font-weight-bold">
+            @if($details->wal_credited_wallet == $details->wal_debited_wallet)
+                {{ $details->withdraw['bank_user'] }}
+            @else
+                {{ $details->creditedwallet['walletusers']['name'] }}
+            @endif
+            </td>
         </tr>
         <tr>
             <td>No. Akun</td>
-            <td class="text-right font-weight-bold">****{{ substr($details->wal_credited_wallet, -4) }}</td>
+            <td class="text-right font-weight-bold">
+            @if($details->wal_credited_wallet == $details->wal_debited_wallet)
+                ****{{ substr(base64_decode($details->withdraw['bank_account']), -4) }}
+            @else
+                ****{{ substr($details->wal_credited_wallet, -4) }}
+            @endif
+            </td>
         </tr>
         <tr>
             <td>Tipe Transaksi</td>
@@ -57,6 +69,10 @@
         <tr>
             <td>Tanggal</td>
             <td class="text-right font-weight-bold">{{ date('F j, Y h:i:s a', strtotime($details->updated_at)) }}</td>
+        </tr>
+        <tr>
+            <td>Transaksi ID</td>
+            <td class="text-right font-weight-bold">{{ $details->wal_transaction_id }}</td>
         </tr>
     </tbody>
 </table>

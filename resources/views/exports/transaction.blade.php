@@ -909,7 +909,7 @@ a {
     <div class="text-center text-white">
         <img width="250px" height="150px" src="https://assets.exova.id/payments.png">
     </div>
-    <div><h2 class="text-center text-capitalize">Payment {{ $details->wal_status }}</h2></div>
+    <div><h2 class="text-center text-capitalize">INV/EX/XX/{{ $details->wal_transaction_id }}</h2></div>
     <div>
         <h1 class="text-center text-exova amount">IDR {{ number_format($details->wal_amount, 0) }}</h1>
     </div>
@@ -919,10 +919,22 @@ a {
             <td>Dari  <span class="float-right text-capitalize font-weight-bold">{{ $details->debitedwallet['walletusers']['name'] }}</span></td>
         </tr>
         <tr>
-            <td>Kepada  <span class="float-right text-capitalize font-weight-bold">{{ $details->creditedwallet['walletusers']['name'] }}</span></td>
+            <td>Kepada  <span class="float-right text-capitalize font-weight-bold">
+            @if($details->wal_credited_wallet == $details->wal_debited_wallet)
+                {{ $details->withdraw['bank_user'] }}
+            @else
+                {{ $details->creditedwallet['walletusers']['name'] }}
+            @endif
+            </span></td>
         </tr>
         <tr>
-            <td>No. Akun  <span class="float-right text-capitalize font-weight-bold">****{{ substr($details->wal_debited_wallet, -4) }}</span></td>
+            <td>No. Akun  <span class="float-right text-capitalize font-weight-bold">
+            @if($details->wal_credited_wallet == $details->wal_debited_wallet)
+                ****{{ substr(base64_decode($details->withdraw['bank_account']), -4) }}
+            @else
+                ****{{ substr($details->wal_credited_wallet, -4) }}
+            @endif
+            </span></td>
         </tr>
         <tr>
             <td>Tipe Transaksi  <span class="float-right text-capitalize font-weight-bold">{{ $details->wal_transaction_type }}</span></td>
@@ -932,6 +944,9 @@ a {
         </tr>
         <tr>
             <td>Tanggal <span class="float-right text-capitalize font-weight-bold">{{ date('j M Y h:i:s', strtotime($details->updated_at)) }}</span></td>
+        </tr>
+        <tr>
+            <td>Transaksi ID <span class="float-right text-capitalize font-weight-bold">{{ $details->wal_transaction_id }}</span></td>
         </tr>
     </tbody>
 </table>
