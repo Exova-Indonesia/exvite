@@ -139,7 +139,7 @@ class WalletController extends Controller
             'wal_description' => $request['note'],
             'wal_amount' => preg_replace(['/[,.]/'],'',$request['amount']),
             'wal_transaction_type' => 'Penarikan',
-            'wal_status' => 'pending',
+            'wal_status' => 'failed',
             'wal_token' => $token,
             'wal_invoice' => $invoice,
         ]);
@@ -153,7 +153,6 @@ class WalletController extends Controller
         $pdf = PDF::loadview('exports.transaction', ['details' => $details])->setPaper('a4', 'potrait');
         Storage::put($invoice, $pdf->output());
         Auth::user()->notify(new TransactionMail($details));
-        // Auth::user()->notify(new TransactionToAdmin($details));
     }
 
     public function withdraw(Request $request) {

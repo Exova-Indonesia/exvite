@@ -146,7 +146,7 @@
         </div>
     </div>
 </section>
-
+@if(! empty($highlight[0]))
 <section class="py-5" id="highlight">
     <div class="container">
         <div class="row">
@@ -157,6 +157,7 @@
                     </div>
                     <p class="text-right"><a class="text-primary" href="{{ url('highlight') }}">@lang('home.highlight.seeall')</a></p>
                 <div class="row"  data-component="highlight">
+                @foreach($highlight as $h)
                 <div class="col-lg-2 mb-5 col-sm-6 mb-lg-0">
                     <a href="#" class="rounded-lg text-center">
                         <div class="ribbon-wrapper">
@@ -164,36 +165,22 @@
                                 Highlight
                             </div>
                         </div>
-                            <img class="w-100" src="{{ Auth::user()->avatar ?? '' }}" alt="products">
-                            <div class="p-3 bg-white shadow-sm">
-                                <ul class="list-unstyled my-2 text-small text-secondary text-left font-weight-normal">
-                                    <div>Exova Creations</div>
-                                    <div class="font-weight-bold">IDR 0 - 120k</div>
-                                </ul>
+                        <img class="w-100 p-2" src="{{ $h->product['jasa_thumbnail'] }}" alt="products">
+                        <div class="p-2 bg-white shadow-sm">
+                            <ul class="list-unstyled text-small text-secondary text-left font-weight-normal">
+                                <div>{{ $h->product['jasa_name'] }}</div>
+                                <div class="font-weight-bold">IDR {{ number_format($h->product['jasa_price'], 0) }}</div>
+                            </ul>
                         </div>
                     </a>
                 </div>
-                <div class="col-lg-2 mb-5 col-sm-6 mb-lg-0">
-                    <a href="#" class="rounded-lg text-center">
-                        <div class="ribbon-wrapper">
-                            <div class="ribbon bg-danger text-white">
-                                Highlight
-                            </div>
-                        </div>
-                            <img class="w-100" src="{{ Auth::user()->avatar ?? '' }}" alt="products">
-                            <div class="p-3 bg-white shadow-sm">
-                                <ul class="list-unstyled my-2 text-small text-secondary text-left font-weight-normal">
-                                    <div>Exova Creations</div>
-                                    <div class="font-weight-bold">IDR 0 - 120k</div>
-                                </ul>
-                        </div>
-                    </a>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>
 </div>
 </section>
+@endif
 
 <section class="py-5" id="membership">
         <div class="container-fulid">
@@ -325,7 +312,7 @@
                         <img src="{{ url('images/executive/ngurahfix.jpg') }}" alt="">
                         </div>
                         <h4>Ngurah Krisna</h4>
-                        <h6 class="position">Co-Founder, CMO, & Developer</h6>
+                        <h6 class="position">Co-Founder, CMO, & CDO</h6>
                         <p>Bio</p>
                     </div>
                     <div class="team-box">
@@ -549,4 +536,12 @@
     </div>
 </div>
 @endguest
+@endsection
+@section('scripts')
+<script>
+/* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
+    particlesJS.load("particles-js", "particles.js/particlesjs.json", function () {
+        //
+});
+</script>
 @endsection

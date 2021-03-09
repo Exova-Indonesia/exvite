@@ -107,7 +107,7 @@
                                 <a href="{{ url('/cart') }}" class="text-white @if(!Request::is('/')) text-secondary @endif align-middle h5 mx-1">
                                     <i class="fas fa-shopping-cart"></i>
                                 </a>
-                                <a href="profile/notifications" class="text-white dropdown-toggle @if(!Request::is('/')) text-secondary @endif align-middle h5 mx-1">
+                                <a href="{{ url('/notifications') }}" class="text-white dropdown-toggle @if(!Request::is('/')) text-secondary @endif align-middle h5 mx-1">
                                     <i class="fas fa-bell"></i>
                                 </a>
                                 <a id="navbarDropdown" class="navbar-profile dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -130,7 +130,7 @@
                                         <div class="py-1"><a href="#">@lang('layout.header.profile.revenue')<span class="float-right">IDR {{ number_format($balance->revenue, 0) }}</span></a></div>
                                         <div class="py-1"><a href="#">@lang('layout.header.profile.fund')<span class="float-right">IDR {{ number_format($balance->fund, 0) }}</span></a></div>
                                     </div>
-                                    <a class="btn btn-exova-grad w-100" href="profile">
+                                    <a class="btn btn-exova-grad w-100" href="{{ url('/profile') }}">
                                         @lang('layout.header.profile.button')
                                     </a>
 
@@ -205,14 +205,19 @@
             </div>
         </div>
     </footer>
-
+    @yield('scripts')
     <script>
     $(function() {
     const Toast = Swal.mixin({
       toast: true,
       position: 'top-end',
       showConfirmButton: false,
-      timer: 3000
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
     });
       @if(session('status'))
         Toast.fire({

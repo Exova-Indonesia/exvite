@@ -20,7 +20,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::put('/wallet/status/send', [App\Http\Controllers\WalletController::class, 'sendstatus']);
 Route::get('/payments/handling', [App\Http\Controllers\PaymentsHandling::class, 'handling']);
 Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'data'])->name('data.profile');
-Route::get('/province/{id}', [App\Http\Controllers\ApiController::class, 'province']);
-Route::get('/city/{id}', [App\Http\Controllers\ApiController::class, 'city']);
-Route::get('/postal/{id}', [App\Http\Controllers\ApiController::class, 'postal']);
+Route::get('/provinces/{id}', [App\Http\Controllers\ApiController::class, 'province']);
+Route::get('all/provinces/', [App\Http\Controllers\ApiController::class, 'province_all']);
+Route::get('/regencies/{id}', [App\Http\Controllers\ApiController::class, 'city']);
+Route::get('/districts/{id}', [App\Http\Controllers\ApiController::class, 'districts']);
+Route::get('/villages/{id}', [App\Http\Controllers\ApiController::class, 'villages']);
 Route::get('/indonesian', [App\Http\Controllers\ApiController::class, 'allAddress']);

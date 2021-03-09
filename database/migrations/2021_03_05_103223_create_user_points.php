@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserNotifications extends Migration
+class CreateUserPoints extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,13 @@ class CreateUserNotifications extends Migration
      */
     public function up()
     {
-        Schema::create('user_notifications', function (Blueprint $table) {
-            $table->id('notif_id');
+        Schema::create('user_points', function (Blueprint $table) {
+            $table->id();
+            $table->string('prefix');
             $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->integer('pembelian')->default(0);
-            $table->integer('penjualan')->default(0);
-            $table->integer('pengingat')->default(0);
-            $table->integer('aktivitas')->default(0);
-            $table->integer('promo')->default(0);
-            $table->integer('pencarian')->default(0);
+            $table->string('value');
+            $table->string('description');
             $table->timestamps();
         });
     }
@@ -34,6 +31,6 @@ class CreateUserNotifications extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_notifications');
+        Schema::dropIfExists('user_points');
     }
 }

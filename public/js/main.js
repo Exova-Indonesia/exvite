@@ -2,12 +2,16 @@
     "use strict";
     var url = "http://localhost:8000/";
     $(document).ready(function () {
-        $("#search").keyup(function () {
+        $("#search").keyup(function (e) {
             var query = $(this).val();
             if (!$(this).val()) {
                 $("#result").css("display", "none");
                 $("#result").html();
             } else {
+                if (e.keyCode === 13) {
+                    window.location =
+                        url + "search/" + $(this).val().replace(/\s/g, "");
+                }
                 $.ajaxSetup({
                     headers: {
                         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
@@ -16,17 +20,53 @@
                     },
                 });
                 $.ajax({
-                    url: "http://localhost:8000/search",
+                    url: url + "autocomplete",
                     type: "POST",
                     data: "query=" + query,
                     success: function (data) {
                         $("#result").css("display", "block");
                         $("#result").html(data);
                     },
+                    error: function (data) {
+                        $("#result").css("display", "none");
+                        // console.log(data);
+                    },
                 });
             }
         });
     });
+
+    $("#button-addon4").on("click", function () {
+        $.ajaxSetup({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+        });
+        $.ajax({
+            url: url + "search",
+            type: "POST",
+            data: "query=" + $("#search").val(),
+            success: function (data) {},
+            error: function (data) {
+                $("#result").css("display", "none");
+                console.log(data);
+            },
+        });
+    });
+
+    // $("#search").on("click", function () {
+    //     $("#result").css("display", "block");
+    //     let content = `
+    //         <ul class="autocomplete d-flex">
+    //             <li class="nav-link text-capitalize"><a href="">Wedding Photography</a></li>
+    //             <li class="nav-link text-capitalize"><a href="">Casual Videography</a></li>
+    //         </ul>
+    //     `;
+    //     $("#result").html(content);
+    // });
+    // $("#search").on("blur", function () {
+    //     $("#result").css("display", "none");
+    // });
 
     /*==================================================================
     [ Validate ]*/
@@ -290,29 +330,37 @@
         $(this).addClass("highlight-active");
 
         let highlight = $(this).html();
-        $(".highlight-title").html(highlight);
+        $(".highlight-title").html("Exova " + highlight);
 
         let content = "";
         $.getJSON("/highlight/all", function (data) {
             $.each(data, function (i, data) {
-                if (data.services == highlight) {
-                    content += `<div class="col-lg-2 mb-5 col-sm-6 mb-lg-0">
+                if (data.type == highlight) {
+                    content +=
+                        `<div class="col-lg-2 mb-5 col-sm-6 mb-lg-0">
                     <a href="#" class="rounded-lg text-center">
                         <div class="ribbon-wrapper">
                             <div class="ribbon bg-danger text-white">
                                 Highlight
                             </div>
                         </div>
-                        <img class="w-100" src="" alt="products">
-                        <div class="p-3 bg-white shadow-sm">
-                            <ul class="list-unstyled my-2 text-small text-secondary text-left font-weight-normal">
-                                <div>Exova Creations</div>
-                                <div class="font-weight-bold">IDR 0 - 120k</div>
+                        <img class="w-100 p-2" src="` +
+                        data.product["jasa_thumbnail"] +
+                        `" alt="products">
+                        <div class="p-2 bg-white shadow-sm">
+                            <ul class="list-unstyled text-small text-secondary text-left font-weight-normal">
+                                <div>` +
+                        data.product["jasa_name"] +
+                        `</div>
+                                <div class="font-weight-bold">IDR ` +
+                        numeral(data.product["jasa_price"]).format("0,0") +
+                        `</div>
                             </ul>
                         </div>
                     </a>
                 </div>`;
                 }
+                $(".highlight-content").html(content);
             });
         });
     });
@@ -767,10 +815,6 @@
     });
 })(jQuery);
 
-/* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
-particlesJS.load("particles-js", "particles.js/particlesjs.json", function () {
-    //
-});
 /*
 window.onscroll = function() {scrollFunction()};
 

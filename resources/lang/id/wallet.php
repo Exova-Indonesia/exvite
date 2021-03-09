@@ -6,7 +6,8 @@ return [
     'history' => [
         'title' => 'Riwayat Transaksi',
         'date' => 'Tanggal',
-        'to' => 'Dari',
+        'from' => 'Dari',
+        'to' => 'Kepada',
         'note' => 'Catatan',
         'amount' => 'Jumlah',
         'status' => 'Status',
@@ -41,7 +42,8 @@ return [
     'modal' => [
         'title' => 'Detail Transaksi',
         'status' => 'Status',
-        'to' => 'Dari',
+        'from' => 'Dari',
+        'to' => 'Kepada',
         'id' => 'Nomor Akun',
         'type' => 'Tipe Transaksi',
         'note' => 'Catatan',

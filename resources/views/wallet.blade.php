@@ -132,11 +132,9 @@
                             <tr data-target="#detailtransaksi" data-toggle="modal" role="button" data-trans="{{ $c->wal_transaction_id }}">   
                                 <td>{{ $c->created_at }}</td>
                                 @if($c->wal_credited_wallet == $c->wal_debited_wallet)
-                                <td>{{ $c->debitedwallet->walletusers['name'] }}</td>
-                                @elseif($c->creditedwallet->walletusers['id'] == Auth::user()->id)
-                                <td>{{ $c->debitedwallet->walletusers['name'] }}</td>
+                                <td>{{ $c->withdraw['bank_user'] }}</td>
                                 @else
-                                <td>{{ $c->debitedwallet->walletusers['name'] }}</td>
+                                <td>{{ $c->creditedwallet->walletusers['name'] }}</td>
                                 @endif
                                 <td>{{ $c->wal_transaction_type }}</td>
                                 @if($c->creditedwallet->walletusers['id'] == Auth::user()->id && $c->wal_credited_wallet !== $c->wal_debited_wallet)
@@ -171,6 +169,10 @@
             <li class="list-group-item">
                 <strong>@lang('wallet.modal.status')</strong>
                 <span class="float-right text-right status"></span>
+            </li>
+            <li class="list-group-item">
+                <strong>@lang('wallet.modal.from')</strong>
+                <span class="float-right text-right from"></span>
             </li>
             <li class="list-group-item">
                 <strong>@lang('wallet.modal.to')</strong>
@@ -352,15 +354,15 @@
             $('.amount').html(`<span class="float-right text-right text-danger">- IDR `+numeral(data.wal_amount).format('0,0'))+`</span>`
         }
         if(data.wal_credited_wallet == data.wal_debited_wallet) {
-            $('.to').html(data.debitedwallet.walletusers.name);
+            $('.from').html(data.debitedwallet.walletusers.name);
+            $('.to').html(data.withdraw.bank_user);
             // $('.id').html("****"+atob(data.withdraw.bank_account).substr(-4))
-            $('.id').html("****"+data.wal_credited_wallet.substr(-4))
-        } else if(data.creditedwallet.walletusers.id == <?php echo Auth::user()->id ?>) {
-            $('.id').html("****"+data.wal_credited_wallet.substr(-4))
-            $('.to').html(data.debitedwallet.walletusers.name);
+            $('.id').html("****"+atob(data.withdraw.bank_account).substr(-4))
+            // $('.id').html("****"+data.wal_credited_wallet.substr(-4))
         } else {
             $('.id').html("****"+data.wal_debited_wallet.substr(-4))
-            $('.to').html(data.debitedwallet.walletusers.name);
+            $('.from').html(data.debitedwallet.walletusers.name);
+            $('.to').html(data.creditedwallet.walletusers.name);
         }
         
         $('.type').html(data.wal_transaction_type)

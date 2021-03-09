@@ -150,7 +150,7 @@ return [
             'success' => 'Berhasil menghapus file',
             'failed' => 'Gagal menghapus file',
         ],
-        'add' > [
+        'add' => [
             'success' => 'Berhasil menambah ke keranjang',
             'limit' => 'Kamu hanya bisa membeli 1 produk langganan',
         ],

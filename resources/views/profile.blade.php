@@ -48,7 +48,7 @@
                         </div>
                         <div class="alert alert-primary m-2 text-center">
                             @lang('profile.card-2.membership')
-                            <a href="membership" class="btn-sm btn-danger">@lang('profile.card-2.button.membership')</a>
+                            <a href="{{ url('/#membership') }}" class="btn-sm btn-danger">@lang('profile.card-2.button.membership')</a>
                         </div>
                         <div class="card-body">
                             <div class="row">
@@ -68,8 +68,8 @@
                                             </div>
                                             <div class="profile status">
                                                 <div class="text-responsive"><span>@lang('profile.card-2.since')</span><strong class="float-right">{{ date('F j, Y', strtotime($user->created_at)) }}</strong></div>
-                                                <div class="text-responsive"><span>@lang('profile.card-2.points')</span><strong class="float-right">1390</strong></div>
-                                                <div class="text-responsive"><span>@lang('profile.card-2.status')</span><strong class="float-right">{{ $user->subs->plan->plan_name ?? 'NewBie' }}</strong></div>
+                                                <div class="text-responsive"><span>@lang('profile.card-2.points')</span><strong class="float-right">{{ $user->points->sum('value') ?? '0' }}</strong></div>
+                                                <div class="text-responsive"><span>@lang('profile.card-2.status')</span><strong class="float-right">{{ $user->subs->plan->plan_name ?? 'Standard' }}</strong></div>
                                             </div>
                                         </div>
                                     </div>
@@ -181,12 +181,12 @@
                                             <div class="text-responsive">
                                                 @lang('profile.card-3.search.title')
                                                 <span class="float-right">
-                                                    <input class="notifications" data-label="aktivitas" name="aktivitas" type="checkbox" @if( Auth::user()->notif->aktivitas == 0) value="1" checked @else value="0" @endif>
+                                                    <input class="notifications" data-label="pencarian" name="pencarian" type="checkbox" @if( Auth::user()->notif->pencarian == 0) value="1" checked @else value="0" @endif>
                                                 </span>
                                             </div>
                                         </div>
                                         <div class="sub-collapse">
-                                            <div class="text-responsive deletePencarian" data-label="deletePencarian">
+                                            <div class="text-responsive deleteAktivitas" data-label="deletePencarian">
                                                 @lang('profile.card-3.search.delete')
                                             </div>
                                         </div>
@@ -269,8 +269,8 @@
                         <label id="label">Provinsi</label>
                         <select type="text" class="form-control" id="province">
                             <option selected disabled hidden >Pilih Alamat</option>
-                            @foreach($state->provinsi as $s)
-                                <option value="{{ $s->id }}">{{ $s->nama }}</option>
+                            @foreach($state as $s)
+                                <option value="{{ $s->id }}">{{ $s->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -282,6 +282,11 @@
                     <div class="form-group">
                         <label id="label">Kecamatan</label>
                             <select type="text" class="form-control" id="district" value="">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label id="label">Desa</label>
+                            <select type="text" class="form-control villages" value="">
                         </select>
                     </div>
                     <div class="form-group">
@@ -299,7 +304,10 @@
             </div>
         </div>
     </div>
+@endsection
+@section('scripts')
     <script>
+        let url = "http://localhost:8000/";
     let ReloadAll = () => {
         let reloadProfile = (data) => {
             let content = ``;
@@ -412,10 +420,10 @@
         $('#province').on('change', () => {
             let content = ``;
             let state = $('#province').val();
-            $.getJSON('https://dev.farizdotid.com/api/daerahindonesia/kota?id_provinsi=' + state, function(data) {
-                $.each(data.kota_kabupaten, function(i, index) {
+            $.getJSON(url + 'regencies/' + state, function(data) {
+                $.each(data, function(i, index) {
                     content += `
-                        <option value="` + index.id + `">`+ index.nama +`</option>
+                        <option value="` + index.id + `">`+ index.name +`</option>
                     `;
                     $('.city').html(content);
                 });
@@ -425,12 +433,25 @@
         $('.city').on('change', () => {
             let content = ``;
             let city = $('.city').val();
-            $.getJSON('https://dev.farizdotid.com/api/daerahindonesia/kecamatan?id_kota=' + city, function(data) {
-                $.each(data.kecamatan, function(i, index) {
+            $.getJSON(url + 'districts/' + city, function(data) {
+                $.each(data, function(i, index) {
                     content += `
-                        <option value="` + index.id + `">`+ index.nama +`</option>
+                        <option value="` + index.id + `">`+ index.name +`</option>
                     `;
                     $('#district').html(content);
+                });
+            });
+        })
+
+        $('#district').on('change', () => {
+            let content = ``;
+            let districts = $('#district').val();
+            $.getJSON(url + 'villages/' + districts, function(data) {
+                $.each(data, function(i, index) {
+                    content += `
+                        <option value="` + index.id + `">`+ index.name +`</option>
+                    `;
+                    $('.villages').html(content);
                 });
             });
         })
@@ -630,7 +651,7 @@
                         } 
                     },
                     error: function (data) {
-                        console.log(data)
+                        // console.log(data)
                     },
                 })
             })
@@ -667,7 +688,7 @@
                     $('#editphotoSend').val('');
                 },
                 error: function (data) {
-                    console.log(data)
+                    // console.log(data)
                 },
             })
         })
@@ -693,7 +714,7 @@
                         //
                     },
                     error: function (data) {
-                        console.log(data)
+                        // console.log(data)
                     },
             })
         });
@@ -712,10 +733,15 @@
                     type: "PUT",
                     data: { type:label, content:content },
                     success: function (data) {
-                        window.location = window.location;
+                        // window.location = window.location;
+                        Toast.fire({
+                            icon: 'success',
+                            title: data.status,
+                        })
+
                     },
                     error: function (data) {
-                        console.log(data)
+                        // console.log(data)
                     },
             })
         });

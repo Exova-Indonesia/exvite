@@ -4,7 +4,7 @@ return [
         'withdraw' => [
             'pendapatan' => 'Melakukan penarikan dari akun Pendapatan Exova',
             'dana' => 'Melakukan penarikan dari akun Dana Exova',
-            'balance' => 'Melakukan penarikan dari Total Saldo Exova',
+            'saldo' => 'Melakukan penarikan dari Total Saldo Exova',
         ],
         'send' => [
             'fund' => 'Melakukan transfer dari akun Dana Exova',
@@ -30,11 +30,13 @@ return [
             'email' => 'Mengubah alamat email',
             'phone' => 'Mengubah nomor telepon',
             'delAktivitas' => 'Menghapus riwayat aktivitas',
+            'delPencarian' => 'Menghapus riwayat pencarian',
             'pembelian' => 'Mengubah pengaturan notifikasi pembelian',
             'penjualan' => 'Mengubah pengaturan notifikasi penjualan',
             'promo' => 'Mengubah pengaturan notifikasi promo',
             'pengingat' => 'Mengubah pengaturan notifikasi pengingat',
             'aktivitas' => 'Mengubah pengaturan riwayat aktivitas',
+            'pencarian' => 'Mengubah pengaturan riwayat pencarian',
         ]
     ]
 ];

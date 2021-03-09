@@ -62,7 +62,7 @@ class AuthController extends Controller
         else{
             $id = date('Ymd').rand();
             Wallet::create([
-                'wallet_id' => date('Ymd').rand(),
+                'wallet_id' => substr($id, -4) . rand(0, 99999),
                 'user_id' => $id,
             ]);
             $data = User::create([

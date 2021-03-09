@@ -43,15 +43,20 @@ Route::get('/transaksi', function () {
 // })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
 Route::middleware('auth')->group(function() {
-    Route::put('/profile/check/{id}', [App\Http\Controllers\ProfileController::class, 'check'])->name('profile.check');
-    Route::get('/profile/data', [App\Http\Controllers\ProfileController::class, 'data'])->name('profile.data');
+    Route::put('profile/check/{id}', [App\Http\Controllers\ProfileController::class, 'check'])->name('profile.check');
+    Route::get('profile/data', [App\Http\Controllers\ProfileController::class, 'data'])->name('profile.data');
     Route::resource('/profile', App\Http\Controllers\ProfileController::class);
+});
+
+Route::middleware('auth')->group(function() {
+    Route::resource('/notifications', App\Http\Controllers\NotificationController::class);
 });
 
 Auth::routes(['verify' => true]);
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::post('/search', [App\Http\Controllers\HomeController::class, 'autocomplete']);
+Route::post('/autocomplete', [App\Http\Controllers\HomeController::class, 'autocomplete']);
+Route::get('/search/{title}', [App\Http\Controllers\HomeController::class, 'search']);
 Route::get('auth/{provider}', [App\Http\Controllers\Auth\AuthController::class, 'redirectToProvider']);
 Route::get('auth/{provider}/callback', [App\Http\Controllers\Auth\AuthController::class, 'handleProviderCallback']);
 
@@ -73,8 +78,20 @@ Route::middleware(['auth'])->prefix('wallet')->group(function() {
     Route::get('/redirect/{id}/{type}', [App\Http\Controllers\WalletController::class, 'redirectTransaction']);
 });
 
+// Wilayah Indonesia
+Route::get('all/provinces/', [App\Http\Controllers\ApiController::class, 'province_all']);
+Route::get('/regencies/{id}', [App\Http\Controllers\ApiController::class, 'regencies']);
+Route::get('/districts/{id}', [App\Http\Controllers\ApiController::class, 'districts']);
+Route::get('/villages/{id}', [App\Http\Controllers\ApiController::class, 'villages']);
+
+Route::get('/province/{id}', [App\Http\Controllers\ApiController::class, 'province']);
+Route::get('/regencie/{id}', [App\Http\Controllers\ApiController::class, 'regencie']);
+Route::get('/district/{id}', [App\Http\Controllers\ApiController::class, 'district']);
+Route::get('/village/{id}', [App\Http\Controllers\ApiController::class, 'village']);
+
 Route::get('/history/export/all', [App\Http\Controllers\ExportController::class, 'tes'])->name('transaction.all');
 Route::post('/download', [App\Http\Controllers\ExportController::class, 'download'])->name('download');
+Route::get('/view/{path}', [App\Http\Controllers\ExportController::class, 'view'])->name('view');
 // Route::get('/tests', [App\Http\Controllers\WalletController::class, 'tests']);
 
 // Payments

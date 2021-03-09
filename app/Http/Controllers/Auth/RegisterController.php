@@ -84,7 +84,7 @@ class RegisterController extends Controller
             'api_token' => Str::random(60),
             ]);
             Wallet::create([
-            'wallet_id' => date('Ymd').rand(),
+            'wallet_id' => substr($id, -4) . rand(0, 99999),
             'user_id' => $id,
             ]);
             Avatar::create([

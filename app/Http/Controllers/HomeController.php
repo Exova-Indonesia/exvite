@@ -7,7 +7,9 @@ use App;
 use auth;
 use App\Models\Bank;
 use App\Models\Wallet;
+use App\Models\SearchHistory;
 use App\Models\Plan;
+use App\Models\Highlight;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -41,25 +43,43 @@ class HomeController extends Controller
         $balance = '';
         $bank = '';
         }
+        $highlight = Highlight::with('product')->get();
         $subs = Plan::all();
-        return view('home', ['balance' => $balance, 'subs' => $subs, 'bank' => $bank]);
+        return view('home', [
+            'balance' => $balance,
+            'subs' => $subs, 
+            'bank' => $bank, 
+            'highlight' => $highlight,
+        ]);
+        // return response()->json([
+        //     'highlight' => $highlight,
+        // ]);
     }
     public function autocomplete(Request $request)  {
        $query = $request->get('query');
-       $data = DB::table('templates')->where('templates_name', 'LIKE', "%{$query}%")->get();
-       $data2 = DB::table('users')->where('name', 'LIKE', "%{$query}%")->get();
+       $data = DB::table('jasa_products')
+       ->where('jasa_name', 'LIKE', "%{$query}%")
+       ->get();
+
+       $data2 = DB::table('search_history')
+       ->where('user_id', auth()->user()->id)
+       ->where('content', 'LIKE', "%{$query}%")
+       ->get();
        if((count($data) || count($data2)) >= 1) {
         $output = '<ul class="autocomplete" style="display:block;">';
-        foreach($data as $row)
-        {
-        $output .= '
-        <li class="nav-link text-capitalize"><a href="'.$row->templates_name.'">'.$row->templates_name.'</a></li>
-        ';
-        }
         foreach($data2 as $row)
         {
         $output .= '
-        <li class="nav-link text-capitalize"><a href="'.$row->user_id.'">'.$row->name.'</a></li>
+        <li class="nav-link text-capitalize">
+        <a class="text-primary" href="'.url('search/' . str_replace(' ', '-', strtolower($row->content))).'">'.$row->content.'</a>
+        <span role="button" class="float-right"><i class="text-danger fas fa-times"></i></span>
+        </li>
+        ';
+        }
+        foreach($data as $row)
+        {
+        $output .= '
+        <li class="nav-link text-capitalize"><a href="'.url('search/' . str_replace(' ', '-', strtolower($row->jasa_name))).'">'.$row->jasa_name.'</a></li>
         ';
         }
         $output .= '</ul>';
@@ -69,5 +89,24 @@ class HomeController extends Controller
         $output .= '</ul>';
         return $output;
         }
+    }
+    public function search($title) {
+        $balance = WalletController::index()->balance;
+        $title = str_replace('-', ' ', $title);
+
+        $check = SearchHistory::where('user_id', auth()->user()->id)
+        ->where('content', 'LIKE', "%{$title}%")
+        ->first();
+        // return response()->json($check);
+        if(empty($check)) {
+            SearchHistory::create([
+                'user_id' => auth()->user()->id,
+                'content' => htmlentities($title),
+                'availability' => (Auth::user()->notif->pencarian == 1) ? 1 : 0,
+            ]);
+        }
+
+        $data = DB::table('jasa_products')->where('jasa_name', 'LIKE', "%{$title}%")->get();
+        return view('search', ['products' => $data, 'balance' => $balance, 'title' => $title]);
     }
 }

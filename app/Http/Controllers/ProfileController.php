@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Points;
 use App\Models\UserNotif;
 use App\Models\Avatar;
 use App\Models\Activity;
+use App\Models\SearchHistory;
 use App\Models\State;
 use Illuminate\Http\Request;
 use Auth;
@@ -28,10 +30,10 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        $state = file_get_contents("https://dev.farizdotid.com/api/daerahindonesia/provinsi");
+        $state = DB::table('provinces')->get();
         $balance = WalletController::index()->balance;
-        return view('profile', ['balance' => $balance, 'user' => Auth::user(), 'state' => json_decode($state)]);
-        // return response()->json(['balance' => $balance, 'user' => Auth::user()->id, 'state' => json_decode($state)->nama]);
+        return view('profile', ['balance' => $balance, 'user' => Auth::user(), 'state' => $state]);
+        // return response()->json(['balance' => $balance, 'user' => Auth::user()->id, 'state' => json_decode($state), 'points' => $points]);
     }
     public function data()
     {
@@ -57,8 +59,8 @@ class ProfileController extends Controller
      */
     public function store(Request $request)
     {
-        $path = base_path('../assets/' . Auth::user()->id . '/profile/avatar/' . date('Y-m'));
-        $pathDB = asset('storage/' . Auth::user()->id . '/profile/avatar') . '/' . date('Y-m');
+        $path = base_path('../assets/' . Auth::user()->id . '/profile/avatar/' . date('Y') . '/' . date('F'));
+        $pathDB = asset('storage/' . Auth::user()->id . '/profile/avatar') . '/' . date('Y') . '/' . date('F');
         $avatar =  Avatar::where('user_id', Auth::user()->id);
         $f = $request->file('content');
         $f_name = 'user-profile-' . date('Ymdhis') . '-' . Auth::user()->id . '.' . $f->getClientOriginalExtension();
@@ -188,14 +190,14 @@ class ProfileController extends Controller
                 break;
 
             case 'Alamat':
-                $state = file_get_contents("https://dev.farizdotid.com/api/daerahindonesia/provinsi/" . $request->province);
-                $city = file_get_contents("https://dev.farizdotid.com/api/daerahindonesia/kota/" . $request->city);
-                $disrict = file_get_contents("https://dev.farizdotid.com/api/daerahindonesia/kecamatan/" . $request->district);
+                $state = ApiController::province($request->province);
+                $city = ApiController::regencie($request->city);
+                $disrict = ApiController::district($request->district);
                 $address->update([
                     'address' => $request->address,
-                    'city' => json_decode($city)->nama,
-                    'state' => json_decode($state)->nama,
-                    'district' => json_decode($disrict)->nama,
+                    'state' => $state->name,
+                    'city' => $city->name,
+                    'district' => $disrict->name,
                     'address_name' => $request->name,
                 ]);
                 Activity::create([
@@ -329,6 +331,34 @@ class ProfileController extends Controller
                     'user_agent' => $request->userAgent(),
                     'availability' => 1,
                 ]);
+                return response()->json(['status' => Lang::get('activity.user.profile.delAktivitas')]);
+                break;
+
+            case 'pencarian':
+                $notif->update([
+                    'pencarian' => $request->content,
+                ]);
+                Activity::create([
+                    'user_id' => Auth::user()->id,
+                    'activity' => Lang::get('activity.user.profile.pencarian'),
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                    'availability' => (Auth::user()->notif->aktivitas == 1) ? 1 : 0,
+                ]);
+                break;
+
+            case 'deletePencarian':
+                SearchHistory::where('user_id', Auth::user()->id)->update([
+                    'availability' => $request->content,
+                ]);
+                Activity::create([
+                    'user_id' => Auth::user()->id,
+                    'activity' => Lang::get('activity.user.profile.delPencarian'),
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                    'availability' => (Auth::user()->notif->aktivitas == 1) ? 1 : 0,
+                ]);
+                return response()->json(['status' => Lang::get('activity.user.profile.delPencarian')]);
                 break;
             default:
             //

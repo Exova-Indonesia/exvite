@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Highlight;
 use Illuminate\Http\Request;
 
 class HighlightController extends Controller
@@ -12,8 +13,8 @@ class HighlightController extends Controller
         return view('/highlight', ['balance' => $balance]);
     }
     public function all() {
-        $balance = User::all();
+        $highlight = Highlight::with('product')->get();
         // return view('/highlight', ['balance' => $balance]);
-        return response()->json($balance);
+        return response()->json($highlight);
     }
 }

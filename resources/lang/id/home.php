@@ -15,10 +15,10 @@ return [
     ],
     'services' => [
         'title' => 'Layanan Kami',
-        'jasatitle' => 'Exova Jasa',
+        'jasatitle' => 'Exova Project',
         'createtitle' => 'Exove Creations',
         'jasa' => [
-            'description' => 'Jasa Exova adalah tempat membeli/menjual jasa seperti photography, design, videography, web apps developing hingga games',
+            'description' => 'Exova Project adalah tempat mencari/menjual jasa seperti photography, design, dan videography yang berfokus pada "Capture Moment"',
             'button' => 'Lihat Selengkapnya',
         ],
         'creations' => [

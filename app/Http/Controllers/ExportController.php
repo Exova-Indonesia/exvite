@@ -7,7 +7,9 @@ use App\Models\Transaction;
 // use App\Exports\Transactions;
 use PDF;
 use Lang;
+use File;
 use Storage;
+use Response;
 use Excel;
 use App\Jobs\VerifyEmailJobs;
 
@@ -42,6 +44,19 @@ class ExportController extends Controller
     public function download(Request $request) {
         return Storage::download($request->invoice);
         // return response()->json([$request->invoice]);
+    }
+
+    public function view($path) {
+        $id = base64_decode($path);
+        if (!File::exists($id)) {
+            abort(404);
+        }
+        $file = File::get($id);
+        $type = File::mimeType($id);
+        $response = Response::make($file, 200);
+
+        $response->header("Content-Type", $type);
+        return $response;
     }
 
 }
