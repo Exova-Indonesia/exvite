@@ -18,6 +18,18 @@
     <!-- Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <!-- add before </body> -->
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.min.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.min.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.min.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-rename/dist/filepond-plugin-file-rename.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+
+
     <script src="{{ asset('js/vendor/jquery-1.12.4.min.js') }}" defer></script>
     <script src="{{ asset('js/vendor/jquery-ui.js') }}" defer></script>
     <script src="{{ asset('js/vendor/bootstrap.min.js') }}" defer></script>
@@ -32,7 +44,7 @@
     <script src="{{ asset('js/wow.min.js') }}" defer></script>
     <script src="{{ asset('particles.js/particles.js') }}" defer></script>
     <script src="{{ asset('tourguide.js/tourguide.min.js') }}" defer></script>
-    <script src="{{ asset('sweetalert2/sweetalert2.min.js') }}" defer></script>
+    <!-- <script src="{{ asset('sweetalert2/sweetalert2.min.js') }}" defer></script> -->
     <script src="{{ asset('js/main.js') }}" defer></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
 
@@ -43,6 +55,9 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('fontawesome/css/all.css') }}" rel="stylesheet">
+    
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('datatables-bs4/css/dataTables.bootstrap4.css') }}">
     <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/linearicons.css') }}">
@@ -147,7 +162,7 @@
         <!-- <div class="preloader">
             <span><img width="40px" height="40px" src="{{ ('https://assets.exova.id/img/1.png') }}"></span>
         </div> -->
-        <main>
+        <main class="mb-7">
             @yield('content')
         </main>
     </div>
@@ -205,7 +220,6 @@
             </div>
         </div>
     </footer>
-    @yield('scripts')
     <script>
     $(function() {
     const Toast = Swal.mixin({
@@ -233,5 +247,6 @@
       @endif
     })
     </script>
+    @yield('scripts')
 </body>
 </html>

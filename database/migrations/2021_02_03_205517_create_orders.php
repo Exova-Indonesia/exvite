@@ -23,6 +23,9 @@ class CreateOrders extends Migration
             $table->string('status');
             $table->dateTime('deadline');
             $table->timestamps();
+
+            // $table->foreign('product_id')->references('jasa_id')->on('jasa_products')->onDelete('cascade');
+            $table->foreign('customer_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

@@ -20,7 +20,7 @@ class CreateActivitiesTable extends Migration
             $table->string('activity');
             $table->ipAddress('ip_address');
             $table->text('user_agent');
-            $table->integer('avaibility')->default(0);
+            $table->integer('availability')->default(0);
             $table->timestamps();
         });
     }

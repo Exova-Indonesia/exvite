@@ -20,4 +20,10 @@ class OrderJasa extends Model
         'deadline',
         'example',
     ];
+    public function products() {
+        return $this->belongsTo(Jasa::class, 'product_id');
+    }
+    public function customer() {
+        return $this->belongsTo(User::class, 'customer_id');
+    }
 }

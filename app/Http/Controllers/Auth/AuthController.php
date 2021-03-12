@@ -72,7 +72,7 @@ class AuthController extends Controller
                 'provider' => $provider,
                 'provider_id' => $user->id,
                 'id' => $id,
-                'subscription' => 'Newbie',
+                'subscription' => 0,
                 'api_token' => Str::random(60),
             ]);
             Avatar::create([
@@ -92,6 +92,7 @@ class AuthController extends Controller
                 'activity' => Lang::get('activity.user.with').$provider,
                 'ip_address' => Request::ip(),
                 'user_agent' => Request::userAgent(),
+                'availability' => 0,
             ]);
             return $data;
         }

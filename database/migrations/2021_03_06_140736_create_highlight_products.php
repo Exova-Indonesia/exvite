@@ -18,7 +18,7 @@ class CreateHighlightProducts extends Migration
             $table->bigInteger('product_id')->unsigned();
             $table->foreign('product_id')->references('jasa_id')->on('jasa_products')->onDelete('cascade');
             $table->bigInteger('plan_id')->unsigned();
-            $table->foreign('plan_id')->references('id')->on('highlight_plan')->onDelete('cascade');
+            // $table->foreign('plan_id')->references('id')->on('highlight_plan')->onDelete('cascade');
             $table->string('type');
             $table->dateTime('start_at');
             $table->dateTime('ends_at');

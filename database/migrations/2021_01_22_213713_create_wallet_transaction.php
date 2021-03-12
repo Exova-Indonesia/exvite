@@ -16,8 +16,8 @@ class CreateWalletTransaction extends Migration
         Schema::create('wallet_transaction', function (Blueprint $table) {
             $table->id('wal_transaction_id');
             $table->string('wal_reference_id')->nullable();
-            $table->string('wal_credited_wallet');
-            $table->string('wal_debited_wallet');
+            $table->bigInteger('wal_credited_wallet')->unsigned();
+            $table->bigInteger('wal_debited_wallet')->unsigned();
             $table->string('wal_debited_bank')->nullable();
             $table->string('wal_description');
             $table->string('wal_amount');
@@ -26,6 +26,9 @@ class CreateWalletTransaction extends Migration
             $table->string('wal_token');
             $table->string('wal_invoice');
             $table->timestamps();
+
+            $table->foreign('wal_credited_wallet')->references('wallet_id')->on('wallets')->onDelete('cascade');
+            $table->foreign('wal_debited_wallet')->references('wallet_id')->on('wallets')->onDelete('cascade');
         });
     }
 

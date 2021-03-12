@@ -42,6 +42,17 @@ Route::get('/transaksi', function () {
 //     return back()->with('message', 'Verification link sent!');
 // })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
+
+// Web Api
+Route::middleware('auth')->prefix('/web/v2')->group(function() {
+    Route::get('/orders/penjualan/{submenu}', [App\Http\Controllers\ApiController::class, 'penjualan'])->name('penjualan');
+    Route::get('/orders/pembelian/{submenu}', [App\Http\Controllers\ApiController::class, 'pembelian'])->name('pembelian');
+    Route::get('/notification/update', [App\Http\Controllers\ApiController::class, 'update'])->name('update');
+    Route::get('/notification/pesan', [App\Http\Controllers\ApiController::class, 'pesan'])->name('pesan');
+    Route::post('/uploads/orders/{id}/{label}', [App\Http\Controllers\ApiController::class, 'store_order_files'])->name('order.files');
+});
+
+
 Route::middleware('auth')->group(function() {
     Route::put('profile/check/{id}', [App\Http\Controllers\ProfileController::class, 'check'])->name('profile.check');
     Route::get('profile/data', [App\Http\Controllers\ProfileController::class, 'data'])->name('profile.data');

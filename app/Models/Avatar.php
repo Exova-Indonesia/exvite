@@ -10,6 +10,7 @@ class Avatar extends Model
     use HasFactory;
     protected $table = 'user_avatar';
     protected $fillable = [
+        'avatar_id',
         'user_id',
         'medium',
         'small',

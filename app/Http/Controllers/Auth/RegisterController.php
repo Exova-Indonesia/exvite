@@ -80,7 +80,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'subscription' => 'Newbie',
+            'subscription' => 0,
             'api_token' => Str::random(60),
             ]);
             Wallet::create([
@@ -104,6 +104,7 @@ class RegisterController extends Controller
                 'activity' => 'Masuk dengan akun exova',
                 'ip_address' => Request::ip(),
                 'user_agent' => Request::userAgent(),
+                'availability' => 0,
             ]);
         return $user;
     }

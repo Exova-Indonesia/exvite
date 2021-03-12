@@ -17,12 +17,12 @@ class CreateUserAddress extends Migration
             $table->id('address_id');
             $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('address_name');
-            $table->string('address');
-            $table->string('state');
-            $table->string('city');
-            $table->string('postal');
-            $table->string('country');
+            $table->string('address_name')->nullable();
+            $table->string('address')->nullable();
+            $table->string('state')->nullable();
+            $table->string('city')->nullable();
+            $table->string('postal')->nullable();
+            $table->string('country')->nullable();
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
             $table->timestamps();

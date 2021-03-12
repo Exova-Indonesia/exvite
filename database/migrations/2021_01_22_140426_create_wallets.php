@@ -15,11 +15,13 @@ class CreateWallets extends Migration
     {
         Schema::create('wallets', function (Blueprint $table) {
             $table->id('wallet_id');
-            $table->string('user_id');
+            $table->bigInteger('user_id')->unsigned();
             $table->integer('revenue')->default(0);
             $table->integer('fund')->default(0);
             $table->integer('balance')->default(0);
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

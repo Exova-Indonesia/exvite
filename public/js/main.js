@@ -478,7 +478,7 @@
     $(document).ready(function () {
         reload();
         function reload() {
-            $.getJSON("cart/data", function (data) {
+            $.getJSON( url + "cart/data", function (data) {
                 let total = 0;
                 $.each(data, function (i, data) {
                     $(".parent").each(function () {
@@ -497,7 +497,7 @@
             });
         }
 
-        $.getJSON("cart/data", function (data) {
+        $.getJSON( url + "cart/data", function (data) {
             $.each(data, function (i, data) {
                 $(".parent").each(function () {
                     if (data.cart_id == $(this).attr("data-id")) {
@@ -588,7 +588,7 @@
             });
         });
 
-        $.getJSON("cart/data", function (data) {
+        $.getJSON( url + "cart/data", function (data) {
             let total = 0;
             $.each(data, function (i, data) {
                 let subtotal =

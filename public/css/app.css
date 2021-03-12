@@ -535,7 +535,8 @@ section {
 .scroll-notif span {
     display: inline-block;
 }
-.shortcut-notif {
+.shortcut-notif, 
+.shortcut-product {
     border: 1px solid #e1e1e1;
     text-align: center;
     padding: 12px 16px;
@@ -548,9 +549,35 @@ section {
     color: rgb(94, 136, 252);
     border-color: rgb(94, 136, 252);
 }
-.shortcut-notif:hover {
+.shortcut-notif:hover, 
+.shortcut-product:hover {
     color: rgb(94, 136, 252);
     border-color: rgb(94, 136, 252);
+}
+.file-minimize-upload {
+    position: fixed;
+    width: 25rem;
+    bottom: -20rem;
+    right: 0;
+    z-index: 9999999;
+    background-color: #fff;
+    border-start-start-radius: 12px;
+
+    transition: all 0.7s;
+}
+.filepond--credits {
+    /* display: none !important; */
+}
+.header-upload-bar {
+    background-color: #272626;
+    border-start-start-radius: 12px;
+    padding: 15px 20px;
+}
+.header-upload-bar span {
+    color: white;
+}
+.file-minimize-body {
+    padding: 15px 20px;
 }
 
 /* Exova Wallets */
@@ -2997,6 +3024,13 @@ pre code {
 
     .table-responsive-md > .table-bordered {
         border: 0;
+    }
+    .file-minimize-upload {
+        width: 100%;
+        border-radius: 0;
+    }
+    .header-upload-bar {
+        border-radius: 0;
     }
 }
 
@@ -9776,6 +9810,10 @@ button.bg-dark:focus {
 .mb-5,
 .my-5 {
     margin-bottom: 3rem !important;
+}
+
+.mb-7 {
+    margin-bottom: 7rem !important;
 }
 
 .ml-5,
