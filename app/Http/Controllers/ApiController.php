@@ -7,7 +7,8 @@ use DB;
 use Storage;
 use App\Models\State;
 use App\Models\OrderJasa;
-use App\Models\OrderJasaMedia;
+use App\Models\OrderJasaResult;
+use App\Models\OrderRevision;
 
 class ApiController extends Controller
 {
@@ -82,20 +83,20 @@ class ApiController extends Controller
             $f_name = $f->getClientOriginalName();
             Storage::putFileAs('/', $f, $f_name);
             if($label == 'pesanan_diproses') {
-                $data = OrderJasaMedia::create([
+                $data = OrderJasaResult::create([
                     'order_id' => $id,
-                    'result' =>  $f_name,
+                    'path' =>  $f_name,
                 ]);
             } else if($label == 'permintaan_revisi') {
-                $data = OrderJasaMedia::create([
+                $data = OrderRevision::create([
                     'order_id' => $id,
-                    'revisi' =>  $f_name,
+                    'path' => $f_name,
                 ]);
             }
-            // OrderJasa::where('order_id', $id)
-            // ->update([
-            //     'status' => 'pesanan_dikirim',
-            // ]);
+            OrderJasa::where('order_id', $id)
+            ->update([
+                'status' => 'pesanan_dikirim',
+            ]);
         }
     }
 

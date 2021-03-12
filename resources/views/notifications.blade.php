@@ -156,6 +156,8 @@
                         allowFileTypeValidation: true,
                         credits: false,
                         allowRevert: false,
+                        allowMultiple: false,
+                        allowReplace: true,
                         allowFileSizeValidation: true,
                         maxTotalFileSize: '20MB',
                         acceptedFileTypes: ['image/png', 'image/jpeg', 'image/jpg',
@@ -219,12 +221,17 @@
                                 icon: 'success',
                                 title: 'Berhasil membatalkan',
                                 });
+                                pond.onprocessfileabort = (file) => {
+                                    //
+                                }
                                 pond.removeFiles();
+                                $('.count-files').html('');
                             }
                         });
                         } else if(totalFiles == 0 || completedFiles !== 0 ) {
                             document.getElementById("upload-bar").style.bottom = "-35rem";
                             pond.removeFiles();
+                            $('.count-files').html('');
                             $('.upload-btn').removeAttr('disabled');
                             $('.upload-order-files').attr('data-status', 0);
                         }

@@ -13,13 +13,14 @@ class CreateJasaMedia extends Migration
      */
     public function up()
     {
-        Schema::create('jasa_media', function (Blueprint $table) {
+        Schema::create('jasa_product_media', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('jasa_id')->unsigned();
-            $table->text('path');
-            $table->string('type');
+            $table->text('small');
+            $table->text('medium');
+            $table->text('large');
             $table->timestamps();
-
+            
             $table->foreign('jasa_id')->references('jasa_id')->on('jasa_products')->onDelete('cascade');
         });
     }
