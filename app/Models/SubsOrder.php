@@ -11,6 +11,7 @@ class SubsOrder extends Model
     protected $table = 'subs_orders';
     protected $fillable = [
         'order_id',
+        'order_detail_id',
         'product_id',
         'customer_id',
         'type',

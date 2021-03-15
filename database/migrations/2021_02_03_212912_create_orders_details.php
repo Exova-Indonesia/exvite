@@ -14,16 +14,12 @@ class CreateOrdersDetails extends Migration
     public function up()
     {
         Schema::create('orders_details', function (Blueprint $table) {
-            $table->id('orders_details_id');
+            $table->id('orders_detail_id');
             $table->bigInteger('order_id')->unsigned();
-            $table->foreign('order_id')->references('order_id')->on('jasa_orders')->onDelete('cascade');
-            $table->string('quantity');
-            $table->string('unit_price');
-            $table->string('discount');
-            $table->string('admin_fee');
-            $table->string('total_price');
-            $table->string('payment_type');
-            $table->string('status');
+            $table->bigInteger('payment_id')->unsigned();
+            $table->integer('quantity');
+            $table->integer('unit_price');
+            $table->integer('subtotal');
             $table->timestamps();
         });
     }

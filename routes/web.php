@@ -25,8 +25,12 @@ use App\Notifications\TransactionMail;
 |
 */
 
-Route::get('/welcome', function () {
-    return response()->json(Auth::user()->subs->plan->plan_name);
+Route::get('/welcome', function (Request $request) {
+    return view('index');
+});
+
+Route::get('/components/sidebar', function (Request $request) {
+    return view('components.side-bar');
 });
 
 Route::get('/transaksi', function () {

@@ -20,7 +20,7 @@
         </div>
         <div class="col-lg-12 my-3">
             <div class="row">
-                <div class="col-lg-3 p-2">
+                <div class="col-lg-3 col-sm-12 p-2">
                     <div class="card">
                         <div class="card-header text-white bg-exova">
                             @lang('profile.card-1.title')
@@ -41,7 +41,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 p-2">
+                <div class="col-lg-6 col-sm-12 p-2">
                     <div class="card">
                         <div class="card-header text-white bg-exova">
                             @lang('profile.card-2.title')
@@ -52,7 +52,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-lg-7 p-1">
+                                <div class="col-lg-7 col-sm-12 p-1">
                                     <div class="profile-bar">
                                         <div class="user-profile-picture-bar">
                                             <img class="profile-picture" src="" alt="Profile Picture">
@@ -74,7 +74,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-5 p-1">
+                                <div class="col-lg-5 col-sm-12 p-1">
                                     <ul class="list-group">
                                         <li class="list-group-item"> <span id="name"></span> 
                                             <span id="name-btn" role="button" data-title="Ganti Nama" data-label="Nama" data-target="#Modal" data-toggle="modal">
@@ -93,7 +93,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 p-2">
+                <div class="col-lg-3 col-sm-12 p-2">
                     <div class="card">
                         <div class="card-header text-white bg-exova">
                             @lang('profile.card-3.title')

@@ -7,11 +7,13 @@ namespace App\Http\Controllers;
 \Midtrans\Config::$isSanitized = config('app.md_sanitized');
 
 use Auth;
+use Lang;
 use App\Models\Cart;
 use App\Models\Subscription;
 use App\Models\SubsOrder;
 use App\Models\OrderDetails;
 use App\Models\PayMethod;
+use App\Models\PaymentDetail;
 use App\Models\OrderJasa;
 use App\Models\OrderJasaMedia;
 use Illuminate\Http\Request;
@@ -31,19 +33,21 @@ class PaymentsController extends Controller
 
     public function pay(Request $request) {
         // $cart = Cart::where('cart_id', $request->cart_id);
+        $payment_id = rand();
         $user = Auth::user();
         $data = $request->session()->get('cart_shopping');
         $adm_fee = 0.02;
         switch($request->method) {
             case "QRIS":
                 $subtotal = 0;
+                $subtotal_adm = 0;
                 $method = 'QRIS';
                 foreach($data as $d) {
-                    $subtotal += $d['price'] * $d['quantity']; 
+                    $subtotal_adm += $d['price'] * $d['quantity'];
                 }
                 $fee = array(
                     'id'=>rand(),
-                    'price'=>$subtotal*$adm_fee,
+                    'price'=>$subtotal_adm*$adm_fee,
                     'name'=>'Biaya Layanan',
                     'quantity'=>1,
                 );
@@ -55,7 +59,8 @@ class PaymentsController extends Controller
                         'name'=>$d['name'],
                         'quantity'=>$d['quantity'],
                     );
-                    PaymentsController::createOrders($d, $subtotal, $method, $subtotal*$adm_fee);
+                    $subtotal += $d['price'] * $d['quantity'];
+                    PaymentsController::createOrders($d, $subtotal, $method, $subtotal*$adm_fee, $payment_id);
                 }
                 $billing_address = array(
                     'address'       => $user->address->address,
@@ -74,15 +79,23 @@ class PaymentsController extends Controller
                 $total = $subtotal + $subtotal*$adm_fee;
                 $params = array(
                     'transaction_details' => array(
-                        'order_id' => rand(),
+                        'order_id' => $payment_id,
                         'gross_amount' => $total,
                     ),
                     'item_details' => $item_details,
                     'payment_type' => 'gopay',
                     'customer_details' => $customer_details,
                 );
+                PaymentDetail::create([
+                    'payment_id' => $payment_id,
+                    'payment_method' => $method,
+                    'discount' => 0,
+                    'admin_fee' => $subtotal*$adm_fee,
+                    'amount' => $total,
+                    'status' => 'pending',
+                ]);
                 $paymentUrl = \Midtrans\Snap::createTransaction($params)->redirect_url;
-                return redirect($paymentUrl);
+                return response()->json(["link" => $paymentUrl, "method" => $request->method]);
                 break;
 
             case "Mandiri":
@@ -107,6 +120,7 @@ class PaymentsController extends Controller
             default:
                 return back()->with(['error' => Lang::get('validation.pay.nomethod')]);
         }
+        $request->session()->forget('cart_shopping');
     }
     function banks($data, $method) {
         $user = Auth::user();
@@ -127,7 +141,7 @@ class PaymentsController extends Controller
                     'quantity'=>$d['quantity'],
                 );
                 $subtotal += $d['price'] * $d['quantity'];
-                PaymentsController::createOrders($d, $subtotal, $method, $adm_fee);
+                PaymentsController::createOrders($d, $subtotal, $method, $adm_fee, $payment_id);
             }
                 $billing_address = array(
                     'address'       => $user->address->address,
@@ -146,20 +160,28 @@ class PaymentsController extends Controller
             $total = $subtotal + $adm_fee;
             $params = array(
                 'transaction_details' => array(
-                    'order_id' => rand(),
+                    'order_id' => $payment_id,
                     'gross_amount' => $total,
                 ),
                 'item_details' => $item_details,
                 'payment_type' => $method,
                 'customer_details' => $customer_details,
             );
+            PaymentDetail::create([
+                'payment_id' => $payment_id,
+                'payment_method' => $method,
+                'discount' => 0,
+                'admin_fee' => $adm_fee,
+                'amount' => $total,
+                'status' => 'pending',
+            ]);
             $paymentUrl = \Midtrans\Snap::createTransaction($params)->redirect_url;
             // $response = \Midtrans\CoreApi::charge($params);
             return redirect($paymentUrl);
             // return response()->json($paymentUrl);
     }
 
-    function createOrders($d, $subtotal, $method, $adm_fee) {
+    function createOrders($d, $subtotal, $method, $adm_fee, $payment_id) {
         $data = Cart::where('cart_id', $d['id'])->first();
         $order_id = date('hi').rand();
         switch($d['type']) {
@@ -172,16 +194,11 @@ class PaymentsController extends Controller
                     'invoice' => '',
                 ]);
                 OrderDetails::create([
-                    'orders_details_id' => date('hi').rand(),
                     'order_id' =>$order_id,
+                    'payment_id' => $payment_id,
                     'quantity' => $data->quantity,
-                    'unit_price' => $data->price,
-                    'discount' => 0,
-                    'admin_fee' => $adm_fee,
-                    'total_price' => $subtotal + $adm_fee,
-                    'payment_type' => $method,
-                    'invoice' => '',
-                    'status' => 'pending',
+                    'unit_price' => $data->unit_price,
+                    'subtotal' => $data->unit_price,
                 ]);
                 break;
             case "Jasa":
@@ -196,21 +213,15 @@ class PaymentsController extends Controller
                     'deadline' => $data->deadline,
                 ]);
                 OrderJasaMedia::create([
-                    'jasa_order_media_id' => date('hi').rand(),
                     'order_id' => $order_id,
                     'example' => $d['example'],
-                    'example_ori' => $d['example_ori'],
                 ]);
                 OrderDetails::create([
-                    'orders_details_id' => date('hi').rand(),
                     'order_id' =>$order_id,
+                    'payment_id' => $payment_id,
                     'quantity' => $data->quantity,
                     'unit_price' => $data->unit_price,
-                    'discount' => 0,
-                    'admin_fee' => $adm_fee,
-                    'total_price' => $subtotal + $adm_fee,
-                    'payment_type' => $method,
-                    'status' => 'pending',
+                    'subtotal' => $subtotal,
                 ]);
                 break;
                 default:

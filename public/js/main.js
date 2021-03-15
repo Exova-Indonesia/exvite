@@ -325,160 +325,51 @@
         $("#history_transaction").DataTable();
     });
 
-    $(".shortcut-highlight").on("click", function () {
-        $(".shortcut-highlight").removeClass("highlight-active");
-        $(this).addClass("highlight-active");
+    // $(".shortcut-highlight").on("click", function () {
+    //     $(".shortcut-highlight").removeClass("highlight-active");
+    //     $(this).addClass("highlight-active");
 
-        let highlight = $(this).html();
-        $(".highlight-title").html("Exova " + highlight);
+    //     let highlight = $(this).html();
+    //     $(".highlight-title").html("Exova " + highlight);
 
-        let content = "";
-        $.getJSON("/highlight/all", function (data) {
-            $.each(data, function (i, data) {
-                if (data.type == highlight) {
-                    content +=
-                        `<div class="col-lg-2 mb-5 col-sm-6 mb-lg-0">
-                    <a href="#" class="rounded-lg text-center">
-                        <div class="ribbon-wrapper">
-                            <div class="ribbon bg-danger text-white">
-                                Highlight
-                            </div>
-                        </div>
-                        <img class="w-100 p-2" src="` +
-                        data.product["jasa_thumbnail"] +
-                        `" alt="products">
-                        <div class="p-2 bg-white shadow-sm">
-                            <ul class="list-unstyled text-small text-secondary text-left font-weight-normal">
-                                <div>` +
-                        data.product["jasa_name"] +
-                        `</div>
-                                <div class="font-weight-bold">IDR ` +
-                        numeral(data.product["jasa_price"]).format("0,0") +
-                        `</div>
-                            </ul>
-                        </div>
-                    </a>
-                </div>`;
-                }
-                $(".highlight-content").html(content);
-            });
-        });
-    });
-
-    $(document).ready(function () {
-        let products = ``;
-        function price(val, pm_price, subtotal) {
-            let pricing, total;
-            if (val == "QRIS") {
-                pricing = pm_price * subtotal;
-            } else {
-                pricing = parseInt(pm_price);
-            }
-            total = subtotal + pricing;
-            $(".serv_price").html("IDR " + numeral(pricing).format("0,0"));
-            $(".buy_price").html("IDR " + numeral(subtotal).format("0,0"));
-            $(".total").html("IDR " + numeral(total).format("0,0"));
-        }
-        $.getJSON("http://localhost:8000/payments/data", function (data) {
-            let buy_price,
-                subtotal = 0;
-            $.each(data[1], function (i, data) {
-                buy_price = parseInt(data.price);
-                subtotal += buy_price;
-                products +=
-                    `
-                <div class="col-lg-12 py-1">
-                    <li class="list-group-item border-dashed my-2">
-                        <div class="product-cart-body">
-                            <div class="row">
-                                <div class="ml-2">
-                                    <img width="70" height="70" src="` +
-                    data.picture +
-                    `" alt="Products Icons">
-                                </div>
-                                <div class="ml-3">
-                                    <p class="mb-1">` +
-                    data.name +
-                    `</p>
-                                    <p class="mb-1"><strong>IDR ` +
-                    numeral(data.price).format(0, 0) +
-                    `</strong></p>
-                                    <p class="mb-1">` +
-                    data.type +
-                    `</p>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </div>
-                `;
-                $(".products").html(products);
-            });
-            $(".payment-method-radio").on("change", function () {
-                $(".payment-method-radio").removeClass("highlight-active");
-                $(this).addClass("highlight-active");
-                let val = $("input[name=method]:checked").val();
-                $(".method").html(val);
-                $.each(data[0], function (i, data) {
-                    if (val == data.pm_name) {
-                        let content = "";
-                        content +=
-                            `
-                    <img width="200" height="66" src="` +
-                            data.pm_icons +
-                            `" alt="Icons">
-                    <p>` +
-                            data.pm_description +
-                            `</p>
-                    `;
-                        $(".method-desc").html(content);
-                        price(val, data.pm_price, subtotal);
-                    }
-                });
-            });
-            let val = $("input[name=method]:checked").val();
-            price(val, data[0][0].pm_price, subtotal);
-            let content = "";
-            content +=
-                `
-            <img width="200" height="66" src="` +
-                data[0][0].pm_icons +
-                `" alt="Icons">
-            <p>` +
-                data[0][0].pm_description +
-                `</p>
-            `;
-            $(".method-desc").html(content);
-        });
-
-        // $('.snap').on('click', function () {
-        //     let val = $('input[name=method]:checked').val();
-        //     $.ajaxSetup({
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-        //             'Access-Control-Allow-Origin': '*',
-        //         }
-        //     });
-        //     $.ajax({
-        //         url: url + "payments/pay",
-        //         data: 'method=' + val,
-        //         type: "POST",
-        //         success: function (data) {
-        //             console.log(data.link)
-        //             window.location = data.link;
-        //         },
-        //         error: function (data) {
-        //             console.log(data);
-        //         }
-        //     })
-        // })
-    });
+    //     let content = "";
+    //     $.getJSON("/highlight/all", function (data) {
+    //         $.each(data, function (i, data) {
+    //             if (data.type == highlight) {
+    //                 content +=
+    //                     `<div class="col-lg-2 mb-5 col-sm-6 mb-lg-0">
+    //                 <a href="#" class="rounded-lg text-center">
+    //                     <div class="ribbon-wrapper">
+    //                         <div class="ribbon bg-danger text-white">
+    //                             Highlight
+    //                         </div>
+    //                     </div>
+    //                     <img class="w-100 p-2" src="` +
+    //                     data.product["jasa_thumbnail"] +
+    //                     `" alt="products">
+    //                     <div class="p-2 bg-white shadow-sm">
+    //                         <ul class="list-unstyled text-small text-secondary text-left font-weight-normal">
+    //                             <div>` +
+    //                     data.product["jasa_name"] +
+    //                     `</div>
+    //                             <div class="font-weight-bold">IDR ` +
+    //                     numeral(data.product["jasa_price"]).format("0,0") +
+    //                     `</div>
+    //                         </ul>
+    //                     </div>
+    //                 </a>
+    //             </div>`;
+    //             }
+    //             $(".highlight-content").html(content);
+    //         });
+    //     });
+    // });
 
     // Cart
     $(document).ready(function () {
         reload();
         function reload() {
-            $.getJSON( url + "cart/data", function (data) {
+            $.getJSON(url + "cart/data", function (data) {
                 let total = 0;
                 $.each(data, function (i, data) {
                     $(".parent").each(function () {
@@ -497,7 +388,7 @@
             });
         }
 
-        $.getJSON( url + "cart/data", function (data) {
+        $.getJSON(url + "cart/data", function (data) {
             $.each(data, function (i, data) {
                 $(".parent").each(function () {
                     if (data.cart_id == $(this).attr("data-id")) {
@@ -588,7 +479,7 @@
             });
         });
 
-        $.getJSON( url + "cart/data", function (data) {
+        $.getJSON(url + "cart/data", function (data) {
             let total = 0;
             $.each(data, function (i, data) {
                 let subtotal =
@@ -699,119 +590,6 @@
     // Input Price
     $("input[name=amount]").keyup(function () {
         $(this).val(numeral($(this).val()).format("0,0"));
-    });
-})(jQuery);
-
-(function ($) {
-    "use strict";
-    $(".carousel-inner .item:first-child").addClass("active");
-    $(".mainmenu-area #primary_menu li a").on("click", function () {
-        $(".navbar-collapse").removeClass("in");
-    });
-    $.scrollUp({
-        scrollText: '<i class="lnr lnr-arrow-up"></i>',
-        easingType: "linear",
-        scrollSpeed: 900,
-        animation: "fade",
-    });
-    $(".gallery-slide").owlCarousel({
-        loop: true,
-        margin: 0,
-        responsiveClass: true,
-        nav: false,
-        autoplay: true,
-        autoplayTimeout: 4000,
-        smartSpeed: 1000,
-        navText: [
-            '<i class="lnr lnr-chevron-left"></i>',
-            '<i class="lnr lnr-chevron-right"></i>',
-        ],
-        responsive: {
-            0: { items: 1 },
-            600: { items: 2 },
-            1280: { items: 3 },
-            1500: { items: 4 },
-        },
-    });
-    $(".team-slide").owlCarousel({
-        loop: true,
-        margin: 0,
-        responsiveClass: true,
-        nav: true,
-        autoplay: true,
-        autoplayTimeout: 4000,
-        smartSpeed: 1000,
-        navText: [
-            '<i class="lnr lnr-chevron-left"></i>',
-            '<i class="lnr lnr-chevron-right"></i>',
-        ],
-        responsive: { 0: { items: 1 }, 600: { items: 2 }, 1000: { items: 3 } },
-    });
-    $(".toggole-boxs").accordion();
-    $("#mc-form").ajaxChimp({
-        url:
-            "https://quomodosoft.us14.list-manage.com/subscribe/post?u=b2a3f199e321346f8785d48fb&amp;id=d0323b0697",
-        callback: function (resp) {
-            if (resp.result === "success") {
-                $(".subscrie-form, .join-button").fadeOut();
-                $("body").css("overflow-y", "scroll");
-            }
-        },
-    });
-    $('.mainmenu-area a[href*="#"]')
-        .not('[href="#"]')
-        .not('[href="#0"]')
-        .click(function (event) {
-            if (
-                location.pathname.replace(/^\//, "") ==
-                    this.pathname.replace(/^\//, "") &&
-                location.hostname == this.hostname
-            ) {
-                var target = $(this.hash);
-                target = target.length
-                    ? target
-                    : $("[name=" + this.hash.slice(1) + "]");
-                if (target.length) {
-                    event.preventDefault();
-                    $("html, body").animate(
-                        { scrollTop: target.offset().top },
-                        1000,
-                        function () {
-                            var $target = $(target);
-                            $target.focus();
-                            if ($target.is(":focus")) {
-                                return false;
-                            } else {
-                                $target.attr("tabindex", "-1");
-                                $target.focus();
-                            }
-                        }
-                    );
-                }
-            }
-        });
-    var magnifPopup = function () {
-        $(".popup").magnificPopup({
-            type: "iframe",
-            removalDelay: 300,
-            mainClass: "mfp-with-zoom",
-            gallery: { enabled: true },
-            zoom: {
-                enabled: true,
-                duration: 300,
-                easing: "ease-in-out",
-                opener: function (openerElement) {
-                    return openerElement.is("img")
-                        ? openerElement
-                        : openerElement.find("img");
-                },
-            },
-        });
-    };
-    magnifPopup();
-    $(window).on("load", function () {
-        $(".preloader").fadeOut(500);
-        new WOW().init({ mobile: false });
     });
 })(jQuery);
 

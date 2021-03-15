@@ -12,12 +12,9 @@ class OrderDetails extends Model
     protected $fillable = [
         'orders_details_id',
         'order_id',
+        'payment_id',
         'quantity',
         'unit_price',
-        'discount',
-        'admin_fee',
-        'total_price',
-        'payment_type',
-        'status',
+        'subtotal'
     ];
 }

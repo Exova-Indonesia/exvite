@@ -5,9 +5,9 @@
 <div class="container mb-5">
     <div class="col-lg-12">
         <div class="row">
-            <div class="@if(!empty($data[0])) col-lg-8 @else col-lg-12 @endif px-1">
+            <div class="@if(!empty($data[0])) col-lg-8 col-sm-12 @else col-sm-12 col-lg-12 @endif px-1">
                 <div class="card mb-2 border-0">
-                    <div class="card-header bg-white border-0">
+                    <div class="card-header border-0">
                         <h5 class="m-0"> @lang('payments.cart.title') </h5>
                     </div>
                     <div class="card-body pt-0">
@@ -42,9 +42,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 px-1">
+            <div class="col-lg-4 col-sm-12 px-1">
                 <div class="card">
-                    <div class="card-header border-0 bg-white">
+                    <div class="card-header border-0">
                         <h5 class="m-0">@lang('payments.cart.paymenttitle')</h5>
                     </div>
                     <div class="card-body">

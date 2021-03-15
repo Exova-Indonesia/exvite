@@ -15,6 +15,7 @@ class CreateOrders extends Migration
     {
         Schema::create('jasa_orders', function (Blueprint $table) {
             $table->id('order_id');
+            $table->bigInteger('order_detail_id');
             $table->bigInteger('product_id')->unsigned();
             $table->bigInteger('customer_id')->unsigned();
             $table->string('type');

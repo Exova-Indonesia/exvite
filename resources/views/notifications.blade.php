@@ -28,6 +28,8 @@
 @endsection
 @section('scripts')
 <script>
+jQuery(function() {
+$(document).ready(function() {
     const Toast = Swal.mixin({
       toast: true,
       position: 'top-end',
@@ -305,11 +307,14 @@
     }
     $(".shortcut-notif").on("click", function () {
         $(".shortcut-notif").removeClass("notif-active");
+        $(this).addClass("notif-active");
         let notif = $(this).html();
         reload(notif);
     });
+
     path = window.location.pathname.replace('/notifications/', '')
     reload(path);
-
+});
+});
 </script>
 @endsection

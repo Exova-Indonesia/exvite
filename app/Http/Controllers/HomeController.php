@@ -45,7 +45,7 @@ class HomeController extends Controller
         }
         $highlight = Highlight::with('product')->get();
         $subs = Plan::all();
-        return view('home', [
+        return view('landing', [
             'balance' => $balance,
             'subs' => $subs, 
             'bank' => $bank, 
