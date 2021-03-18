@@ -41,12 +41,15 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="{{ asset('scripts/bootstrap.min.js') }}" defer></script>
 
+    @livewireStyles
+
     <!--<link rel="dns-prefetch" href="//fonts.gstatic.com">-->
     <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
     
 
     <!-- Styles -->
     <!-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> -->
+    <link rel="manifest" href="_manifest.json" data-pwa-version="set_in_manifest_and_pwa_js">
     <link href="{{ asset('fontawesome/css/all.css') }}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset('styles/bootstrap.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('fonts/css/fontawesome-all.min.css') }}"/>
@@ -63,61 +66,56 @@
     </div>
     <div id="page">
       <div class="header header-auto-show container header-fixed header-logo-center">
-        <a href="index.html" class="header-title">Exova</a>
-        <a href="#" data-menu="menu-main" class="header-icon header-icon-1"
-          ><i class="fas fa-user"></i
+        <a href="{{ url('/') }}" class="header-title">Exova</a>
+        <a 
+          href="{{ url('/cart') }}" 
+          class="header-icon header-icon-1"
+          ><i class="fas fa-shopping-cart"></i
         ></a>
         <a
-          href="#"
-          data-toggle-theme
-          class="header-icon header-icon-4 show-on-theme-dark"
-          ><i class="fas fa-sun"></i
-        ></a>
-        <a
-          href="#"
-          data-toggle-theme
-          class="header-icon header-icon-4 show-on-theme-light"
-          ><i class="fas fa-moon"></i
-        ></a>
-        <a href="#" data-menu="menu-share" class="header-icon header-icon-3"
-          ><i class="fas fa-share-alt"></i
+          href="{{ url('/notifications') }}"
+          class="header-icon header-icon-4"
+          ><i class="fas fa-bell"></i
         ></a>
       </div>
       <div id="footer-bar" class="footer-bar-6">
-        <a href="index-components.html"
+        <a href="{{ url('/bookings') }}"
           ><i class="fa fa-shopping-bag"></i><span>Booking</span></a
         >
         <a href="index-pages.html"
           ><i class="fa fa-rss"></i><span>Feed</span></a
         >
-        <a href="{{ url('/') }}" class="circle-nav active-nav"
-          ><i class="fa fa-home"></i><span>Dashboard</span></a
-        >
-        <a href="index-projects.html"
+      <a href="{{ url('/') }}" class="circle-nav @if(Request::is('/')) active-nav @endif">
+      <i class="fa fa-home"></i>
+      <span>Welcome</span>
+      <em></em><strong><u></u></strong></a>
+        <a href="{{ url('/studio') }}" class=" @if(Request::is('studio')) active-nav @endif"
           ><i class="fa fa-business-time"></i><span>Studio</span></a
         >
-        <a href="#" data-menu="menu-main"
+        <a href="{{ url('/profile') }}" class=" @if(Request::is('profile')) active-nav @endif"
           ><i class="fa fa-user"></i><span>Akun</span></a
         >
       </div>
       <div class="page-title page-title-fixed container">
-        <h1>Exova</h1>
-        <a
-          href="#"
-          class="page-title-icon shadow-xl bg-theme color-theme show-on-theme-light"
-          data-toggle-theme
-          ><i class="fa fa-moon"></i
+        <h1>@if(Request::is('/')) 
+          Exova
+          @elseif(Request::segment(1) == 'products')
+          Produk
+          @elseif(Request::segment(1) == 'cart')
+          Keranjang
+          @elseif(Request::segment(1) == 'profile')
+          Profil
+          @endif</h1>
+        @if(Request::is('/'))
+        <a role="button"
+          class="page-title-icon shadow-xl bg-theme color-theme"
+          data-menu="menu-main"
+          ><i class="fa fa-bars"></i
         ></a>
-        <a
-          href="#"
-          class="page-title-icon shadow-xl bg-theme color-theme show-on-theme-dark"
-          data-toggle-theme
-          ><i class="fa fa-lightbulb color-yellow-dark"></i
-        ></a>
+        @endif
         <a
           href="{{ url('/cart') }}"
           class="page-title-icon shadow-xl bg-theme color-theme"
-          data-menu="menu-share"
           ><i class="fa fa-shopping-cart"></i
         ></a>
         <a
@@ -164,5 +162,6 @@
     })
     </script>
     @yield('scripts')
+    @livewireScripts
 </body>
 </html>

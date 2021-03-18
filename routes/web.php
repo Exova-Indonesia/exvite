@@ -55,6 +55,15 @@ Route::middleware('auth')->prefix('/web/v2')->group(function() {
     Route::get('/notification/pesan', [App\Http\Controllers\ApiController::class, 'pesan'])->name('pesan');
     Route::post('/uploads/orders/{id}/{label}', [App\Http\Controllers\ApiController::class, 'store_order_files'])->name('order.files');
 });
+    Route::get('all/provinces/', [App\Http\Controllers\ApiController::class, 'province_all']);
+    Route::get('/regencies/{id}', [App\Http\Controllers\ApiController::class, 'regencies']);
+    Route::get('/districts/{id}', [App\Http\Controllers\ApiController::class, 'districts']);
+    Route::get('/villages/{id}', [App\Http\Controllers\ApiController::class, 'villages']);
+
+    Route::get('/province/{id}', [App\Http\Controllers\ApiController::class, 'province']);
+    Route::get('/regencie/{id}', [App\Http\Controllers\ApiController::class, 'regencie']);
+    Route::get('/district/{id}', [App\Http\Controllers\ApiController::class, 'district']);
+    Route::get('/village/{id}', [App\Http\Controllers\ApiController::class, 'village']);
 
 
 Route::middleware('auth')->group(function() {
@@ -93,17 +102,6 @@ Route::middleware(['auth'])->prefix('wallet')->group(function() {
     Route::get('/redirect/{id}/{type}', [App\Http\Controllers\WalletController::class, 'redirectTransaction']);
 });
 
-// Wilayah Indonesia
-Route::get('all/provinces/', [App\Http\Controllers\ApiController::class, 'province_all']);
-Route::get('/regencies/{id}', [App\Http\Controllers\ApiController::class, 'regencies']);
-Route::get('/districts/{id}', [App\Http\Controllers\ApiController::class, 'districts']);
-Route::get('/villages/{id}', [App\Http\Controllers\ApiController::class, 'villages']);
-
-Route::get('/province/{id}', [App\Http\Controllers\ApiController::class, 'province']);
-Route::get('/regencie/{id}', [App\Http\Controllers\ApiController::class, 'regencie']);
-Route::get('/district/{id}', [App\Http\Controllers\ApiController::class, 'district']);
-Route::get('/village/{id}', [App\Http\Controllers\ApiController::class, 'village']);
-
 Route::get('/history/export/all', [App\Http\Controllers\ExportController::class, 'tes'])->name('transaction.all');
 Route::post('/download', [App\Http\Controllers\ExportController::class, 'download'])->name('download');
 Route::get('/view/{path}', [App\Http\Controllers\ExportController::class, 'view'])->name('view');
@@ -137,6 +135,11 @@ Route::get('/highlight/all', [App\Http\Controllers\HighlightController::class, '
 
 Route::middleware('auth', 'cartsession')->group(function() {
     Route::resource('/order', App\Http\Controllers\OrderController::class);
+});
+
+// Products Page
+Route::middleware('auth')->group(function() {
+    Route::resource('/products', App\Http\Controllers\ProductController::class);
 });
 
 

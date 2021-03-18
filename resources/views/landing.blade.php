@@ -76,23 +76,89 @@
                         <input id="search" type="search" autocomplete="off" placeholder="@lang('home.header.search')" aria-describedby="button-addon4" class="form-control bg-transparent border-0">
                 </div>
             </div>
-            <div class="landing-shorcut-wrapper row col-lg-8 m-auto">
-                <div class="col-lg-4">
-                    <div class="landing-shortcut">
-                        <i class="fas fa-business-time"></i>
+            <div class="row col-lg-8 m-auto">
+                <div class="col-5 px-1">
+                    <div class="card mx-0 mb-2 card-style bg-33" data-card-height="130">
+                        <div class="card-bottom">
+                            <h2 class="color-white text-center mb-n1">Banners</h2>
+                            <p class="color-white text-center opacity-50 pb-3">
+                                Promo &amp; Promo
+                            </p>
+                        </div>
                     </div>
-                    <div class="landing-shortcut">
-                        <i class="fas fa-percent"></i>
+                        <a class="card mx-0 mb-2 card-style bg-20" data-card-height="130">
+                            <div class="card-top ps-3 pt-3">
+                                <h1 class="color-white font-19">Saldo</h1>
+                            </div>
+                                <div class="card-center pe-3">
+                                    <h4 class="color-white text-end">****6345</h4>
+                                </div>
+                            <div class="card-bottom ps-3 pb-2">
+                                <h5 class="color-white">Rp20,000,000</h5>
+                            </div>
+                            <div class="card-overlay bg-gradient"></div>
+                        </a>
                     </div>
-                    <div class="landing-shortcut">
-                        <i class="fas fa-thumbs-up"></i>
-                    </div>
-                    <div class="landing-shortcut">
-                        <i class="fa fa-map-marker" aria-hidden="true"></i>
-                    </div>
+                <div class="col-7 px-1">
+                    <a class="card mx-0 card-style default-link bg-6" data-card-height="270">
+                        <div class="card-bottom">
+                            <h2 class="color-white text-center mb-n1">Banners</h2>
+                            <p class="color-white text-center opacity-50 pb-3">
+                                Promo &amp; Promo
+                            </p>
+                        </div>
+                        <div class="card-overlay bg-gradient"></div>
+                    </a>
                 </div>
-                <div class="col-lg-4">
-                    <i class="fas fa-business-time"></i>
+            </div>
+        </div>
+        <div class="container">
+            <div class="col-12">
+                <div class="section-title">
+                    <h2 class="s-title">Terlaris</h2>
+                </div>
+                <div class="row mx-2">
+                    <ul class="product-slide col-lg-12">
+                        <li class="col-lg-3 col-sm-10 col-md-12">
+                            <div class="product-seller">
+                                <div class="row m-0">
+                                    <div class="product-seller-pp">
+                                        <img width="40px" height="40px" src="{{ asset('../images/bg-01.jpg') }}" alt="">
+                                    </div>
+                                    <div class="product-seller-name">
+                                        <span>Exova Studios</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-lg-12 pe-2">
+                                <div class="card card-style mr-0 mt-2 ml-2">
+                                <img src="images/food/small/10s.jpg" class="img-fluid">
+                                    <div class="px-2 white-space-normal">
+                                    <a href="{{ url('/products/1') }}">
+                                    <p class="color-highlight font-600 font-11 mb-n1 pt-1">Photography</p>
+                                        <h5 class="font-14">Wedding Ceremony in Bali</h5>
+                                        <p class="font-12 line-height-s mb-2">
+                                        Tomato Sauce, Mozzarella, Pizza Stuff, Oregano
+                                        </p>
+                                        <s class="font-12 m-0">Rp2,500,000</s>
+                                        <h5 class="font-14 price-rating">Rp2,250,000<span class="float-right"><i class="fa fa-star text-warning"></i> 4.5</span></h5>
+                                        </a>
+                                        <div class="d-flex footer-products">
+                                            <div class="likers color-theme" role="button">
+                                                <i class="fa fa-heart"></i>
+                                            </div>
+                                            <div class="cart-add color-theme" role="button">
+                                                <i class="fa fa-shopping-cart"></i>
+                                            </div>
+                                            <div class="comments font-11" role="button">
+                                                Tambah Diskusi
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

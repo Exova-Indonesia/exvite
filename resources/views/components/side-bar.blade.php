@@ -1,13 +1,9 @@
         <div
-          class="card rounded-0 bg-6"
+          class="card rounded-0"
+          style="background-image: url({{ auth()->user()->avatar->large }});"
           data-card-height="150"
           style="height: 150px"
         >
-        <style>
-          .bg-6 {
-              background-image: url({{ auth()->user()->avatar->large }});
-          }
-        </style>
           <div class="card-top">
             <a
               href="#"
@@ -23,17 +19,17 @@
         <div class="mt-4"></div>
         <h6 class="menu-divider">Akun</h6>
         <div class="list-group list-custom-small list-menu">
-          <a id="nav-welcome" href="index.html" class="active-nav">
+          <a id="nav-welcome" href="{{ url('/profile') }}" class="active-nav">
             <i class="fa fa-user gradient-red color-white"></i>
             <span>Profil</span>
             <i class="fa fa-angle-right"></i>
           </a>
-          <a id="nav-homepages" href="index-homepages.html">
+          <a id="nav-homepages" href="{{ url('/wallet') }}">
             <i class="fa fa-piggy-bank gradient-green color-white"></i>
             <span>Wallet</span>
             <i class="fa fa-angle-right"></i>
           </a>
-          <a id="nav-components" href="index-components.html">
+          <a id="nav-components" href="{{ url('/studio') }}">
             <i class="fa fa-business-time gradient-blue color-white"></i>
             <span>Studio</span>
             <i class="fa fa-angle-right"></i>

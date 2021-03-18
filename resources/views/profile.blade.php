@@ -307,6 +307,7 @@
 @endsection
 @section('scripts')
     <script>
+    $(document).ready(function() {
         let url = "http://localhost:8000/";
     let ReloadAll = () => {
         let reloadProfile = (data) => {
@@ -414,8 +415,6 @@
             },
         })
     }
-
-    $(document).ready(function() {
 
         $('#province').on('change', () => {
             let content = ``;
@@ -745,10 +744,8 @@
                     },
             })
         });
-    });
 
     ReloadAll();
-
-
+    })
     </script>
 @endsection
