@@ -1,8 +1,6 @@
-@extends('layouts.app')
+@extends('seller.layouts.app')
 @section('content')
-Index
 @endsection
 
 @section('scripts')
-
 @endsection

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\studio;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Jasa;
 
-class ProductController extends Controller
+class StudioController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view('products.show');
+        //
     }
 
     /**
@@ -46,18 +46,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $data = Jasa::where('jasa_id', $id)->first();
-        if( empty($data)) {
-            return view('products.show');
-        } else {
-            switch($id) {
-                case "terlaris":
-                    return view('products.segment');
-                    break;
-                default:
-                    return view('products.index');
-            }
-        }
+        //
     }
 
     /**

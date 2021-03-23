@@ -15,7 +15,7 @@ class CreateJasaProducts extends Migration
     {
         Schema::create('jasa_products', function (Blueprint $table) {
             $table->id('jasa_id');
-            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('studio_id')->unsigned();
             $table->string('jasa_name');
             $table->integer('jasa_subcategory');
             $table->string('jasa_deskripsi');
@@ -28,7 +28,7 @@ class CreateJasaProducts extends Migration
             $table->integer('jasa_sold')->default(0);
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            // $table->foreign('studio_id')->references('id')->on('studios')->onDelete('cascade');
 
         });
     }

@@ -25,8 +25,19 @@ use App\Notifications\TransactionMail;
 |
 */
 
+
+// Studio
+
+Route::middleware('auth')->group(function() {
+    Route::resource('/studio', App\Http\Controllers\Studio\RegisterController::class);
+});
+
+Route::middleware('auth')->prefix('upload')->group(function() {
+    Route::post('/studio/logo', [App\Http\Controllers\UploadController::class, 'logo_studio'])->name('upload.logo');
+});
+
 Route::get('/welcome', function (Request $request) {
-    return view('index');
+    return response()->json($request->session()->get('cart_shopping'));
 });
 
 Route::get('/components/sidebar', function (Request $request) {

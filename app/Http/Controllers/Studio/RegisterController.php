@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\studio;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Jasa;
+use App\Models\Studio;
+use App\Models\StudioLogo;
+use Auth;
 
-class ProductController extends Controller
+class RegisterController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +17,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view('products.show');
+        $check = Studio::where('user_id', auth()->user()->id)
+        ->first();
+        if(empty($check)) {
+            return redirect('studio/getting-started');
+        }
     }
 
     /**
@@ -35,7 +42,14 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $logo = StudioLogo::where('folder', $request->studio_logo)->first();
+        Studio::create([
+            'prefix' => 'EX-' . date('his') . rand(0, 9999),
+            'user_id' => auth()->user()->id,
+            'logo_id' => $logo->id,
+            'name' => $request->studio_name,
+        ]);
+        return redirect('/studio/description');
     }
 
     /**
@@ -46,19 +60,26 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $data = Jasa::where('jasa_id', $id)->first();
-        if( empty($data)) {
-            return view('products.show');
-        } else {
+        $check = Studio::where('user_id', auth()->user()->id)->first();
             switch($id) {
-                case "terlaris":
-                    return view('products.segment');
+                case "getting-started":
+                    if(empty($check->name)) {
+                        return view('seller.start.index');
+                    } else {
+                        return redirect('studio/description');
+                    }
+                    break;
+                        case "description":
+                    if(empty($check->description)) {
+                        return view('seller.start.description');
+                    } else {
+                        return redirect('studio/view');
+                    }
                     break;
                 default:
-                    return view('products.index');
+                return redirect('studio/getting-started');
             }
         }
-    }
 
     /**
      * Show the form for editing the specified resource.

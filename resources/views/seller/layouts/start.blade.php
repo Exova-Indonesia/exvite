@@ -26,12 +26,12 @@
     <!-- add before </body> -->
     <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
     <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.min.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.min.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.min.js"></script>
     <script src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.min.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-crop/dist/filepond-plugin-image-crop.min.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-resize/dist/filepond-plugin-image-resize.min.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-transform/dist/filepond-plugin-image-transform.min.js"></script>
     <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-file-rename/dist/filepond-plugin-file-rename.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
-    <script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>
 
     <script type="text/javascript" src="{{ asset('scripts/custom.js') }}" defer></script>
     <script src="{{ asset('datatables/jquery.dataTables.js') }}" defer></script>
@@ -65,103 +65,9 @@
     <div id="preloader">
       <div class="spinner-border color-highlight" role="status"></div>
     </div>
-    <div id="page">
-      <div class="header header-auto-show container header-fixed header-logo-center">
-        <a href="{{ url('/') }}" class="header-title">Exova</a>
-        <a 
-          href="{{ url('/cart') }}" 
-          class="header-icon header-icon-1"
-          ><i class="fas fa-shopping-cart"></i
-        ></a>
-        <a
-          href="{{ url('/notifications') }}"
-          class="header-icon header-icon-4"
-          ><i class="fas fa-bell"></i
-        ></a>
-      </div>
-      <div id="footer-bar" class="footer-bar-6">
-        <a href="{{ url('/studio') }}" class=" @if(Request::is('studio')) active-nav @endif"
-          ><i class="fa fa-business-time"></i><span>Studio</span></a
-        >
-        <a href="index-pages.html"
-          ><i class="fa fa-heart"></i><span>Favorit</span></a
-        >
-      <a href="{{ url('/') }}" class="circle-nav @if(Request::is('/')) active-nav @endif">
-      <i class="fa fa-home"></i>
-      <span>Beranda</span>
-      <em></em><strong><u></u></strong></a>
-        <a href="{{ url('/bookings') }}"
-          ><i class="fa fa-shopping-bag"></i><span>Pesanan</span></a
-        >
-        <a href="{{ url('/profile') }}" class=" @if(Request::is('profile')) active-nav @endif"
-          ><i class="fa fa-user"></i><span>Akun</span></a
-        >
-      </div>
-      <div class="page-title page-title-fixed container">
-        <h1>@if(Request::is('/')) 
-          Exova
-          @elseif(Request::segment(1) == 'products')
-          Produk
-          @elseif(Request::segment(1) == 'cart')
-          Keranjang
-          @elseif(Request::segment(1) == 'profile')
-          Profil
-          @endif</h1>
-        @if(Request::is('/'))
-        <a role="button"
-          class="page-title-icon shadow-xl bg-theme color-theme"
-          data-menu="menu-main"
-          ><i class="fa fa-bars"></i
-        ></a>
-        @endif
-        <a
-          href="{{ url('/cart') }}"
-          class="page-title-icon shadow-xl bg-theme color-theme"
-          ><i class="fa fa-shopping-cart"></i
-        ></a>
-        <a
-          href="{{ url('/notifications') }}"
-          class="page-title-icon shadow-xl bg-theme color-theme"
-          ><i class="fa fa-bell"></i
-        ></a>
-      </div>
-      <div class="page-title-clear"></div>
-      <div
-        id="menu-main"
-        class="menu menu-box-left rounded-0"
-        data-menu-width="280"
-        data-menu-active="nav-welcome"
-        data-menu-load="{{ url('/components/sidebar') }}"
-      ></div>
+    <div id="page"> 
       @yield('content')
     </div>
-    <script>
-    $(function() {
-    const Toast = Swal.mixin({
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-      toast.addEventListener('mouseenter', Swal.stopTimer)
-      toast.addEventListener('mouseleave', Swal.resumeTimer)
-    }
-    });
-      @if(session('status'))
-        Toast.fire({
-          icon: 'success',
-          title: '{{ session('status') }}',
-        })
-      @endif
-      @if(session('error'))
-        Toast.fire({
-          icon: 'error',
-          title: '{{ session('error') }}',
-        })
-      @endif
-    })
-    </script>
     @yield('scripts')
 </body>
 </html>

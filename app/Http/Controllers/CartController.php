@@ -43,7 +43,7 @@ class CartController extends Controller
                 switch($type->product_type) {
                     case "Jasa" :
                         $p = Cart::with('user', 'jasa.seller')->where('cart_id', $type->cart_id)->first();
-                        $carts = array(
+                        $carts[] = array(
                         'id'=>$p->cart_id,
                         'name' => $p->jasa->jasa_name,
                         'price' => $p->unit_price,
@@ -59,7 +59,7 @@ class CartController extends Controller
                     break;
 
                     case "Subscription" :
-                        $carts = array(
+                        $carts[] = array(
                         'id'=>$p->cart_id,
                         'name' => $p->plan->plan_name,
                         'price' => $p->unit_price,
@@ -74,7 +74,7 @@ class CartController extends Controller
                     case "Create" :
                         // Belum selesai
                         $p = Cart::with('user', 'jasa.seller')->where('cart_id', $type->cart_id)->first();
-                        $carts = array(
+                        $carts[] = array(
                         'id'=>$p->cart_id,
                         'name' => $p->jasa->jasa_name,
                         'price' => $p->unit_price,

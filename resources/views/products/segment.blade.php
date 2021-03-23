@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-Index
+Segment
 @endsection
 
 @section('scripts')

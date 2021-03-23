@@ -19,7 +19,7 @@
         <div class="mt-4"></div>
         <h6 class="menu-divider">Akun</h6>
         <div class="list-group list-custom-small list-menu">
-          <a id="nav-welcome" href="{{ url('/profile') }}" class="active-nav">
+          <a id="nav-welcome" href="{{ url('/profile') }}">
             <i class="fa fa-user gradient-red color-white"></i>
             <span>Profil</span>
             <i class="fa fa-angle-right"></i>

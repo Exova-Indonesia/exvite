@@ -84,29 +84,21 @@
           ><i class="fa fa-business-time"></i><span>Studio</span></a
         >
         <a href="index-pages.html"
-          ><i class="fa fa-heart"></i><span>Favorit</span></a
+          ><i class="fa fa-heart"></i><span>Pesanan</span></a
         >
       <a href="{{ url('/') }}" class="circle-nav @if(Request::is('/')) active-nav @endif">
-      <i class="fa fa-home"></i>
-      <span>Beranda</span>
+      <i class="fa fa-upload"></i>
+      <span>Upload</span>
       <em></em><strong><u></u></strong></a>
         <a href="{{ url('/bookings') }}"
-          ><i class="fa fa-shopping-bag"></i><span>Pesanan</span></a
+          ><i class="fa fa-shopping-bag"></i><span>Pendapatan</span></a
         >
         <a href="{{ url('/profile') }}" class=" @if(Request::is('profile')) active-nav @endif"
           ><i class="fa fa-user"></i><span>Akun</span></a
         >
       </div>
       <div class="page-title page-title-fixed container">
-        <h1>@if(Request::is('/')) 
-          Exova
-          @elseif(Request::segment(1) == 'products')
-          Produk
-          @elseif(Request::segment(1) == 'cart')
-          Keranjang
-          @elseif(Request::segment(1) == 'profile')
-          Profil
-          @endif</h1>
+        <h1>Studio</h1>
         @if(Request::is('/'))
         <a role="button"
           class="page-title-icon shadow-xl bg-theme color-theme"
@@ -135,6 +127,7 @@
       ></div>
       @yield('content')
     </div>
+      <script src="{{ asset('scripts/bootstrap.min.js') }}"></script>
     <script>
     $(function() {
     const Toast = Swal.mixin({
