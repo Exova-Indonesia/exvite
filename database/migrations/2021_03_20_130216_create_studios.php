@@ -18,10 +18,12 @@ class CreateStudios extends Migration
             $table->string('prefix')->default('EX');
             $table->bigInteger('user_id')->unsigned();
             $table->string('name', 20);
-            $table->string('category_id')->nullable();
-            $table->string('description')->nullable();
+            $table->longText('description')->nullable();
+            $table->string('slogan')->nullable();
+            $table->string('subdomain')->nullable();
             $table->bigInteger('address_id')->nullable();
             $table->bigInteger('logo_id');
+            $table->boolean('is_complete')->default(false);
             $table->boolean('suspend')->default(false);
             $table->timestamps();
 

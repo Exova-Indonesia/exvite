@@ -17,11 +17,7 @@ class RegisterController extends Controller
      */
     public function index()
     {
-        $check = Studio::where('user_id', auth()->user()->id)
-        ->first();
-        if(empty($check)) {
-            return redirect('studio/getting-started');
-        }
+        return redirect('studio/getting-started');
     }
 
     /**
@@ -61,24 +57,44 @@ class RegisterController extends Controller
     public function show($id)
     {
         $check = Studio::where('user_id', auth()->user()->id)->first();
-            switch($id) {
-                case "getting-started":
-                    if(empty($check->name)) {
-                        return view('seller.start.index');
-                    } else {
-                        return redirect('studio/description');
-                    }
-                    break;
-                        case "description":
-                    if(empty($check->description)) {
-                        return view('seller.start.description');
-                    } else {
-                        return redirect('studio/view');
-                    }
-                    break;
-                default:
-                return redirect('studio/getting-started');
-            }
+                switch($id) {
+                    case "getting-started":
+                        if(empty($check->name) && ! isset($check->is_complete)) {
+                            return view('seller.start.index');
+                        } else {
+                            return redirect('studio/description');
+                        }
+                        break;
+                            case "description":
+                        if(empty($check) || empty($check->name)) {
+                            return redirect('studio/getting-started');
+                        } else if(empty($check->description) && !empty($check->name) && !$check->is_complete) {
+                            return view('seller.start.description');
+                        } else {
+                            return redirect('studio/domain');
+                        }
+                        break;
+                            case "domain":
+                        if(empty($check) || empty($check->description)) {
+                            return redirect('studio/getting-started');
+                        } else if(empty($check->subdomain) && !empty($check->description) && !$check->is_complete) {
+                            return view('seller.start.domain');
+                        } else {
+                            return redirect('studio/agreement');
+                        }
+                        break;
+                            case "agreement":
+                        if(empty($check) || empty($check->subdomain)) {
+                            return redirect('studio/getting-started');
+                        } else if(! empty($check->subdomain) && !$check->is_complete) {
+                            return view('seller.start.agreement');
+                        } else {
+                            return redirect('http://studio.exova.test');
+                        }
+                        break;
+                    default:
+                    return redirect('studio/getting-started');
+                }
         }
 
     /**
@@ -101,7 +117,14 @@ class RegisterController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = Studio::where('user_id', auth()->user()->id)->first();
+        Studio::where('user_id', auth()->user()->id)->update([
+            'description' => $request->studio_description ?? $data->description,
+            'slogan' => $request->studio_slogan ?? $data->slogan,
+            'subdomain' => ($data->is_complete == 0) ? $request->studio_domain ?? $data->subdomain : $data->subdomain,
+            'is_complete' => ($data->is_complete == 0) ? ($request->is_agree == 'on') ? true : false : $data->subdomain,
+        ]);
+        return redirect('studio/getting-started');
     }
 
     /**

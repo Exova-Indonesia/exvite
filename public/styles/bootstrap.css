@@ -15261,6 +15261,8 @@ button {
     cursor: pointer;
     font-size: 13px;
     padding: 0 15px 0 40px;
+    vertical-align: text-top;
+
 }
 .icon-check .icon-check-2 {
     display: none;

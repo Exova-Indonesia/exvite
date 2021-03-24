@@ -17,9 +17,9 @@ class CreateStudioLogo extends Migration
             $table->id();
             $table->string('prefix')->default('EX');
             $table->string('folder');
-            $table->longText('small')->default(asset('images/users/default.png'));
-            $table->longText('medium')->default(asset('images/users/default.png'));
-            $table->longText('large')->default(asset('images/users/default.png'));
+            $table->longText('small');
+            $table->longText('medium');
+            $table->longText('large');
             $table->timestamps();
         });
     }

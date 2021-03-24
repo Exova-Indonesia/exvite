@@ -7,7 +7,7 @@
     "name": "Exova",
     "scope": "http://localhost:8000",
     "display": "fullscreen",
-    "start_url": "http://localhost:8000",
+    "start_url": "http://localhost:8000/index.php",
     "short_name": "Exova",
     "description": "",
     "orientation": "portrait",

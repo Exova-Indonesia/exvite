@@ -10,14 +10,8 @@
       </div>
       <div class="col-lg-6 col-sm-12 mt-4 mx-auto">
         <div class="input-style input-style-always-active has-borders has-icon mb-4">    
-                <input type="name" class="form-control" name="studio_slogan" id="slogan" placeholder="Exova Save The Culture">
-                    <label for="slogan" class="color-theme opacity-50 text-uppercase font-700 font-10">Slogan Studio</label>
-                <i class="fa fa-times disabled invalid color-red-dark"></i>
-            <i class="fa fa-check disabled valid color-green-dark"></i>
-        </div>
-        <div class="input-style input-style-always-active has-borders has-icon mb-4">    
-                <textarea type="name" class="form-control" name="studio_description" id="deskripsi" placeholder=""></textarea>
-                    <label for="deskripsi" class="color-theme opacity-50 text-uppercase font-700 font-10">Deskripsi Studio</label>
+                <input type="name" class="form-control" name="studio_domain" id="domain" placeholder="">
+                    <label for="domain" class="color-theme opacity-50 text-uppercase font-700 font-10">Domain Studio</label>
                 <i class="fa fa-times disabled invalid color-red-dark"></i>
             <i class="fa fa-check disabled valid color-green-dark"></i>
         </div>

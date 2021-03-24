@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Exova Indonesia'),
+    'name' => env('APP_NAME', 'Exova'),
     'induk' => env('APP_INDUK', 'Exova Indonesia'),
 
     /*

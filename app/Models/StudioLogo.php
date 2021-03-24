@@ -18,4 +18,10 @@ class StudioLogo extends Model
         'large',
     ];
     protected $guarded = [];
+
+    protected $attributes = [
+        'small' => 'images/users/default.png',
+        'medium' => 'images/users/default.png',
+        'large' => 'images/users/default.png',
+    ];
 }

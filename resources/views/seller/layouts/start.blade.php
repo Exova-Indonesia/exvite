@@ -36,7 +36,7 @@
     <script type="text/javascript" src="{{ asset('scripts/custom.js') }}" defer></script>
     <script src="{{ asset('datatables/jquery.dataTables.js') }}" defer></script>
     <script src="{{ asset('datatables-bs4/js/dataTables.bootstrap4.js') }}" defer></script>
-    <script src="{{ asset('tourguide.js/tourguide.min.js') }}" defer></script>
+    <!-- <script src="{{ asset('tourguide.js/tourguide.min.js') }}" defer></script> -->
     <!-- <script src="{{ asset('sweetalert2/sweetalert2.min.js') }}" defer></script> -->
     <script src="{{ asset('js/main.js') }}" defer></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
