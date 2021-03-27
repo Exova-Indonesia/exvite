@@ -38,7 +38,7 @@
     <script src="{{ asset('datatables-bs4/js/dataTables.bootstrap4.js') }}" defer></script>
     <script src="{{ asset('tourguide.js/tourguide.min.js') }}" defer></script>
     <!-- <script src="{{ asset('sweetalert2/sweetalert2.min.js') }}" defer></script> -->
-    <script src="{{ asset('js/main.js') }}" defer></script>
+    <!-- <script src="{{ asset('js/main.js') }}" defer></script> -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="{{ asset('scripts/bootstrap.min.js') }}" defer></script>
 
@@ -67,11 +67,11 @@
     </div>
     <div id="page">
       <div class="header header-auto-show container header-fixed header-logo-center">
-        <a href="{{ url('/') }}" class="header-title">Exova</a>
+        <a class="header-title">{{ $seller->name }}</a>
         <a 
-          href="{{ url('/cart') }}" 
+          href="{{ url('/') }}" 
           class="header-icon header-icon-1"
-          ><i class="fas fa-shopping-cart"></i
+          ><i class="fas fa-home"></i
         ></a>
         <a
           href="{{ url('/notifications') }}"
@@ -80,36 +80,30 @@
         ></a>
       </div>
       <div id="footer-bar" class="footer-bar-6">
-        <a href="{{ url('/studio') }}" class=" @if(Request::is('studio')) active-nav @endif"
-          ><i class="fa fa-business-time"></i><span>Studio</span></a
+
+        <a href="{{ url('/mystudio/dashboard') }}" class="@if(Request::is('mystudio/dashboard')) active-nav @endif"
+          ><i class="fa fa-business-time"></i><span>Dashboard</span></a
         >
-        <a href="index-pages.html"
+        <a href="{{ url('/mystudio/orders') }}"
           ><i class="fa fa-heart"></i><span>Pesanan</span></a
         >
-      <a href="{{ url('/') }}" class="circle-nav @if(Request::is('/')) active-nav @endif">
-      <i class="fa fa-upload"></i>
-      <span>Upload</span>
-      <em></em><strong><u></u></strong></a>
-        <a href="{{ url('/bookings') }}"
+      <a href="{{ url('/mystudio/upload') }}" class="circle-nav @if(Request::is('mystudio/upload') || Request::is('mystudio/manage/' . strtolower(str_replace(' ', '-', $products->jasa_name ?? '')))) active-nav @endif">
+        <i class="fa fa-upload"></i>
+        <span>Upload</span>
+      </a>
+        <a href="{{ url('mystudio/revenue') }}"
           ><i class="fa fa-shopping-bag"></i><span>Pendapatan</span></a
         >
-        <a href="{{ url('/profile') }}" class=" @if(Request::is('profile')) active-nav @endif"
-          ><i class="fa fa-user"></i><span>Akun</span></a
+        <a href="{{ url('/mystudio/profile') }}" class=" @if(Request::is('mystudio/profile')) active-nav @endif"
+          ><i class="fa fa-user"></i><span>Statistik</span></a
         >
       </div>
       <div class="page-title page-title-fixed container">
-        <h1>Studio</h1>
-        @if(Request::is('/'))
-        <a role="button"
-          class="page-title-icon shadow-xl bg-theme color-theme"
-          data-menu="menu-main"
-          ><i class="fa fa-bars"></i
-        ></a>
-        @endif
+        <h1 class="text-capitalize">{{ Request::segment(1) }}</h1>
         <a
-          href="{{ url('/cart') }}"
+          href="{{ url('/') }}"
           class="page-title-icon shadow-xl bg-theme color-theme"
-          ><i class="fa fa-shopping-cart"></i
+          ><i class="fa fa-home"></i
         ></a>
         <a
           href="{{ url('/notifications') }}"
@@ -118,16 +112,13 @@
         ></a>
       </div>
       <div class="page-title-clear"></div>
-      <div
-        id="menu-main"
-        class="menu menu-box-left rounded-0"
-        data-menu-width="280"
-        data-menu-active="nav-welcome"
-        data-menu-load="{{ url('/components/sidebar') }}"
-      ></div>
-      @yield('content')
+      <div class="page-content">
+        <div class="container">
+          @yield('content')
+          @yield('modals')
+        </div>
+      </div>
     </div>
-      <script src="{{ asset('scripts/bootstrap.min.js') }}"></script>
     <script>
     $(function() {
     const Toast = Swal.mixin({

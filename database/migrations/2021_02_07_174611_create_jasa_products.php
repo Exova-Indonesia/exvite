@@ -17,13 +17,13 @@ class CreateJasaProducts extends Migration
             $table->id('jasa_id');
             $table->bigInteger('studio_id')->unsigned();
             $table->string('jasa_name');
-            $table->integer('jasa_subcategory');
-            $table->string('jasa_deskripsi');
-            $table->integer('jasa_price');
+            $table->integer('jasa_subcategory')->nullable();
+            $table->string('jasa_deskripsi')->nullable();
+            $table->integer('jasa_price')->nullable();
             $table->integer('jasa_price_old')->nullable();
             $table->integer('jasa_revision')->default(0);
-            $table->text('jasa_thumbnail');
-            $table->text('jasa_status');
+            $table->text('jasa_thumbnail')->nullable();
+            $table->boolean('jasa_status')->default(false);
             $table->integer('jasa_rating')->default(0);
             $table->integer('jasa_sold')->default(0);
             $table->timestamps();

@@ -9,6 +9,7 @@ use App\Models\Bank;
 use App\Models\Wallet;
 use App\Models\SearchHistory;
 use App\Models\Plan;
+use App\Models\Jasa;
 use App\Models\Highlight;
 use Illuminate\Http\Request;
 
@@ -37,6 +38,7 @@ class HomeController extends Controller
         App::setLocale($locale);
         */
         if(Auth::user()) {
+        $seller = Jasa::with('seller.logo', 'subcategory.parent')->get();
         $balance = Wallet::where('user_id', Auth::user()->id)->first();
         $bank = Bank::where('user_id', Auth::user()->id)->get();
         } else {
@@ -50,6 +52,7 @@ class HomeController extends Controller
             'subs' => $subs, 
             'bank' => $bank, 
             'highlight' => $highlight,
+            'seller' => $seller,
         ]);
         // return response()->json([
         //     'highlight' => $highlight,

@@ -26,14 +26,18 @@ use App\Notifications\TransactionMail;
 */
 
 
-// Studio
 
+// Studio
 Route::middleware('auth')->group(function() {
+    Route::resource('/mystudio', App\Http\Controllers\Studio\StudioController::class);
     Route::resource('/studio', App\Http\Controllers\Studio\RegisterController::class);
+    Route::get('mystudio/manage/{id}', [App\Http\Controllers\Studio\StudioController::class, 'manage']);
+    Route::delete('picture/{id}', [App\Http\Controllers\Studio\StudioController::class, 'destroy_picture']);
 });
 
 Route::middleware('auth')->prefix('upload')->group(function() {
     Route::post('/studio/logo', [App\Http\Controllers\UploadController::class, 'logo_studio'])->name('upload.logo');
+    Route::post('/uploads/jasapictures', [App\Http\Controllers\UploadController::class, 'jasa_picture'])->name('upload.pictures');
 });
 
 Route::get('/welcome', function (Request $request) {
@@ -65,6 +69,9 @@ Route::middleware('auth')->prefix('/web/v2')->group(function() {
     Route::get('/notification/update', [App\Http\Controllers\ApiController::class, 'update'])->name('update');
     Route::get('/notification/pesan', [App\Http\Controllers\ApiController::class, 'pesan'])->name('pesan');
     Route::post('/uploads/orders/{id}/{label}', [App\Http\Controllers\ApiController::class, 'store_order_files'])->name('order.files');
+    Route::get('/subcategory/{id}', [App\Http\Controllers\ApiController::class, 'getSubCategory'])->name('api.subcategory');
+    Route::get('/category', [App\Http\Controllers\ApiController::class, 'getCategory'])->name('api.category');
+    Route::get('/products/pictures/{id}', [App\Http\Controllers\ApiController::class, 'getPictures'])->name('api.pictures');
 });
     Route::get('all/provinces/', [App\Http\Controllers\ApiController::class, 'province_all']);
     Route::get('/regencies/{id}', [App\Http\Controllers\ApiController::class, 'regencies']);
@@ -88,10 +95,11 @@ Route::middleware('auth')->group(function() {
 });
 
 Auth::routes(['verify' => true]);
-
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::post('/autocomplete', [App\Http\Controllers\HomeController::class, 'autocomplete']);
-Route::get('/search/{title}', [App\Http\Controllers\HomeController::class, 'search']);
+Route::middleware('auth')->group(function() {
+    Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::post('/autocomplete', [App\Http\Controllers\HomeController::class, 'autocomplete']);
+    Route::get('/search/{title}', [App\Http\Controllers\HomeController::class, 'search']);
+});
 Route::get('auth/{provider}', [App\Http\Controllers\Auth\AuthController::class, 'redirectToProvider']);
 Route::get('auth/{provider}/callback', [App\Http\Controllers\Auth\AuthController::class, 'handleProviderCallback']);
 

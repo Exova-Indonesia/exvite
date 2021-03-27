@@ -56,7 +56,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost:8000'),
+    'url' => env('APP_URL', 'http://exvite.test'),
 
     'asset_url' => env('ASSET_URL', null),
 

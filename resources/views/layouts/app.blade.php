@@ -115,12 +115,12 @@
         ></a>
         @endif
         <a
-          href="{{ url('/cart') }}"
+          href="{{ url('cart') }}"
           class="page-title-icon shadow-xl bg-theme color-theme"
           ><i class="fa fa-shopping-cart"></i
         ></a>
         <a
-          href="{{ url('/notifications') }}"
+          href="{{ url('notifications') }}"
           class="page-title-icon shadow-xl bg-theme color-theme"
           ><i class="fa fa-bell"></i
         ></a>
@@ -131,7 +131,7 @@
         class="menu menu-box-left rounded-0"
         data-menu-width="280"
         data-menu-active="nav-welcome"
-        data-menu-load="{{ url('/components/sidebar') }}"
+        data-menu-load="{{ url('components/sidebar') }}"
       ></div>
       @yield('content')
     </div>

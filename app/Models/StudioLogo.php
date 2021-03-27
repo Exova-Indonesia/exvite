@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class StudioLogo extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'id';
     protected $table = 'studio_logo';
     protected $fillable = [
         'prefix',

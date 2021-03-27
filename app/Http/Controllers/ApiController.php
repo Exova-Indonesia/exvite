@@ -9,6 +9,8 @@ use App\Models\State;
 use App\Models\OrderJasa;
 use App\Models\OrderJasaResult;
 use App\Models\OrderRevision;
+use App\Models\SubCategory;
+use App\Models\JasaPicture;
 
 class ApiController extends Controller
 {
@@ -100,5 +102,14 @@ class ApiController extends Controller
         }
     }
 
+    public function getSubCategory($id) {
+        $return = SubCategory::where('category_id', $id)->get();
+        return response()->json($return);
+    }
+
+    public function getPictures($id) {
+        $return = JasaPicture::where('jasa_id', $id)->get();
+        return response()->json($return);
+    }
 
 }

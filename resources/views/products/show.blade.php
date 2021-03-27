@@ -55,19 +55,17 @@
         </div>
         <div class="divider mb-0"></div>
         <div class="content">
-          <p class="font-600 mb-1 color-highlight">Wedding Photography</p>
-          <h1 class="font-30 text-capitalize">Sedia jasa photo prawed, wedding</h1>
+          <p class="font-600 mb-1 color-highlight">{{ $seller->subcategory['parent']['name'] }}</p>
+          <h1 class="font-30 text-capitalize">{{ $seller->jasa_name }}</h1>
           <p>
-            The best Headsets on the Market. Powered by the awesome chip that
-            you don't care about but works awesome with your mobile device and
-            has a decent battery life.
+            {{ $seller->jasa_description }}
           </p>
           <div class="d-flex">
             <div class="me-auto align-self-center">
             <p class="font-400 font-10 mt-n2 mb-0 opacity-50 ">
                 Start From
             </p>
-              <h2 class="me-3 font-700">Rp2,500,000</h2>
+              <h2 class="me-3 font-700">Rp{{ number_format($seller->jasa_price, 0) }}</h2>
                     <p class="mb-0">
                         <strong class="color-theme">4.9</strong>
                         <i class="fa fa-star color-yellow-dark"></i>

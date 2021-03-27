@@ -119,6 +119,7 @@
                 </div>
                 <div class="row mx-2">
                     <ul class="product-slide col-lg-12">
+                      @forelse($seller as $f)
                         <li class="col-lg-3 col-sm-10 col-md-12">
                             <div class="product-seller">
                                 <div class="row m-0">
@@ -134,7 +135,7 @@
                                 <div class="card card-style mr-0 mt-2 ml-2">
                                 <img src="images/food/small/10s.jpg" class="img-fluid">
                                     <div class="px-2 white-space-normal">
-                                    <a href="{{ url('/products/1') }}">
+                                    <a href="{{ url('products/' . strtolower(str_replace(' ','-', $f->jasa_name))) }}">
                                     <p class="color-highlight font-600 font-11 mb-n1 pt-1">Photography</p>
                                         <h5 class="font-14">Wedding Ceremony in Bali</h5>
                                         <p class="font-12 line-height-s mb-2">
@@ -158,6 +159,8 @@
                                 </div>
                             </div>
                         </li>
+                      @empty
+                      @endforelse
                     </ul>
                 </div>
             </div>

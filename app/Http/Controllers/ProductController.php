@@ -46,19 +46,23 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $data = Jasa::where('jasa_id', $id)->first();
-        if( empty($data)) {
-            return view('products.show');
-        } else {
-            switch($id) {
-                case "terlaris":
-                    return view('products.segment');
-                    break;
-                default:
-                    return view('products.index');
-            }
-        }
+        $slugs = str_replace('-', ' ', $id);
+        $seller = Jasa::with('seller.logo', 'subcategory.parent')
+        ->where([
+            ['jasa_name', $slugs],
+            ['jasa_status', 1]
+            ])
+        ->first();
+        return view('products.show', ['seller' => $seller]);
+        // return response()->json($seller);
     }
+
+    /**
+     * Show the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
 
     /**
      * Show the form for editing the specified resource.

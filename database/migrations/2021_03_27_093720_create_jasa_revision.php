@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCategory extends Migration
+class CreateJasaRevision extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateCategory extends Migration
      */
     public function up()
     {
-        Schema::create('category', function (Blueprint $table) {
+        Schema::create('jasa_revision', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->longText('icon');
+            $table->integer('count')->nullable();
+            $table->integer('price')->nullable();
+            $table->string('add_day')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateCategory extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('category');
+        Schema::dropIfExists('jasa_revision');
     }
 }

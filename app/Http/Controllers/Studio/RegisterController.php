@@ -71,25 +71,25 @@ class RegisterController extends Controller
                         } else if(empty($check->description) && !empty($check->name) && !$check->is_complete) {
                             return view('seller.start.description');
                         } else {
-                            return redirect('studio/domain');
-                        }
-                        break;
-                            case "domain":
-                        if(empty($check) || empty($check->description)) {
-                            return redirect('studio/getting-started');
-                        } else if(empty($check->subdomain) && !empty($check->description) && !$check->is_complete) {
-                            return view('seller.start.domain');
-                        } else {
                             return redirect('studio/agreement');
                         }
                         break;
+                        //     case "domain":
+                        // if(empty($check) || empty($check->description)) {
+                        //     return redirect('studio/getting-started');
+                        // } else if(empty($check->subdomain) && !empty($check->description) && !$check->is_complete) {
+                        //     return view('seller.start.domain');
+                        // } else {
+                        //     return redirect('studio/agreement');
+                        // }
+                        // break;
                             case "agreement":
-                        if(empty($check) || empty($check->subdomain)) {
+                        if(empty($check) || empty($check->description)) {
                             return redirect('studio/getting-started');
-                        } else if(! empty($check->subdomain) && !$check->is_complete) {
+                        } else if(! empty($check->description) && !$check->is_complete) {
                             return view('seller.start.agreement');
                         } else {
-                            return redirect('http://studio.exova.test');
+                            return redirect('/mystudio');
                         }
                         break;
                     default:
