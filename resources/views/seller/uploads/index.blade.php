@@ -11,9 +11,7 @@
             <div class="col-lg-8 col-sm-12">
                 <div class="upload-jasa-field p-4 shadow-sm">
                     <div class="col-lg-12 col-sm-12 px-1 picture-field">
-                        <label for="jp">Picture</label>
-                        <input type="file" class="form-control jpclass" 
-                        data-allow-reorder="true" name="jasa_picture" multiple>
+
                     </div>
                     <div class="row m-0 data-pictures">
 
@@ -31,15 +29,11 @@
                 <div class="upload-jasa-field p-4 shadow-sm">
                     <div class="input-style input-style-always-active has-borders has-icon mb-4">    
                         <input type="text" class="form-control" name="title" id="title" autocomplete="off" value="{{ $products->jasa_name }}">
-                            <label for="title" class="color-theme opacity-50 text-uppercase font-700 font-10">Nama Portfolio</label>
-                        <i class="fa fa-times disabled invalid color-red-dark"></i>
-                        <i class="fa fa-check disabled valid color-green-dark"></i>
+                        <label for="title" class="color-theme opacity-50 text-uppercase font-700 font-10">Nama Portfolio</label>
                     </div>
                     <div class="input-style input-style-always-active has-borders has-icon mb-4">    
                         <textarea type="text" class="form-control" name="description" id="descrip">{{ $products->jasa_deskripsi }}</textarea>
-                            <label for="descrip" class="color-theme opacity-50 text-uppercase font-700 font-10">Deskripsi Portfolio</label>
-                        <i class="fa fa-times disabled invalid color-red-dark"></i>
-                        <i class="fa fa-check disabled valid color-green-dark"></i>
+                        <label for="descrip" class="color-theme opacity-50 text-uppercase font-700 font-10">Deskripsi Portfolio</label>
                     </div>
                 </div>
             </div>
@@ -107,6 +101,7 @@
                 <div class="upload-jasa-field p-4 shadow-sm">
                     <div class="row m-0">
                         <div class="input-style col-lg-2 col-sm-12 px-1 input-style-always-active has-borders has-icon mb-4">    
+                            <input type="hidden" class="form-control" id="revisi_id" value="{{ $products->revisi['id'] }}">
                             <input type="number" min="0" max="10" class="form-control" name="revisi_count" id="rev_count" value="{{ $products->revisi['count'] }}" autocomplete="off">
                             <label for="rev_count" class="color-theme opacity-50 text-uppercase font-700 font-10">Revision</label>
                         </div>
@@ -173,8 +168,13 @@
                 </div>
             </div>
         </div>
-        <div class="text-right">
-            <button type="button" class="btn btn-exova submit">Simpan & Publikasikan</button>
+        <div class="row m-0 float-right">
+            <div class="m-1">
+                <button type="button" class="btn btn-danger delete">Hapus</button>
+            </div>
+            <div class="m-1">
+                <button type="button" class="btn btn-exova submit">Simpan & Publikasikan</button>
+            </div>
         </div>
     </div>
 </div>
@@ -184,8 +184,8 @@
 <div id="menu-success-2" class="menu menu-box-bottom bg-green-dark rounded-m" data-menu-height="335" data-menu-effect="menu-over" style="display: block; height: 335px;">
     <h1 class="text-center mt-4"><i class="fa fa-3x fa-check-circle scale-box color-white shadow-xl rounded-circle"></i></h1>
         <h1 class="text-center mt-3 font-700 color-white">All's Good</h1>
-            <p class="boxed-text-l color-white opacity-70">
-            You can continue with your previous actions.<br> Easy to attach these to success calls.
+            <p class="boxed-text-l success-message color-white opacity-70">
+
         </p>
     <a href="#" class="close-menu btn btn-m btn-center-m button-s shadow-l rounded-s text-uppercase font-600 bg-white color-black">Great, Thanks!</a>
 </div>
@@ -195,17 +195,22 @@
             <p class="boxed-text-l error-message color-white opacity-70">
             
         </p>
-    <a href="#" class="close-menu btn btn-m btn-center-l button-s shadow-l rounded-s text-uppercase font-600 bg-white color-black">Hmmm, Check again?</a>
+    <a href="#" class="unmodal btn btn-m btn-center-l button-s shadow-l rounded-s text-uppercase font-600 bg-white color-black">Hmmm, Check again?</a>
 </div>
+<div class="menu-hider"></div>
 @endsection
 @section('scripts')
 <script>
     $(document).ready(function() {
         dataPictures = () => {
-            let dataPic = ``;
+            let dataPic = ``, fieldPic;
             $.getJSON("{{ url('/web/v2/products/pictures') }}/" + {{ $products->jasa_id }}, function(data) {
                 let maxFiles = 3 - data.length;
-                $('input[name=jasa_picture]').prop('data-max-files', maxFiles);
+                fieldPic = `
+                    <label for="jp">Picture</label>
+                        <input type="file" class="form-control jpclass" 
+                    data-allow-reorder="true" name="jasa_picture" data-max-files="`+maxFiles+`" multiple>
+                `;
                 if(data.length >= 3) {
                     $('.picture-field').removeClass("d-block");
                     $('.picture-field').addClass("d-none");
@@ -216,11 +221,15 @@
                 $.each(data, function(i, data) {
                     dataPic +=`
                         <div class="col-lg-4 col-sm-12 col-md-6">
-                            <div class="delete-picture" role="button" data-id="`+data.id+`"><i class="fa fa-trash text-danger"></i></div>
-                            <img class="p-1 my-pictures-portfolio" src="` + data.small + `" alt="">
+                            <div class="delete-picture" role="button" data-id="`+data.id+`"><i class="fa fa-trash text-danger"></i></div>`;
+                    if(data.id === {{ $products->jasa_thumbnail }}) {
+                        dataPic += `<div class="cover-picture"><span>Cover</span></div>`;
+                    }
+                    dataPic += `<img class="p-1 my-pictures-portfolio" src="` + data.small + `" alt="">
                         </div>
                     `;
                 })
+                $('.picture-field').html(fieldPic);
                 $('.data-pictures').html(dataPic);
                 $('.delete-picture').on('click', function() {
                 let id = $(this).attr('data-id');
@@ -238,8 +247,48 @@
                         }
                     });
                 });
+                const uploadOptions = {
+                    checkValidity: true,
+                    labelFileTypeNotAllowed: `Format tidak sesuai`,
+                    allowFileEncode: true,
+                    allowFileTypeValidation: true,
+                    credits: false,
+                    labelIdle: `Drag & Drop your picture or <span class="filepond--label-action">Browse</span>`,
+                    imagePreviewHeight: 175,
+                    allowReplace: true,
+                    allowFileSizeValidation: true,
+                    // maxFiles: maxFiles,
+                    maxTotalFileSize: '50MB',
+                }
+                FilePond.registerPlugin(
+                    FilePondPluginFileEncode,
+                    FilePondPluginImagePreview,
+                    FilePondPluginImageExifOrientation,
+                    FilePondPluginFileValidateSize,
+                    FilePondPluginFileValidateType,
+                );
+                const pond = FilePond.create( document.querySelector('input[name="jasa_picture"]'), uploadOptions );
+                pond.on('warning', (error, file) => {
+                    if(error.body === "Max files") {
+                        $('#menu-warning-2').addClass("menu-active");
+                        $('.menu-hider').addClass("menu-active");
+                        $('.error-message').html("Max files upload is 3");
+                    }
+                });
+                    FilePond.setOptions({
+                    server: { 
+                        url: "{{ route('upload.pictures') }}",
+                        headers: { 
+                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                        },
+                    },
+                });
             });
         }
+        $('.unmodal').on('click', function() {
+            $('#menu-warning-2').removeClass("menu-active");
+            $('.menu-hider').removeClass("menu-active");
+        });
         dataPictures();
         let counter = 0;
         $('.add_additional').on('click', function() {
@@ -303,6 +352,29 @@
                 $('#EX-' + count).remove();
             });
 
+            $('.delete').on('click', function() {
+            $.ajax({
+                url: "{{ url('/products') }}/" + {{ $products->jasa_id }},
+                type: "DELETE",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                },
+                success: function(data) {
+                    if(data.status == 200) {
+                        $('.success-message').html(data.message);
+                        $('#menu-success-2').addClass('menu-active');
+                        $('.menu-hider').removeClass("menu-active");
+                        setInterval(() => {
+                            window.location = data.url;
+                        }, 1000);
+                    }
+                },
+                error: function(data) {
+                }
+            });
+                $('#EX-' + count).remove();
+            });
+
         $('.submit').on('click', function() {
             let values = [];
             $('.target-additional .count-additional').each(function(index, field) {
@@ -322,6 +394,7 @@
                 info['revisi_price'] = $('#rev_price').val(),
                 info['revisi_waktu'] = $('#rev_day').val(),
                 info['cover'] = $('#cover').val(),
+                info['rev_id'] = $('#revisi_id').val(),
                 $('input[name=jasa_picture').each(function(index, picture) {
                     datainfo.push(picture.value);
                 })
@@ -330,12 +403,19 @@
                 url: "{{ url('/mystudio/' . $products->jasa_id) }}",
                 // url: "https://webhook.site/7d655689-c052-43a8-900b-9a9d76c8e0f9",
                 type: "PUT",
-                data: { data: values, info: info, picture:datainfo},
+                data: { data: values, info: info, picture:datainfo },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 },
                 success: function(data) {
-                    // console.log(data);
+                    if(data.status == 200) {
+                        $('.success-message').html(data.message);
+                        $('#menu-success-2').addClass('menu-active');
+                        $('.menu-hider').removeClass("menu-active");
+                        setInterval(() => {
+                            window.location = data.url;
+                        }, 1000);
+                    }
                 },
                 error: function(data) {
                     // console.log(data)
@@ -351,43 +431,6 @@
             $(this).val('Rp' + numeral($(this).val()).format("0,0"))
         });
 
-        FilePond.registerPlugin(
-            FilePondPluginFileEncode,
-            FilePondPluginImagePreview,
-            FilePondPluginImageExifOrientation,
-            FilePondPluginFileValidateSize,
-            FilePondPluginFileValidateType,
-        );
-        const pond = FilePond.create(
-        document.querySelector('input[name="jasa_picture"]'),
-        {
-            checkValidity: true,
-            labelFileTypeNotAllowed: `Format tidak sesuai`,
-            allowFileEncode: true,
-            allowFileTypeValidation: true,
-            credits: false,
-            labelIdle: `Drag & Drop your picture or <span class="filepond--label-action">Browse</span>`,
-            imagePreviewHeight: 175,
-            allowReplace: true,
-            allowFileSizeValidation: true,
-            // maxFiles: 3-{{ $products->pictures->count() }},
-            maxTotalFileSize: '50MB',
-        }
-        );
-        pond.on('warning', (error, file) => {
-            if(error.body === "Max files") {
-                $('#menu-warning-2').addClass("menu-active");
-                $('.error-message').html("Max files upload is 3");
-            }
-        });
-            FilePond.setOptions({
-            server: { 
-                url: "{{ route('upload.pictures') }}",
-                headers: { 
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-                },
-            },
-        });
 
         $('#cat').on('change', function() {
             let content = ``;

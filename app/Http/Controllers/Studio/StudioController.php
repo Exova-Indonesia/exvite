@@ -88,6 +88,7 @@ class StudioController extends Controller
         ->where([
             ['jasa_name', $slugs],
             ['user_id', $studio->id],
+            ['jasa_status', true],
             ])
         ->first();
         if($data) {
@@ -119,12 +120,23 @@ class StudioController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $jasa = Jasa::where('jasa_id', $id)->first();
         $studio = Studio::where('user_id', auth()->user()->id)->first();
-        $revision = JasaRevision::create([
-            'count' => $request->info['revisi_count'],
-            'price' => preg_replace(['/[Rp,.]/'],'',$request->info['revisi_price'] ?? 0),
-            'add_day' => $request->info['revisi_waktu'],
-        ]);
+        if(empty($request->info['rev_id'])) {
+            $revision = JasaRevision::create([
+                'count' => $request->info['revisi_count'],
+                'price' => preg_replace(['/[Rp,.]/'],'',$request->info['revisi_price'] ?? 0),
+                'add_day' => $request->info['revisi_waktu'],
+            ]);
+        } else {
+            $revision = JasaRevision::where('id', $request->info['rev_id'])
+            ->update([
+                'count' => $request->info['revisi_count'],
+                'price' => preg_replace(['/[Rp,.]/'],'',$request->info['revisi_price'] ?? 0),
+                'add_day' => $request->info['revisi_waktu'],
+            ]);
+        }
+
         if($request->picture) {
             foreach($request->picture as $jp) {
                 JasaPicture::where('id', $jp)->update([
@@ -133,13 +145,13 @@ class StudioController extends Controller
             }
         }
 
-        $jasa = Jasa::where('jasa_id', $id)->update([
+        Jasa::where('jasa_id', $id)->update([
             'jasa_name' => $request->info['title'],
             'jasa_deskripsi' => $request->info['description'],
             'jasa_subcategory' => $request->info['subcategory'],
             'jasa_price' =>  preg_replace(['/[Rp,.]/'],'',$request->info['price_start']),
-            // 'jasa_thumbnail' => $request->info['cover'],
-            'jasa_revision' => $revision->id,
+            'jasa_thumbnail' => (empty($request->picture)) ? $request->picture[0] : $jasa->jasa_thumbnail,
+            'jasa_revision' => $revision->id ?? $jasa->jasa_revision,
             'jasa_status' => true,
         ]);
         $add = array();
@@ -162,7 +174,7 @@ class StudioController extends Controller
                 }
             }
         }
-        return response()->json($request->all());
+        return response()->json(['status' => 200, 'url' => '/', 'message' => 'Berhasil Mengubah']);
     }
 
     /**
@@ -176,8 +188,24 @@ class StudioController extends Controller
         $data = JasaAdditional::where('id', $id)->delete();
     }
 
+    public function destroy_product($id)
+    {
+        $data = Jasa::where('jasa_id', $id)->update([
+            'jasa_status' => false,
+        ]);
+        return response()->json(['status' => 200, 'url' => '/', 'message' => 'Berhasil Menghapus']);
+    }
+
     public function destroy_picture($id)
     {
-        $data = JasaPicture::where('id', $id)->delete();
+        $jasa = Jasa::where('jasa_thumbnail', $id)->first();
+        JasaPicture::where('id', $id)->delete();
+        if(! empty($jasa)) {
+            $pic = JasaPicture::where('jasa_id', $jasa->jasa_id)->first();
+            $jasa = Jasa::where('jasa_thumbnail', $id)
+            ->update([
+                'jasa_thumbnail' => $pic->id ?? '',
+                ]);
+            }
     }
 }

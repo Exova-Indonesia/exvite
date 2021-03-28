@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function() {
     Route::resource('/studio', App\Http\Controllers\Studio\RegisterController::class);
     Route::get('mystudio/manage/{id}', [App\Http\Controllers\Studio\StudioController::class, 'manage']);
     Route::delete('picture/{id}', [App\Http\Controllers\Studio\StudioController::class, 'destroy_picture']);
+    Route::delete('products/{id}', [App\Http\Controllers\Studio\StudioController::class, 'destroy_product']);
 });
 
 Route::middleware('auth')->prefix('upload')->group(function() {

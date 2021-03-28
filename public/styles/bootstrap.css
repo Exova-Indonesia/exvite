@@ -43,6 +43,18 @@
 }
 
 /* Customs */
+.cover-picture {
+    position: relative;
+}
+.cover-picture span {
+position: absolute;
+    padding: 2px 7px;
+    top: 3px;
+    right: 4px;
+    color: #fff;
+    background: #479cf7;
+    border-radius: 0px;
+}
 .my-pictures-wrap {
     width: 180px;
     height: 150px;
