@@ -29,14 +29,14 @@
     <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.min.js"></script>
     <script src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.min.js"></script>
     <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
-    <script src="https://unpkg.com/filepond-plugin-file-rename/dist/filepond-plugin-file-rename.js"></script>
     <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
-    <script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script>
+
+    <!-- <script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script> -->
 
     <script type="text/javascript" src="{{ asset('scripts/custom.js') }}" defer></script>
     <script src="{{ asset('datatables/jquery.dataTables.js') }}" defer></script>
     <script src="{{ asset('datatables-bs4/js/dataTables.bootstrap4.js') }}" defer></script>
-    <script src="{{ asset('tourguide.js/tourguide.min.js') }}" defer></script>
+    <!-- <script src="{{ asset('tourguide.js/tourguide.min.js') }}" defer></script> -->
     <!-- <script src="{{ asset('sweetalert2/sweetalert2.min.js') }}" defer></script> -->
     <!-- <script src="{{ asset('js/main.js') }}" defer></script> -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -56,9 +56,9 @@
     <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
     <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('datatables-bs4/css/dataTables.bootstrap4.css') }}">
-    <link rel="stylesheet" href="{{ asset('tourguide.js/tourguide.css') }}">
+    <!-- <link rel="stylesheet" href="{{ asset('tourguide.js/tourguide.css') }}"> -->
     <link rel="stylesheet" href="{{ asset('sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
-    <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" />
+    <!-- <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" /> -->
 
 </head>
   <body class="theme-light" data-highlight="highlight-red">
@@ -73,12 +73,15 @@
           class="header-icon header-icon-1"
           ><i class="fas fa-home"></i
         ></a>
+        @owner
         <a
           href="{{ url('/notifications') }}"
           class="header-icon header-icon-4"
           ><i class="fas fa-bell"></i
         ></a>
+        @endowner
       </div>
+    @owner()
       <div id="footer-bar" class="footer-bar-6">
 
         <a href="{{ url('/mystudio/dashboard') }}" class="@if(Request::is('mystudio/dashboard')) active-nav @endif"
@@ -98,6 +101,7 @@
           ><i class="fa fa-user"></i><span>Statistik</span></a
         >
       </div>
+    @endowner
       <div class="page-title page-title-fixed container">
         <h1 class="text-capitalize">{{ Request::segment(1) }}</h1>
         <a
@@ -105,11 +109,13 @@
           class="page-title-icon shadow-xl bg-theme color-theme"
           ><i class="fa fa-home"></i
         ></a>
+      @owner
         <a
           href="{{ url('/notifications') }}"
           class="page-title-icon shadow-xl bg-theme color-theme"
           ><i class="fa fa-bell"></i
         ></a>
+      @endowner
       </div>
       <div class="page-title-clear"></div>
       <div class="page-content">
@@ -119,33 +125,6 @@
         </div>
       </div>
     </div>
-    <script>
-    $(function() {
-    const Toast = Swal.mixin({
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-      toast.addEventListener('mouseenter', Swal.stopTimer)
-      toast.addEventListener('mouseleave', Swal.resumeTimer)
-    }
-    });
-      @if(session('status'))
-        Toast.fire({
-          icon: 'success',
-          title: '{{ session('status') }}',
-        })
-      @endif
-      @if(session('error'))
-        Toast.fire({
-          icon: 'error',
-          title: '{{ session('error') }}',
-        })
-      @endif
-    })
-    </script>
     @yield('scripts')
 </body>
 </html>

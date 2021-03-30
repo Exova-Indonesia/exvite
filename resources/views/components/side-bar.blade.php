@@ -62,6 +62,14 @@
               ></label>
             </div>
           </a>
+          <a role="button" onclick="event.preventDefault();
+            document.getElementById('logout-form').submit();">
+            <i class="fa fa-power-off gradient-red color-white"></i>
+            <span>Logout</span>
+          </a>
+          <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+              @csrf
+          </form>
         </div>
         <h6 class="menu-divider mt-4">Orderan Terakhir</h6>
         <div class="list-group list-custom-small list-menu">

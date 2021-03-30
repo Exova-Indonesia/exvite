@@ -134,34 +134,8 @@
         data-menu-load="{{ url('components/sidebar') }}"
       ></div>
       @yield('content')
+      @yield('modals')
     </div>
-    <script>
-    $(function() {
-    const Toast = Swal.mixin({
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-      toast.addEventListener('mouseenter', Swal.stopTimer)
-      toast.addEventListener('mouseleave', Swal.resumeTimer)
-    }
-    });
-      @if(session('status'))
-        Toast.fire({
-          icon: 'success',
-          title: '{{ session('status') }}',
-        })
-      @endif
-      @if(session('error'))
-        Toast.fire({
-          icon: 'error',
-          title: '{{ session('error') }}',
-        })
-      @endif
-    })
-    </script>
     @yield('scripts')
 </body>
 </html>

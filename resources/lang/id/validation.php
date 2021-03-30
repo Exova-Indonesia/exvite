@@ -152,7 +152,7 @@ return [
         ],
         'add' => [
             'success' => 'Berhasil menambah ke keranjang',
-            'limit' => 'Kamu hanya bisa membeli 1 produk langganan',
+            'limit' => 'Kamu hanya bisa menambahkan 1 produk yang sama dalam keranjang',
         ],
         'note' => [
             'membership' => 'Langganan',

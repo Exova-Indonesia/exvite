@@ -14,7 +14,7 @@ use App\Models\Category;
 class StudioController extends Controller
 {
     public function __construct() {
-        return $this->middleware(['auth', 'studiocomplete']);
+        return $this->middleware(['auth', 'studiocomplete'])->except('studios');
     }
     /**
      * Display a listing of the resource.
@@ -49,6 +49,7 @@ class StudioController extends Controller
             'jasa_id' => date('ymd') . rand(),
             'user_id' => $studio->id,
             'jasa_name' => $request->title,
+            'jasa_deskripsi' => $request->description,
         ]);
         return redirect('manage/' . strtolower(str_replace(' ', '-', $request->title)));
     }
@@ -61,7 +62,9 @@ class StudioController extends Controller
      */
     public function show($id)
     {
-        $seller = Studio::with('portfolio.subcategory.parent', 'owner', 'logo')
+        $seller = Studio::with(['portfolio.subcategory.parent', 'owner', 'logo', 'portfolio.cover', 'portfolio' => function($q) {
+            $q->where('jasa_status', true);
+        }])
         ->where([
             ['user_id', auth()->user()->id],
             ])
@@ -88,7 +91,6 @@ class StudioController extends Controller
         ->where([
             ['jasa_name', $slugs],
             ['user_id', $studio->id],
-            ['jasa_status', true],
             ])
         ->first();
         if($data) {
@@ -98,6 +100,47 @@ class StudioController extends Controller
             return back();
         }
 
+    }
+
+    public function share($id)
+    {
+        $category = Category::all();
+        $studio = Studio::where('user_id', auth()->user()->id)->first();
+        $slugs = str_replace('-', ' ', $id);
+        $data = Jasa::with('seller', 'subcategory', 'revisi', 'additional', 'pictures')
+        ->where([
+            ['jasa_name', $slugs],
+            ['user_id', $studio->id],
+            ])
+        ->first();
+        if($data) {
+            return view('seller.uploads.finish', ['products' => $data]);
+            // return response()->json($data);
+        } else {
+            return back();
+        }
+
+    }
+
+    public function studios($slug) {
+        $slugs = str_replace('-', ' ', $slug);
+        $seller = Studio::with(['portfolio.subcategory.parent', 'owner', 'logo', 'portfolio.cover', 'portfolio' => function($q) {
+            $q->where('jasa_status', true);
+        }])
+        ->where([
+            ['name', $slugs],
+            ['is_complete', 1],
+            ])
+        ->first();
+        if(! empty($seller)) {
+            if($seller->user_id == auth()->user()->id ?? 0) {
+                return redirect('/mystudio/dashboard');
+            } else {
+                return view('seller.dashboard', ['seller' => $seller]);
+            }
+        } else {
+            abort(404);
+        }
     }
 
     /**
@@ -150,7 +193,7 @@ class StudioController extends Controller
             'jasa_deskripsi' => $request->info['description'],
             'jasa_subcategory' => $request->info['subcategory'],
             'jasa_price' =>  preg_replace(['/[Rp,.]/'],'',$request->info['price_start']),
-            'jasa_thumbnail' => (empty($request->picture)) ? $request->picture[0] : $jasa->jasa_thumbnail,
+            'jasa_thumbnail' => (! empty($request->picture)) ? $request->picture[0] : $jasa->jasa_thumbnail,
             'jasa_revision' => $revision->id ?? $jasa->jasa_revision,
             'jasa_status' => true,
         ]);
@@ -174,7 +217,7 @@ class StudioController extends Controller
                 }
             }
         }
-        return response()->json(['status' => 200, 'url' => '/', 'message' => 'Berhasil Mengubah']);
+        return response()->json(['status' => 200, 'url' => url('share/') . strtolower(str_replace(' ', '-', $request->title)) , 'message' => 'Berhasil Mengubah']);
     }
 
     /**

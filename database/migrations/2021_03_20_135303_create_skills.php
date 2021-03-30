@@ -15,7 +15,7 @@ class CreateSkills extends Migration
     {
         Schema::create('skills', function (Blueprint $table) {
             $table->id();
-            $table->string('prefix')->default(EX);
+            $table->string('prefix')->default('EX');
             $table->string('name');
             $table->timestamps();
         });

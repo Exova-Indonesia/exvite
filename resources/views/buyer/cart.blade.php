@@ -17,8 +17,8 @@
                             <li class="list-group-item border-dashed my-2 parent" data-id="{{ $j->cart_id }}">
                                 <div class="product-cart-body">
                                     <div class="row">
-                                        <div class="ml-2">
-                                            <img width="70" height="70" src="@if($j->product_type == 'Jasa') $j->jasa->jasa_thumbnail @elseif($j->product_type == 'Subscription') https://assets.exova.id/img/1.png @endif" alt="Products Icons">
+                                        <div class="ml-2 cart-image">
+                                            <img width="70" height="70" src="@if($j->product_type == 'Jasa') {{ $j->jasa['cover']['small'] }} @elseif($j->product_type == 'Subscription') https://assets.exova.id/img/1.png @endif" alt="Products Icons">
                                         </div>
                                         <div class="ml-3">
                                             <p class="mb-1"> 

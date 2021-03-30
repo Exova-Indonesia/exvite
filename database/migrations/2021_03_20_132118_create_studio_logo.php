@@ -16,10 +16,9 @@ class CreateStudioLogo extends Migration
         Schema::create('studio_logo', function (Blueprint $table) {
             $table->id();
             $table->string('prefix')->default('EX');
-            $table->string('folder');
-            $table->longText('small');
-            $table->longText('medium');
-            $table->longText('large');
+            $table->longText('small')->nullable();
+            $table->longText('medium')->nullable();
+            $table->longText('large')->nullable();
             $table->timestamps();
         });
     }

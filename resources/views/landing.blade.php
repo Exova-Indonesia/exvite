@@ -120,35 +120,35 @@
                 <div class="row mx-2">
                     <ul class="product-slide col-lg-12">
                       @forelse($seller as $f)
-                        <li class="col-lg-3 col-sm-10 col-md-12">
-                            <div class="product-seller">
+                        <li class="col-lg-3 col-sm-10 col-md-12" title="{{ $f->jasa_name }}">
+                            <a class="product-seller" href="{{ url('/studios/' . strtolower(str_replace(' ','-',$f->seller['name']))) }}" title="{{ $f->seller['name'] }}">
                                 <div class="row m-0">
                                     <div class="product-seller-pp">
-                                        <img width="40px" height="40px" src="{{ asset('../images/bg-01.jpg') }}" alt="">
+                                        <img width="40px" height="40px" src="{{ $f->seller['logo']['medium'] }}" alt="Picture">
                                     </div>
                                     <div class="product-seller-name">
-                                        <span>Exova Studios</span>
+                                        <span>{{ explode(' ', $f->seller['name'])[0] }}</span>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                             <div class="col-sm-12 col-lg-12 pe-2">
-                                <div class="card card-style mr-0 mt-2 ml-2">
-                                <img src="images/food/small/10s.jpg" class="img-fluid">
+                                <div class="card card-style mr-0 mt-2 text-ellipsis ml-2">
+                                <img src="{{ $f->cover['small'] }}" class="img-fluid image-products-250">
                                     <div class="px-2 white-space-normal">
                                     <a href="{{ url('products/' . strtolower(str_replace(' ','-', $f->jasa_name))) }}">
-                                    <p class="color-highlight font-600 font-11 mb-n1 pt-1">Photography</p>
-                                        <h5 class="font-14">Wedding Ceremony in Bali</h5>
+                                    <p class="color-highlight font-600 font-11 mb-n1 pt-1">{{ $f->subcategory['parent']['name'] }}</p>
+                                        <h5 class="font-14">{{ $f->jasa_name }}</h5>
                                         <p class="font-12 line-height-s mb-2">
-                                        Tomato Sauce, Mozzarella, Pizza Stuff, Oregano
+                                          {{ $f->jasa_deskripsi }}
                                         </p>
-                                        <s class="font-12 m-0">Rp2,500,000</s>
-                                        <h5 class="font-14 price-rating">Rp2,250,000<span class="float-right"><i class="fa fa-star text-warning"></i> 4.5</span></h5>
+                                        <!-- <s class="font-12 m-0">Rp</s> -->
+                                        <h5 class="font-14 price-rating">Rp{{ number_format($f->jasa_price, 0) }}<span class="float-right"><i class="fa fa-star text-warning"></i>{{ $f->jasa_rating }}</span></h5>
                                         </a>
                                         <div class="d-flex footer-products">
-                                            <div class="likers color-theme" role="button">
+                                            <div class="likers" role="button" data-id="{{ $f->jasa_id }}" title="Tambah ke favorit">
                                                 <i class="fa fa-heart"></i>
                                             </div>
-                                            <div class="cart-add color-theme" role="button">
+                                            <div class="cart-add" role="button" data-id="{{ $f->jasa_id }}" title="Tambah ke keranjang">
                                                 <i class="fa fa-shopping-cart"></i>
                                             </div>
                                             <div class="comments font-11" role="button">
@@ -207,5 +207,81 @@
     </div>
 </div>
 @endsection
+@section('modals')
+<div id="menu-success-2" class="menu menu-box-bottom bg-green-dark rounded-m" data-menu-height="335" data-menu-effect="menu-over" style="display: block; height: 335px;">
+    <h1 class="text-center mt-4"><i class="fa fa-3x fa-check-circle scale-box color-white shadow-xl rounded-circle"></i></h1>
+        <h1 class="text-center mt-3 font-700 color-white">Keren</h1>
+            <p class="boxed-text-l success-message color-white opacity-70">
+
+        </p>
+    <a href="#" class="close-menu btn btn-m btn-center-m button-s shadow-l rounded-s text-uppercase font-600 bg-white color-black">Keren, Thanks!</a>
+</div>
+<div id="menu-warning-2" class="menu menu-box-bottom bg-red-dark rounded-m" data-menu-height="335" data-menu-effect="menu-over" style="display: block; height: 335px;">
+    <h1 class="text-center mt-4"><i class="fa fa-3x fa-times-circle scale-box color-white shadow-xl rounded-circle"></i></h1>
+        <h1 class="text-center mt-3 text-uppercase color-white font-700">Aduchh!</h1>
+            <p class="boxed-text-l error-message color-white opacity-70">
+            
+        </p>
+    <a href="#" class="close-menu btn btn-m btn-center-l button-s shadow-l rounded-s text-uppercase font-600 bg-white color-black">Hmmm, Yaudah deh</a>
+</div>
+<div class="menu-hider"></div>
+@endsection
 @section('scripts')
+<script>
+  $(document).ready(function() {
+    $(".delete-cart").on("click", function (event) {
+      $.ajaxSetup({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                    "content"
+                ),
+                "Access-Control-Allow-Origin": "*",
+            },
+        });
+        $.ajax({
+            url: "{{ url('cart') }}",
+            type: "DELETE",
+            data: "id=" + $(this).attr("data-id"),
+            success: function (data) {
+              $('#menu-success-2').addClass('menu-active');
+              $('.menu-hider').addClass('menu-active');
+              $(".success-message").text(data.status);
+              setInterval(() => {
+                window.location = window.location;
+              }, 1000);
+            },
+            error: function (data) {
+                console.log(data);
+            },
+        });
+    });
+
+    $(".cart-add").on("click", function () {
+        let id;
+        id = $(this).attr("data-id");
+
+        $.ajaxSetup({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                "Access-Control-Allow-Origin": "*",
+            },
+        });
+        $.ajax({
+            url: "{{ url('cart/add') }}",
+            type: "POST",
+            data: { id: id },
+            success: function (data) {
+              $('#menu-success-2').addClass('menu-active');
+              $('.menu-hider').addClass('menu-active');
+              $(".success-message").text(data.statusMessage);
+            },
+            error: function (data) {
+              $('#menu-warning-2').addClass('menu-active');
+              $('.menu-hider').addClass('menu-active');
+              $(".error-message").text(JSON.parse(data.responseText).statusMessage);
+            },
+        });
+    });
+  });
+</script>
 @endsection

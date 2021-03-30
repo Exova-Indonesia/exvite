@@ -15,7 +15,7 @@ class CartController extends Controller
 {
     public function index() {
         $balance = WalletController::index()->balance;
-        $jasa = Cart::with('user', 'jasa.seller', 'plan')->where('user_id', Auth::user()->id)->get();
+        $jasa = Cart::with('user', 'jasa.seller', 'plan', 'jasa.cover')->where('user_id', Auth::user()->id)->get();
         return view('buyer.cart', ['balance' => $balance, 'data'=> $jasa]);
         // return response()->json($jasa);
     }
@@ -102,26 +102,21 @@ class CartController extends Controller
     }
 
     public function add(Request $request) {
-        switch($request->type) {
-            case "Subscription":
-                $check = Cart::where('user_id', Auth::user()->id)->where('product_type', $request->type)->first();
-                if(!empty($check)) {
-                    return response()->json(['status' => Lang::get('validation.cart.add.limit'), 'code' => 400]);
-                }
-
-                $data = Subscription::where('plan_id', $request->id)->first();
-                Cart::create([
-                    'product_id' => $data->plan_id,
-                    'user_id' => Auth::user()->id,
-                    'product_type' => $request->type,
-                    'unit_price' => $data->price_per_year,
-                    'quantity' => 1,
-                    'note' => Lang::get('validation.cart.note.membership'),
-                ]);
-                break;
-                //
+        $check = Cart::where([
+            ['user_id', Auth::user()->id],
+            ['product_id', $request->id]])->first();
+        if(!empty($check)) {
+            return response()->json(['statusMessage' => Lang::get('validation.cart.add.limit')], 400);
         }
-        return response()->json(['status' => Lang::get('validation.cart.add.success')]);
+        $data = Jasa::where('jasa_id', $request->id)->first();
+        Cart::create([
+            'product_id' => $data->jasa_id,
+            'user_id' => Auth::user()->id,
+            'product_type' => "Jasa",
+            'unit_price' => $data->jasa_price,
+            'quantity' => 1,
+        ]);
+        return response()->json(['statusMessage' => Lang::get('validation.cart.add.success')]);
     }
 
 }

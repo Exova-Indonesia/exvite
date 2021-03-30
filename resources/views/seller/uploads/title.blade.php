@@ -9,7 +9,7 @@
       </div>
       <div class="col-lg-6 col-sm-12 mt-4 mx-auto">
         <div class="input-style input-style-always-active has-borders has-icon mb-4">    
-                <input type="name" class="form-control" name="title" id="title" placeholder="Exova Save The Culture" autocomplete="off">
+                <input type="name" class="form-control" name="title" id="title" autocomplete="off">
                     <label for="title" class="color-theme opacity-50 text-uppercase font-700 font-10">Nama Portfolio</label>
                 <i class="fa fa-times disabled invalid color-red-dark"></i>
             <i class="fa fa-check disabled valid color-green-dark"></i>

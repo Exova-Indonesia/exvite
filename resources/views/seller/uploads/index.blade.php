@@ -183,7 +183,7 @@
 @section('modals')
 <div id="menu-success-2" class="menu menu-box-bottom bg-green-dark rounded-m" data-menu-height="335" data-menu-effect="menu-over" style="display: block; height: 335px;">
     <h1 class="text-center mt-4"><i class="fa fa-3x fa-check-circle scale-box color-white shadow-xl rounded-circle"></i></h1>
-        <h1 class="text-center mt-3 font-700 color-white">All's Good</h1>
+        <h1 class="text-center mt-3 font-700 color-white">Keren</h1>
             <p class="boxed-text-l success-message color-white opacity-70">
 
         </p>
@@ -191,7 +191,7 @@
 </div>
 <div id="menu-warning-2" class="menu menu-box-bottom bg-red-dark rounded-m" data-menu-height="335" data-menu-effect="menu-over" style="display: block; height: 335px;">
     <h1 class="text-center mt-4"><i class="fa fa-3x fa-times-circle scale-box color-white shadow-xl rounded-circle"></i></h1>
-        <h1 class="text-center mt-3 text-uppercase color-white font-700">Wooops!</h1>
+        <h1 class="text-center mt-3 text-uppercase color-white font-700">Aduchh!</h1>
             <p class="boxed-text-l error-message color-white opacity-70">
             
         </p>
@@ -203,7 +203,7 @@
 <script>
     $(document).ready(function() {
         dataPictures = () => {
-            let dataPic = ``, fieldPic;
+            let dataPic = ``, fieldPic = ``;
             $.getJSON("{{ url('/web/v2/products/pictures') }}/" + {{ $products->jasa_id }}, function(data) {
                 let maxFiles = 3 - data.length;
                 fieldPic = `
@@ -222,7 +222,7 @@
                     dataPic +=`
                         <div class="col-lg-4 col-sm-12 col-md-6">
                             <div class="delete-picture" role="button" data-id="`+data.id+`"><i class="fa fa-trash text-danger"></i></div>`;
-                    if(data.id === {{ $products->jasa_thumbnail }}) {
+                    if(data.id === {{ $products->jasa_thumbnail ?? 0 }}) {
                         dataPic += `<div class="cover-picture"><span>Cover</span></div>`;
                     }
                     dataPic += `<img class="p-1 my-pictures-portfolio" src="` + data.small + `" alt="">

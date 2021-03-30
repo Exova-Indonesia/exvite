@@ -89,9 +89,9 @@ class RegisterController extends Controller
             ]);
             Avatar::create([
             'user_id' => $id,
-            'small' => asset('images/users/default.png'),
-            'medium' => asset('images/users/default.png'),
-            'large' => asset('images/users/default.png'),
+            'small' => 'https://ui-avatars.com/api/?name=' . str_replace(' ','+',$data['name']) . '&background=random',
+            'medium' => 'https://ui-avatars.com/api/?name=' . str_replace(' ','+',$data['name']) . '&background=random',
+            'large' => 'https://ui-avatars.com/api/?name=' . str_replace(' ','+',$data['name']) . '&background=random',
             ]);
             State::create([
                 'user_id' => $id,

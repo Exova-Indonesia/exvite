@@ -38,7 +38,11 @@ class HomeController extends Controller
         App::setLocale($locale);
         */
         if(Auth::user()) {
-        $seller = Jasa::with('seller.logo', 'subcategory.parent')->get();
+        $seller = Jasa::with('seller.logo', 'subcategory', 'revisi', 'additional', 'cover')
+        ->where([
+                ['jasa_status', true],
+            ])
+        ->get();
         $balance = Wallet::where('user_id', Auth::user()->id)->first();
         $bank = Bank::where('user_id', Auth::user()->id)->get();
         } else {

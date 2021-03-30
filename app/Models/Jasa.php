@@ -43,4 +43,7 @@ class Jasa extends Model
     public function pictures() {
         return $this->hasMany(JasaPicture::class, 'jasa_id');
     }
+    public function cover() {
+        return $this->belongsTo(JasaPicture::class, 'jasa_thumbnail');
+    }
 }

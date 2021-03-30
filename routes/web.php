@@ -31,7 +31,9 @@ use App\Notifications\TransactionMail;
 Route::middleware('auth')->group(function() {
     Route::resource('/mystudio', App\Http\Controllers\Studio\StudioController::class);
     Route::resource('/studio', App\Http\Controllers\Studio\RegisterController::class);
-    Route::get('mystudio/manage/{id}', [App\Http\Controllers\Studio\StudioController::class, 'manage']);
+    Route::get('/manage/{id}', [App\Http\Controllers\Studio\StudioController::class, 'manage']);
+    Route::get('/share/{id}', [App\Http\Controllers\Studio\StudioController::class, 'share']);
+    Route::get('/studios/{slug}', [App\Http\Controllers\Studio\StudioController::class, 'studios'])->name('view.studio');
     Route::delete('picture/{id}', [App\Http\Controllers\Studio\StudioController::class, 'destroy_picture']);
     Route::delete('products/{id}', [App\Http\Controllers\Studio\StudioController::class, 'destroy_product']);
 });

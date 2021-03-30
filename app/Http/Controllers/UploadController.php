@@ -19,16 +19,13 @@ class UploadController extends Controller
     }
 
     public function logo_studio(Request $request) {
-        $folder = uniqid() . '-' . now()->timestamp;
-        $path = base_path('../assets/' . Auth::user()->id . '/studio/logo' . '/' . date('Y') . '/' . date('F') . $folder);
-        $pathDB = asset('storage/' . Auth::user()->id . '/studio/logo') . '/' . date('Y') . '/' . date('F')  . $folder;
+        $path = base_path('../assets/' . Auth::user()->id . '/studio/logo' . '/' . date('Y') . '/' . date('F'));
+        $pathDB = asset('storage/' . Auth::user()->id . '/studio/logo') . '/' . date('Y') . '/' . date('F');
         $f = $request->file('studio_logo');
         $f_name = 'studio-logo-' . date('Ymdhis') . '-' . Auth::user()->id . '.' . $f->getClientOriginalExtension();
-        StudioLogo::create([
+        $studio = StudioLogo::create([
             'prefix' => 'EX-' . date('his') . rand(0, 9999),
-            'folder' => $folder,
         ]);
-        $studio = StudioLogo::where('folder', $folder);
 
         if (!File::isDirectory($path)) {
             File::makeDirectory($path, 0755, true);
@@ -57,7 +54,7 @@ class UploadController extends Controller
                 ]);
             }
         }
-        return $folder;
+        return $studio->id;
     }
 
     public function jasa_picture(Request $request) {
