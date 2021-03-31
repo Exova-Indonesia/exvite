@@ -22,8 +22,8 @@ class CreateStudioAddress extends Migration
             $table->string('address')->nullable();
             $table->string('state')->nullable();
             $table->string('city')->nullable();
-            $table->string('postal')->nullable();
-            $table->string('country')->nullable();
+            $table->string('subdistrict')->nullable();
+            $table->string('village')->nullable();
             $table->string('latitude')->nullable();
             $table->string('longitude')->nullable();
             $table->timestamps();

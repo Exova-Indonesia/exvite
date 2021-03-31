@@ -5,11 +5,13 @@ namespace App\Http\Controllers\studio;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Studio;
+use App\Models\StudioLogo;
 use App\Models\Jasa;
 use App\Models\JasaRevision;
 use App\Models\JasaPicture;
 use App\Models\JasaAdditional;
 use App\Models\Category;
+use App\Models\StudioAddress;
 
 class StudioController extends Controller
 {
@@ -62,7 +64,11 @@ class StudioController extends Controller
      */
     public function show($id)
     {
-        $seller = Studio::with(['portfolio.subcategory.parent', 'owner', 'logo', 'portfolio.cover', 'portfolio' => function($q) {
+        $seller = Studio::with(
+            ['portfolio.subcategory.parent',
+             'owner', 'logo', 
+             'address.province', 'address.district',
+              'portfolio.cover', 'portfolio' => function($q) {
             $q->where('jasa_status', true);
         }])
         ->where([
@@ -77,6 +83,10 @@ class StudioController extends Controller
                 break;
             case "upload":
                 return view('seller.uploads.title', ['seller' => $seller, 'category' => $category]);
+                // return response()->json(['seller' => $seller]);
+                break;
+            case "orders":
+                return view('seller.orders', ['seller' => $seller]);
                 // return response()->json(['seller' => $seller]);
                 break;
         }
@@ -152,6 +162,52 @@ class StudioController extends Controller
     public function edit($id)
     {
         //
+    }
+
+    public function edit_profil(Request $request, $id)
+    {
+        $data = Studio::where('user_id', auth()->user()->id)->first();
+        $data->update([
+            'slogan' => $request->studio_slogan,
+            'description' => $request->description,
+            'logo_id' => ($request->studio_logo) ? $request->studio_logo : $data->logo_id,
+        ]);
+        
+        // $address = StudioAddress::where('studio_id', $data->id);
+        // if(! empty($address)) {
+        //     $address->update([
+        //         'studio_id' => $data->id,
+        //         'address_name' => $request->address_name,
+        //         'address' => $request->address,
+        //         'state' => $request->province,
+        //         'city' => $request->district,
+        //         'subdistrict' => $request->subdistrict,
+        //         'village' => $request->village,
+        //     ]);
+        // } else {
+        //     $address->create([
+        //         'studio_id' => $data->id,
+        //         'address_name' => $request->address_name,
+        //         'address' => $request->address,
+        //         'state' => $request->province,
+        //         'city' => $request->district,
+        //         'subdistrict' => $request->subdistrict,
+        //         'village' => $request->village,
+        //     ]);
+        // }
+        StudioAddress::updateOrCreate([
+            'studio_id' => $data->id,
+        ],
+        [
+            'studio_id' => $data->id,
+            'address_name' => $request->address_name,
+            'address' => $request->address,
+            'state' => $request->province,
+            'city' => $request->district,
+            'subdistrict' => $request->subdistrict,
+            'village' => $request->village,
+        ]);
+        return back();
     }
 
     /**

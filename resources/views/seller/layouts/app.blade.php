@@ -31,8 +31,6 @@
     <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
     <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
 
-    <!-- <script src="https://vjs.zencdn.net/7.10.2/video.min.js"></script> -->
-
     <script type="text/javascript" src="{{ asset('scripts/custom.js') }}" defer></script>
     <script src="{{ asset('datatables/jquery.dataTables.js') }}" defer></script>
     <script src="{{ asset('datatables-bs4/js/dataTables.bootstrap4.js') }}" defer></script>
@@ -58,7 +56,6 @@
     <link rel="stylesheet" href="{{ asset('datatables-bs4/css/dataTables.bootstrap4.css') }}">
     <!-- <link rel="stylesheet" href="{{ asset('tourguide.js/tourguide.css') }}"> -->
     <link rel="stylesheet" href="{{ asset('sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
-    <!-- <link href="https://vjs.zencdn.net/7.10.2/video-js.css" rel="stylesheet" /> -->
 
 </head>
   <body class="theme-light" data-highlight="highlight-red">
@@ -87,7 +84,7 @@
         <a href="{{ url('/mystudio/dashboard') }}" class="@if(Request::is('mystudio/dashboard')) active-nav @endif"
           ><i class="fa fa-business-time"></i><span>Dashboard</span></a
         >
-        <a href="{{ url('/mystudio/orders') }}"
+        <a href="{{ url('/mystudio/orders') }}" class="@if(Request::is('mystudio/orders')) active-nav @endif"
           ><i class="fa fa-heart"></i><span>Pesanan</span></a
         >
       <a href="{{ url('/mystudio/upload') }}" class="circle-nav @if(Request::is('mystudio/upload') || Request::is('mystudio/manage/' . strtolower(str_replace(' ', '-', $products->jasa_name ?? '')))) active-nav @endif">
@@ -103,7 +100,7 @@
       </div>
     @endowner
       <div class="page-title page-title-fixed container">
-        <h1 class="text-capitalize">{{ Request::segment(1) }}</h1>
+        <h1 class="text-capitalize">{{ Request::segment(2) }}</h1>
         <a
           href="{{ url('/') }}"
           class="page-title-icon shadow-xl bg-theme color-theme"

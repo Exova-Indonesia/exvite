@@ -17,7 +17,8 @@ class CreateJasaOrderRevision extends Migration
             $table->id();
             $table->bigInteger('order_id')->unsigned();
             $table->foreign('order_id')->references('order_id')->on('jasa_orders')->onDelete('cascade');
-            $table->text('path');
+            $table->longText('detail');
+            $table->text('path')->nullable();
             $table->timestamps();
         });
     }

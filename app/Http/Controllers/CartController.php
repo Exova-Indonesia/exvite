@@ -42,12 +42,12 @@ class CartController extends Controller
                 $p = Cart::with('plan')->where('cart_id', $type->cart_id)->first();
                 switch($type->product_type) {
                     case "Jasa" :
-                        $p = Cart::with('user', 'jasa.seller')->where('cart_id', $type->cart_id)->first();
+                        $p = Cart::with('user', 'jasa.seller', 'jasa.cover')->where('cart_id', $type->cart_id)->first();
                         $carts[] = array(
                         'id'=>$p->cart_id,
                         'name' => $p->jasa->jasa_name,
                         'price' => $p->unit_price,
-                        'picture' => $p->jasa->jasa_thumbnail,
+                        'picture' => $p->jasa->cover['small'],
                         'quantity' => $p->quantity,
                         'category' => $p->jasa->jasa_subcategory,
                         'type' => $p->product_type,

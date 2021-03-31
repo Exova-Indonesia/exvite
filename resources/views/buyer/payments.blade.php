@@ -123,7 +123,7 @@
             $(".buy_price").html("IDR " + numeral(subtotal).format("0,0"));
             $(".total").html("IDR " + numeral(total).format("0,0"));
         }
-        $.getJSON("http://localhost:8000/payments/data", function (data) {
+        $.getJSON("{{ url('payments/data') }}", function (data) {
             let buy_price,
                 subtotal = 0;
             $.each(data[1], function (i, data) {
@@ -134,22 +134,22 @@
                 <div class="col-lg-12 col-sm-12 px-2">
                     <li class="list-group-item border-dashed my-2">
                         <div class="product-cart-body">
-                            <div class="row">
+                            <div class="row m-0">
                                 <div class="ml-2">
                                     <img width="70" height="70" src="` +
-                    data.picture +
-                    `" alt="Products Icons">
-                                </div>
-                                <div class="ml-3">
+                                    data.picture +
+                                    `" alt="Products Icons">
+                                    </div>
+                                    <div class="ml-3">
                                     <p class="mb-1">` +
-                    data.name +
-                    `</p>
+                                    data.name +
+                                    `</p>
                                     <p class="mb-1"><strong>IDR ` +
-                    numeral(data.price).format(0, 0) +
-                    `</strong></p>
+                                    numeral(data.price).format(0, 0) +
+                                    `</strong></p>
                                     <p class="mb-1">` +
-                    data.type +
-                    `</p>
+                                    data.type +
+                                    `</p>
                                 </div>
                             </div>
                         </div>
@@ -161,16 +161,14 @@
 
             $('.snap').on('click', function () {
                 let val = $(".notif-active").attr("data-method");
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                        'Access-Control-Allow-Origin': '*',
-                    }
-                });
                 $.ajax({
                     url: "{{ url('payments/pay') }}",
                     data: 'method=' + val,
                     type: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Access-Control-Allow-Origin': '*',
+                    },
                     success: function (data) {
                         console.log(data)
                         window.location = data.link;

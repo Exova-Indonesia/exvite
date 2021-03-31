@@ -83,3 +83,54 @@
 </div>
 </form>
 @endsection
+@section('modals')
+<div id="menu-success-2" class="menu menu-box-bottom bg-green-dark rounded-m" data-menu-height="335" data-menu-effect="menu-over" style="display: block; height: 335px;">
+    <h1 class="text-center mt-4"><i class="fa fa-3x fa-check-circle scale-box color-white shadow-xl rounded-circle"></i></h1>
+        <h1 class="text-center mt-3 font-700 color-white">Keren</h1>
+            <p class="boxed-text-l success-message color-white opacity-70">
+
+        </p>
+    <a href="#" class="close-menu btn btn-m btn-center-m button-s shadow-l rounded-s text-uppercase font-600 bg-white color-black">Keren, Thanks!</a>
+</div>
+<div id="menu-warning-2" class="menu menu-box-bottom bg-red-dark rounded-m" data-menu-height="335" data-menu-effect="menu-over" style="display: block; height: 335px;">
+    <h1 class="text-center mt-4"><i class="fa fa-3x fa-times-circle scale-box color-white shadow-xl rounded-circle"></i></h1>
+        <h1 class="text-center mt-3 text-uppercase color-white font-700">Aduchh!</h1>
+            <p class="boxed-text-l error-message color-white opacity-70">
+            
+        </p>
+    <a href="#" class="close-menu btn btn-m btn-center-l button-s shadow-l rounded-s text-uppercase font-600 bg-white color-black">Hmmm, Yaudah deh</a>
+</div>
+<div class="menu-hider"></div>
+@endsection
+@section('scripts')
+<script>
+  $(document).ready(function() {
+    $(".delete-cart").on("click", function (event) {
+      $.ajaxSetup({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                    "content"
+                ),
+                "Access-Control-Allow-Origin": "*",
+            },
+        });
+        $.ajax({
+            url: "{{ url('cart') }}",
+            type: "DELETE",
+            data: "id=" + $(this).attr("data-id"),
+            success: function (data) {
+              $('#menu-success-2').addClass('menu-active');
+              $('.menu-hider').addClass('menu-active');
+              $(".success-message").text(data.status);
+              setInterval(() => {
+                window.location = window.location;
+              }, 1000);
+            },
+            error: function (data) {
+                console.log(data);
+            },
+        });
+    });
+  });
+</script>
+@endsection

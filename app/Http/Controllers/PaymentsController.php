@@ -15,11 +15,14 @@ use App\Models\OrderDetails;
 use App\Models\PayMethod;
 use App\Models\PaymentDetail;
 use App\Models\OrderJasa;
-use App\Models\OrderJasaMedia;
+use App\Models\OrderExample;
 use Illuminate\Http\Request;
 
 class PaymentsController extends Controller
 {
+    public function __construct() {
+        $this->payment_id = $payment_id = rand();
+    }
     public function index(Request $request) {
         // $request->session()->flush();
         $balance = WalletController::index()->balance;
@@ -33,10 +36,8 @@ class PaymentsController extends Controller
 
     public function pay(Request $request) {
         // $cart = Cart::where('cart_id', $request->cart_id);
-        $payment_id = rand();
         $user = Auth::user();
         $data = $request->session()->get('cart_shopping');
-        $adm_fee = 0.02;
         switch($request->method) {
             case "QRIS":
                 $subtotal = 0;
@@ -47,7 +48,7 @@ class PaymentsController extends Controller
                 }
                 $fee = array(
                     'id'=>rand(),
-                    'price'=>$subtotal_adm*$adm_fee,
+                    'price'=>round($subtotal_adm*0.02),
                     'name'=>'Biaya Layanan',
                     'quantity'=>1,
                 );
@@ -60,7 +61,7 @@ class PaymentsController extends Controller
                         'quantity'=>$d['quantity'],
                     );
                     $subtotal += $d['price'] * $d['quantity'];
-                    PaymentsController::createOrders($d, $subtotal, $method, $subtotal*$adm_fee, $payment_id);
+                    PaymentsController::createOrders($d, $subtotal, $method, $subtotal*0.02, $this->payment_id);
                 }
                 $billing_address = array(
                     'address'       => $user->address->address,
@@ -76,10 +77,10 @@ class PaymentsController extends Controller
                     'phone'         => $user->phone,
                     'billing_address'  => $billing_address,
                 );
-                $total = $subtotal + $subtotal*$adm_fee;
+                $total = $subtotal + $subtotal*0.02;
                 $params = array(
                     'transaction_details' => array(
-                        'order_id' => $payment_id,
+                        'order_id' => $this->payment_id,
                         'gross_amount' => $total,
                     ),
                     'item_details' => $item_details,
@@ -87,10 +88,10 @@ class PaymentsController extends Controller
                     'customer_details' => $customer_details,
                 );
                 PaymentDetail::create([
-                    'payment_id' => $payment_id,
+                    'payment_id' => $this->payment_id,
                     'payment_method' => $method,
                     'discount' => 0,
-                    'admin_fee' => $subtotal*$adm_fee,
+                    'admin_fee' => round($subtotal*0.02),
                     'amount' => $total,
                     'status' => 'pending',
                 ]);
@@ -141,7 +142,7 @@ class PaymentsController extends Controller
                     'quantity'=>$d['quantity'],
                 );
                 $subtotal += $d['price'] * $d['quantity'];
-                PaymentsController::createOrders($d, $subtotal, $method, $adm_fee, $payment_id);
+                PaymentsController::createOrders($d, $subtotal, $method, $adm_fee, $this->payment_id);
             }
                 $billing_address = array(
                     'address'       => $user->address->address,
@@ -160,7 +161,7 @@ class PaymentsController extends Controller
             $total = $subtotal + $adm_fee;
             $params = array(
                 'transaction_details' => array(
-                    'order_id' => $payment_id,
+                    'order_id' => $this->payment_id,
                     'gross_amount' => $total,
                 ),
                 'item_details' => $item_details,
@@ -168,7 +169,7 @@ class PaymentsController extends Controller
                 'customer_details' => $customer_details,
             );
             PaymentDetail::create([
-                'payment_id' => $payment_id,
+                'payment_id' => $this->payment_id,
                 'payment_method' => $method,
                 'discount' => 0,
                 'admin_fee' => $adm_fee,
@@ -208,13 +209,13 @@ class PaymentsController extends Controller
                     'customer_id' =>Auth::user()->id,
                     'type' => $data->product_type,
                     'invoice' => '',
-                    'status' => '',
+                    'status' => 'menunggu_pembayaran',
                     'note' => $data->note,
                     'deadline' => $data->deadline,
                 ]);
-                OrderJasaMedia::create([
+                OrderExample::create([
                     'order_id' => $order_id,
-                    'example' => $d['example'],
+                    'path' => $d['example'],
                 ]);
                 OrderDetails::create([
                     'order_id' =>$order_id,

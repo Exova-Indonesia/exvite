@@ -1,6 +1,6 @@
 (function ($) {
     "use strict";
-    var url = "http://localhost:8000/";
+    var url = "http://exvite.test/";
     $(document).ready(function () {
         $("#search").keyup(function (e) {
             var query = $(this).val();
@@ -155,7 +155,7 @@
                 },
             });
             $.ajax({
-                url: "http://localhost:8000/wallet/" + select,
+                url: "http://exvite.test/wallet/" + select,
                 type: "POST",
                 data: "amount=" + amount,
                 dataType: "json",
@@ -192,7 +192,7 @@
                 },
             });
             $.ajax({
-                url: "http://localhost:8000/wallet/minimum",
+                url: "http://exvite.test/wallet/minimum",
                 type: "POST",
                 data: "amount=" + amount,
                 dataType: "json",
@@ -228,7 +228,7 @@
                 },
             });
             $.ajax({
-                url: "http://localhost:8000/wallet/" + select,
+                url: "http://exvite.test/wallet/" + select,
                 type: "POST",
                 data: "amount=" + amount,
                 dataType: "json",
@@ -262,7 +262,7 @@
             },
         });
         $.ajax({
-            url: "http://localhost:8000/wallet/cekuser",
+            url: "http://exvite.test/wallet/cekuser",
             type: "POST",
             data: "wallet_id=" + user,
             dataType: "json",
@@ -291,7 +291,7 @@
         $("#addbanks_form").css("display", "block");
     });
 
-    $.getJSON("http://localhost:8000/js/banks.json", function (data) {
+    $.getJSON("http://exvite.test/js/banks.json", function (data) {
         let banks = data;
         $.each(banks, function (i, data) {
             $("#bank_code").append(
@@ -303,7 +303,7 @@
     // $('#bank_name').select2({
     //     placeholder: "Pilih Nama Bank",
     //     ajax: {
-    //         url: 'http://localhost:8000/js/banks.json',
+    //         url: 'http://exvite.test/js/banks.json',
     //         dataType: 'json',
     //         delay: 250,
     //         processResults: function (data) {
@@ -522,68 +522,6 @@
                     //
                 },
             });
-        });
-
-        $(".delete-cart").on("click", function (event) {
-            $.ajaxSetup({
-                headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-                        "content"
-                    ),
-                    "Access-Control-Allow-Origin": "*",
-                },
-            });
-            $.ajax({
-                url: url + "cart",
-                type: "DELETE",
-                data: "id=" + $(this).attr("data-id"),
-                success: function (data) {
-                    Toast.fire({
-                        icon: "success",
-                        title: data.status,
-                    });
-                    window.location = window.location;
-                },
-                error: function (data) {
-                    console.log(data);
-                },
-            });
-        });
-    });
-
-    $(".add_cart").on("click", function () {
-        let id, label;
-        id = $(this).attr("data-id");
-        label = $(this).attr("data-label");
-
-        $.ajaxSetup({
-            headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-                "Access-Control-Allow-Origin": "*",
-            },
-        });
-        $.ajax({
-            url: url + "cart/add",
-            type: "POST",
-            data: { id: id, type: label },
-            success: function (data) {
-                if (data.code == 400) {
-                    Toast.fire({
-                        icon: "error",
-                        title: data.status,
-                    });
-                } else {
-                    $("#cart_add").click();
-                    Toast.fire({
-                        icon: "success",
-                        title: data.status,
-                    });
-                    $("#add_cart_title").text(data.status);
-                }
-            },
-            error: function (data) {
-                // console.log(data);
-            },
         });
     });
 

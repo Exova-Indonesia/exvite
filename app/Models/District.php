@@ -5,12 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OrderExample extends Model
+class District extends Model
 {
     use HasFactory;
-    protected $table = 'jasa_order_example';
-    protected $fillable = [
-        'order_id',
-        'path',
-    ];
+    protected $table = 'regencies';
+    protected $primaryKey = 'id';
 }

@@ -21,6 +21,7 @@ class CreateOrders extends Migration
             $table->string('type');
             $table->string('note')->nullable();
             $table->string('invoice');
+            $table->string('revision');
             $table->string('status');
             $table->dateTime('deadline');
             $table->timestamps();

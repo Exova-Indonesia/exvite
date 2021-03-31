@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Auth;
 use Storage;
 use Lang;
+use Validator;
 use App\Models\Cart;
+use App\Models\OrderJasa;
+use App\Models\OrderRevision;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -22,7 +25,7 @@ class OrderController extends Controller
         foreach($request->session()->get('cart_shopping') as $d) {
             $arr[] = $d['id'];
         }
-        $order = Cart::with('user', 'jasa.seller.address', 'plan')
+        $order = Cart::with('user', 'jasa.seller.address.district', 'jasa.cover', 'plan')
         ->whereIn('cart_id', $arr)
         ->where('user_id', Auth::user()->id)->get();
         // $order = Cart::with('user', 'jasa.seller')->whereIn('cart_id', $arr)->first();
@@ -71,7 +74,35 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = OrderJasa::with(['customer', 'products.seller',
+        'products.cover', 'details',
+        'revisiDetail' => function($query) {
+            $query->latest('created_at');
+        }])->where('order_id', $id)->first();
+        return response()->json($data);
+    }
+
+    public function revisi(Request $request)
+    {
+        $countRevision = OrderRevision::where('order_id', $request->id)->count();
+        $countLimit = OrderJasa::where('order_id', $request->id)->first();
+        $validator = Validator::make($request->all(), [
+            'id' => ['required', 'integer'],
+            'reason' => ['required'],
+        ]);
+        if($validator->fails()) {
+            return response()->json(['statusMessage' => 'Isi data dengan benar!'], 400);
+        } else if($countRevision >= $countLimit->revision) {
+            return response()->json(['statusMessage' => 'Batas revisi terlampaui!'], 400);
+        }
+
+        OrderRevision::create([
+            'order_id' => $request->id,
+            'detail' => $request->reason,
+        ]);
+        OrderJasa::where('order_id', $request->id)->update([
+            'status' => 'permintaan_revisi',
+        ]);
     }
 
     /**
@@ -110,7 +141,13 @@ class OrderController extends Controller
                     'example' => '',
                     'example_ori' => '',
                 ]);
-                    return response()->json(['status' => Lang::get('validation.cart.deletefile.success'), 'type' => 'File']);
+                return response()->json(['status' => Lang::get('validation.cart.deletefile.success'), 'type' => 'File']);
+                break;
+            case 'orderan':
+                OrderJasa::where('order_id', $request->id)->update([
+                    'status' => $request->status,
+                ]);
+                return response()->json(['status' => 125, 'url' => '/']);
                 break;
             default:
             //

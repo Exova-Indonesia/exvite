@@ -43,13 +43,23 @@
 }
 
 /* Customs */
+.pp-studio-dashboard img {
+    width: 85px;
+    height: 85px;
+}
+.logo-field img {
+    width: 125px;
+    height: 125px;
+    margin-bottom: 4px;
+}
 .cart-image img {
     object-fit: cover;
 }
-.text-ellipsis h5, .text-ellipsis p {
-    white-space: nowrap; 
+.text-ellipsis h5,
+.text-ellipsis p {
+    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; 
+    text-overflow: ellipsis;
 }
 .image-products-250 {
     height: 250px !important;
@@ -62,7 +72,7 @@
     position: relative;
 }
 .cover-picture span {
-position: absolute;
+    position: absolute;
     padding: 2px 7px;
     top: 3px;
     right: 4px;
@@ -99,8 +109,8 @@ position: absolute;
     margin-bottom: 9px !important;
 }
 .filepond--root {
-	width:125px;
-	margin: 0 auto;
+    /* width: 125px; */
+    margin: 0 auto;
 }
 .section-title a {
     float: right;
@@ -1648,6 +1658,7 @@ figure {
 img,
 svg {
     vertical-align: middle;
+    object-fit: cover;
 }
 table {
     caption-side: bottom;
@@ -1890,6 +1901,7 @@ progress {
     content: "\2014\00A0";
 }
 .img-fluid {
+    width: 100%;
     max-width: 100%;
     height: auto;
     border-radius: 20px;

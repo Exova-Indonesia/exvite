@@ -11,6 +11,7 @@ class OrderRevision extends Model
     protected $table = 'jasa_order_revision';
     protected $fillable = [
         'order_id',
-        'path'
+        'path',
+        'detail',
     ];
 }

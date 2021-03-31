@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function() {
     Route::get('/studios/{slug}', [App\Http\Controllers\Studio\StudioController::class, 'studios'])->name('view.studio');
     Route::delete('picture/{id}', [App\Http\Controllers\Studio\StudioController::class, 'destroy_picture']);
     Route::delete('products/{id}', [App\Http\Controllers\Studio\StudioController::class, 'destroy_product']);
+    Route::put('profil/studio/{id}', [App\Http\Controllers\Studio\StudioController::class, 'edit_profil'])->name('studio.profil.update');
 });
 
 Route::middleware('auth')->prefix('upload')->group(function() {
@@ -76,7 +77,7 @@ Route::middleware('auth')->prefix('/web/v2')->group(function() {
     Route::get('/category', [App\Http\Controllers\ApiController::class, 'getCategory'])->name('api.category');
     Route::get('/products/pictures/{id}', [App\Http\Controllers\ApiController::class, 'getPictures'])->name('api.pictures');
 });
-    Route::get('all/provinces/', [App\Http\Controllers\ApiController::class, 'province_all']);
+    Route::get('/provinces', [App\Http\Controllers\ApiController::class, 'provinces']);
     Route::get('/regencies/{id}', [App\Http\Controllers\ApiController::class, 'regencies']);
     Route::get('/districts/{id}', [App\Http\Controllers\ApiController::class, 'districts']);
     Route::get('/villages/{id}', [App\Http\Controllers\ApiController::class, 'villages']);
@@ -126,6 +127,7 @@ Route::middleware(['auth'])->prefix('wallet')->group(function() {
 
 Route::get('/history/export/all', [App\Http\Controllers\ExportController::class, 'tes'])->name('transaction.all');
 Route::post('/download', [App\Http\Controllers\ExportController::class, 'download'])->name('download');
+Route::get('/download/{type}/{id}', [App\Http\Controllers\ExportController::class, 'download_orders'])->name('download.orderan');
 Route::get('/view/{path}', [App\Http\Controllers\ExportController::class, 'view'])->name('view');
 // Route::get('/tests', [App\Http\Controllers\WalletController::class, 'tests']);
 
@@ -157,6 +159,7 @@ Route::get('/highlight/all', [App\Http\Controllers\HighlightController::class, '
 
 Route::middleware('auth', 'cartsession')->group(function() {
     Route::resource('/order', App\Http\Controllers\OrderController::class);
+    Route::post('/revision', [App\Http\Controllers\OrderController::class, 'revisi']);
 });
 
 // Products Page

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
+use Auth;
 use Storage;
 use App\Models\State;
 use App\Models\OrderJasa;
@@ -18,8 +19,8 @@ class ApiController extends Controller
         $data = DB::table('regencies')->where('province_id', $id)->get();
         return $data;
     }
-    public static function provinces($id) {
-        $data = DB::table('provinces')->where('id', $id)->get();
+    public static function provinces() {
+        $data = DB::table('provinces')->get();
         return $data;
     }
     public static function districts($id) {
@@ -55,18 +56,21 @@ class ApiController extends Controller
 
 
     public function penjualan($submenu) {
+        if($submenu == 'pesanan_masuk') {
+            $submenu = 'menunggu_konfirmasi';
+        }
         $value = auth()->user()->id;
         $data = OrderJasa::with(['products.seller'])
-        ->whereHas('products.seller', function($q) use($value) {
-            $q->where('id', $value);
-        })
+        ->with(['products.cover', 'products.seller' => function($q) use($value) {
+            $q->where('user_id', $value);
+        }])
         ->where('status', $submenu)
         ->get();
         return response()->json($data);
     }
     public function pembelian($submenu) {
         $value = auth()->user()->id;
-        $data = OrderJasa::with(['customer', 'products'])
+        $data = OrderJasa::with(['customer', 'products.cover'])
         ->where('customer_id', $value)
         ->where('status', $submenu)
         ->get();
@@ -82,17 +86,21 @@ class ApiController extends Controller
     public function store_order_files(Request $request, $id, $label) {
         if(in_array($label, ['pesanan_diproses', 'permintaan_revisi'])) {
             $f = $request->file("order_files");
-            $f_name = $f->getClientOriginalName();
-            Storage::putFileAs('/', $f, $f_name);
+            $path = Auth::user()->id . '/studio/orders' . '/' . date('Y') . '/' . date('F');
+            $pathDB = asset('storage/' . Auth::user()->id . '/studio/orders') . '/' . date('Y') . '/' . date('F');
+            $f_name = 'order-' . date('Y-m-d') . '-' . strtolower($f->getClientOriginalName());
+            Storage::putFileAs($path, $f, $f_name);
             if($label == 'pesanan_diproses') {
                 $data = OrderJasaResult::create([
                     'order_id' => $id,
-                    'path' =>  $f_name,
+                    'path' =>  $pathDB,
                 ]);
             } else if($label == 'permintaan_revisi') {
-                $data = OrderRevision::create([
+                $data = OrderRevision::updateOrCreate([
                     'order_id' => $id,
-                    'path' => $f_name,
+                ],
+                [
+                    'path' => $pathDB,
                 ]);
             }
             OrderJasa::where('order_id', $id)

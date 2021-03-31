@@ -32,4 +32,8 @@ class Studio extends Model
     public function owner() {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function address() {
+        return $this->hasOne(StudioAddress::class, 'studio_id');
+    }
 }

@@ -212,6 +212,7 @@ return [
         'name' => 'Nama',
         'password' => 'Password',
         'email' => 'Email',
+        'reason' => 'Alasan',
     ],
 
 ];

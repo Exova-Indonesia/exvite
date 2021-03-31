@@ -2,8 +2,8 @@
 @section('content')
 <div class="container mb-5">
     <div class="col-lg-12">
-        <div class="row">
-            <div class="col-lg-8 p-0">
+        <div class="row m-0">
+            <div class="col-lg-7 col-sm-12 p-0 mx-1">
                 <div class="card mb-2 border-0">
                     <div class="card-header border-0 bg-white">
                         <h5 class="m-0">Detail Pesanan</h5>
@@ -17,7 +17,7 @@
                                         </div>
                                         <div class="border-dashed border-top p-3">
                                             <span> {{ Auth::user()->name }} </span>
-                                            <p class="mb-0 text-muted"> {{ Auth::user()->phone }} </p>
+                                            <p class="mb-0 text-muted"> {{ Auth::user()->address->city }} </p>
                                         </div>
                                     </div>
                                 </div>
@@ -32,48 +32,42 @@
                                             {{ $o->jasa->seller->name }}
                                         @elseif($o->product_type == 'Create') @else @endif </h5>
                                         <small> @if($o->product_type == 'Jasa') 
-                                            {{ $o->jasa->seller->address->city }}
+                                            {{ $o->jasa->seller->address->district['name'] }}
                                         @elseif($o->product_type == 'Create') @else @endif </small>
                                     </div>
                                     <div class="row mb-3">
-                                        <div><img class="mx-2 border p-2" width="70px" height="70px" src="@if($o->product_type == 'Jasa') $o->jasa->jasa_thumbnail 
+                                        <div><img class="mx-2 border" width="70px" height="70px" src="@if($o->product_type == 'Jasa') {{ $o->jasa->cover['small'] }}
                                         @elseif($o->product_type == 'Subscription') https://assets.exova.id/img/1.png @endif" alt="Thumbnail"></div>
-                                        <div class="ml-3">
+                                        <div class="ml-2">
                                             <p class="m-0"> @if($o->product_type == 'Jasa') 
-                                            {{ $o->jasa->seller->name }}
+                                            {{ $o->jasa->jasa_name }}
                                             @elseif($o->product_type == 'Create') @else {{ $o->plan->plan_name }} @endif</p>
                                             <p class="m-0"><small>Tipe Pesanan : {{ $o->product_type }}</small></p>
-                                            <p class="m-0"><span><strong>IDR {{ number_format($o->unit_price, 0) }}</strong></span></p>
+                                            <p class="m-0"><span><strong>Rp{{ number_format($o->unit_price, 0) }}</strong></span></p>
                                         </div>
                                     </div>
                                 </div>
                                 @if($o->product_type == 'Jasa')
-                                <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label for="title">Deadline Proyek <span class="text-danger">*</span></label>
-                                        <input type="date" data-id="{{ $o->cart_id }}" id="title" class="form-control" value="{{ date('Y-m-d', strtotime($o->deadline)) }}">
+                                <div class="row m-0">
+                                    <div class="form-group col-lg-6 col-sm-12">
+                                        <div class="input-style input-style-always-active has-borders has-icon mb-4">    
+                                            <input type="date" data-id="{{ $o->cart_id }}" class="form-control" id="title" value="{{ date('Y-m-d', strtotime($o->deadline)) }}">
+                                            <label for="title" class="color-theme opacity-50 text-uppercase font-700 font-10">Deadline Proyek</label>
+                                        </div>
                                         @error('produk')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                         @enderror
                                     </div>
-                                    <div class="form-group col-md-6">
-                                        <form class="uploadFile" data-id="{{ $o->cart_id }}" type="POST" enctype="multipart/form-data">
-                                            @csrf
-                                            <label for="uploadFile{{ $o->cart_id }}">Contoh Proyek</label>
-                                            <input type="hidden" name="id" value="{{ $o->cart_id }}">
-                                            <input type="file" id="uploadFile{{ $o->cart_id }}" data-id="{{ $o->cart_id }}" class="form-control" name="example">
-                                            <small>
-                                                <span data-id="{{ $o->cart_id }}" id="progress{{ $o->cart_id }}" class="text-danger f_name" role="button">
-                                                    {{ $o->example_ori }}
-                                                </span>
-                                            </small>
-                                        </form>
+                                    <div class="form-group col-lg-6 col-sm-12">
+                                        <input type="file" data-id="{{ $o->cart_id }}" name="example" class="form-control" id="examples">
                                     </div>
-                                    <div class="form-group col-lg-12">
-                                        <label for="note">Catatan</label>
-                                        <textarea name="note" data-id="{{ $o->cart_id }}" id="note" cols="10" rows="5" class="form-control">{{ $o->note }}</textarea>
+                                    <div class="form-group col-lg-12 mx-1">
+                                        <div class="input-style input-style-always-active has-borders has-icon mb-4">    
+                                            <textarea type="text" data-id="{{ $o->cart_id }}" name="notes" class="form-control" id="notes">{{ $o->note }}</textarea>
+                                            <label for="note" class="color-theme opacity-50 text-uppercase font-700 font-10">Catatan</label>
+                                        </div>
                                         <small class="text-mutes cstring{{ $o->cart_id }}"></small>
                                     </div>
                                 </div>
@@ -83,7 +77,7 @@
                         </ul>
                     </div>
                 </div>
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-sm-12 mx-1">
                 <div class="card">
                     <div class="card-header bg-white border-0">
                         <h5 class="m-0">@lang('payments.cart.paymenttitle')</h5>
@@ -123,6 +117,43 @@
 </div>
 <script>
 $(document).ready(function() {
+    const uploadOptions = {
+        checkValidity: true,
+        labelFileTypeNotAllowed: `Format tidak sesuai`,
+        allowFileEncode: true,
+        allowFileTypeValidation: true,
+        credits: false,
+        labelIdle: `<span class="filepond--label-action">Pilih</span> contoh proyek`,
+        imagePreviewHeight: 175,
+        allowReplace: true,
+        allowFileSizeValidation: true,
+        // maxFiles: maxFiles,
+        maxTotalFileSize: '50MB',
+    }
+    FilePond.registerPlugin(
+        FilePondPluginFileEncode,
+        FilePondPluginImagePreview,
+        FilePondPluginImageExifOrientation,
+        FilePondPluginFileValidateSize,
+        FilePondPluginFileValidateType,
+    );
+    const pond = FilePond.create( document.querySelector('input[name="example"]'), uploadOptions );
+    pond.on('warning', (error, file) => {
+        if(error.body === "Max files") {
+            $('#menu-warning-2').addClass("menu-active");
+            $('.menu-hider').addClass("menu-active");
+            $('.error-message').html("Max files upload is 3");
+        }
+    });
+        FilePond.setOptions({
+        server: { 
+            url: "{{ route('upload.pictures') }}",
+            headers: { 
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+        },
+    });
+
     let content, id, data, words = 0, cart = [];
     const Toast = Swal.mixin({
         toast: true,
@@ -161,7 +192,7 @@ $(document).ready(function() {
         content = $(this).val();
         store(id, content, 'Date');
     });
-    $('textarea[name=note]').on('keyup', function() {
+    $('textarea[name=notes]').on('keyup', function() {
         id = $(this).attr('data-id');
         content = $(this).val();
         words = content.length;

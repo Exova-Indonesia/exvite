@@ -26,6 +26,24 @@
     </div>
 </div>
 @endsection
+
+@section('modals')
+<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="orderModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      </div>
+    </div>
+  </div>
+</div>
+@endsection
+
 @section('scripts')
 <script>
 jQuery(function() {
@@ -49,21 +67,21 @@ $(document).ready(function() {
         title = title.trim().replace(/^\w/, (c) => c.toUpperCase());
         $.getJSON( "{{ url('/') }}" + '/web/v2/orders/' + base + '/' + id, function(data) {
             $.each(data, function(i, data) {
-                if(data.status === id) {
+                if(data.status) {
                     content += `
-                    <div class="row p-2">
+                    <div class="row m-0 flex-nowrap p-2">
                         <div class="notif-image">
-                                <img class="notif-image-content" src="https://assets.exova.id/img/1.png" alt="">
+                                <img class="notif-image-content" src="` + data.products.cover.small + `" alt="">
                             </div>
                             <div class="notif-content-more">
-                                <h5 class="mb-1">` + data.products['jasa_name'] + ` <strong>[` + new Date(data.deadline).toDateString() + `]</strong></h5>
+                                <h5 class="mb-1">` + data.products['jasa_name'] + `</h5>
                                 <span>` + title + `</span>
                                 <div>
-                                    <small>` + data.created_at + `</small>
+                                    <small>Sisa Waktu : ` + new Date(data.deadline).toDateString() + `</small>
                                 </div>
                             </div>
                             <div class="notif-btn ml-auto">
-                                <button class="detail-btn btn btn-exova"><i class="fas fa-eye"></i></button>
+                                <button class="detail-btn btn btn-exova" data-label="detail_pesanan" data-id="` + data.order_id + `" data-toggle="modal" data-target="#orderModal"><i class="fas fa-eye" title="Lihat Detail"></i></button>
                                 `;
                                 if(id === 'menunggu_pembayaran') {
                                     content += `
@@ -71,24 +89,25 @@ $(document).ready(function() {
                                     `;
                                 } else if(id === 'pesanan_masuk') {
                                     content += `
-                                        <button class="accept-btn btn btn-success"><i class="fas fa-check"></i></button>
+                                        <button class="accept-btn btn btn-success" data-content="pesanan_diproses" data-id="` + data.order_id + `" title="Terima Pesanan"><i class="fas fa-check"></i></button>
                                     `;
-                                } else if((id === 'pesanan_dikirim' || id === 'permintaan_revisi') && base === 'pembelian') {
+                                } else if(id === 'pesanan_dikirim' && base === 'pembelian') {
                                     content += `
-                                        <button class="download-btn btn btn-success"><i class="fas fa-download"></i></button>
-                                        <button class="revisi-btn btn btn-primary"><i class="fas fa-pencil-alt"></i></button>
+                                        <button class="accept-btn btn btn-success" data-content="pesanan_selesai" data-id="` + data.order_id + `" title="Selesaikan Pesanan"><i class="fas fa-check"></i></button>
+                                        <button class="download-btn btn btn-success" data-id="` + data.order_id + `" title="Download"><i class="fas fa-download"></i></button>
+                                        <button class="revisi-btn btn btn-primary" data-label="permintaan_revisi" data-id="` + data.order_id + `" data-toggle="modal" data-target="#orderModal" title="Minta Revisi"><i class="fas fa-pencil-alt"></i></button>
                                     `;
-                                    } else if(id === 'pesanan_diproses' && base === 'penjualan') {
+                                } else if(id === 'pesanan_diproses' && base === 'penjualan') {
                                         content += `
-                                            <button class="upload-btn btn btn-success" data-label="pesanan_diproses" data-id="`+ data.order_id +`"><i class="fas fa-upload"></i></button>
+                                            <button class="upload-btn btn btn-success" data-label="pesanan_diproses" data-id="`+ data.order_id +`" title="Upload Pesanan"><i class="fas fa-upload"></i></button>
                                         `;
                                     } else if(id === 'pesanan_selesai' && base === 'pembelian') {
                                         content += `
-                                            <button class="download-btn btn btn-success"><i class="fas fa-download"></i></button>
+                                            <button class="download-btn btn btn-success" data-id="` + data.order_id + `" title="Download"><i class="fas fa-download"></i></button>
                                         `;
                                     } else if(id === 'permintaan_revisi' && base === 'penjualan') {
                                         content += `
-                                            <button class="upload-btn btn btn-success" data-label="permintaan_revisi" data-id="`+ data.order_id +`"><i class="fas fa-upload"></i></button>
+                                            <button class="upload-btn btn btn-success" data-label="permintaan_revisi" data-id="`+ data.order_id +`" title="Upload Revisian"><i class="fas fa-upload"></i></button>
                                         `;
                                     }
                                     content += `
@@ -99,12 +118,34 @@ $(document).ready(function() {
                 }
             })
             $('.notif-content').html(content);
+
+            $('.download-btn').on('click', function() {
+                 window.location = "{{ url('/download/orderan') }}/" + $(this).attr('data-id');
+            });
             
             $(".accept-btn").on("click", function () {
-                Toast.fire({
-                    icon: 'success',
-                    title: 'Pesanan diterima',
-                })
+                $.ajax({
+                    url: "{{ url('order/orderan') }}",
+                    type: 'PUT',
+                    data: { 
+                        id: $(this).attr('data-id'), type: 'orderan', status: $(this).attr('data-content')
+                    },
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                    },
+                    success: function(data) {
+                        if(data.status === 125) {
+                            window.location = data.url;
+                        }
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Berhasil',  
+                        });
+                    },
+                    error: function(data) {
+                        // console.log(data)
+                    }
+                });
             });
                 $('.decline-btn').on('click', function() {
                 Swal.fire({
@@ -310,6 +351,130 @@ $(document).ready(function() {
         $(this).addClass("notif-active");
         let notif = $(this).html();
         reload(notif);
+    });
+
+        $('#orderModal').on('show.bs.modal', function(e) {
+        let btn = $(e.relatedTarget);
+        let content = ``, label = btn.data('label');
+        if(label === 'permintaan_revisi') {
+            content = `
+                <div class="revisi-field">
+                    <div class="input-style input-style-always-active has-borders has-icon mb-4">    
+                        <textarea type="text" class="form-control" id="reason"></textarea>
+                        <label for="reason" class="color-theme opacity-50 text-uppercase font-700 font-10">Apa yang perlu direvisi?</label>
+                    </div>
+                    <div class="text-right">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-primary submit-revisi">Submit</button>
+                    </div>
+                </div>
+            `;
+            $('.modal-body').html(content);
+        } else if(label === 'detail_pesanan') {
+            $.ajax({
+                url: "{{ url('order') }}/" + btn.data('id'),
+                type: 'GET',
+                success: function(data) {
+                    content = `
+                        <div class="order-detail">
+                            <div class="text-center mb-3 logo-field">
+                                <img
+                                    data-src=""
+                                    src="` + data.products.cover.small + `"
+                                    width="125"
+                                    height="125"
+                                    class="rounded-circle shadow-xl preload-img"
+                                />
+                            </div>
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td>Pembayaran</td>
+                                        <td class="text-right text-capitalize font-weight-bold">Rp`+ numeral(data.details.unit_price).format('0,0') +`</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pembeli</td>
+                                        <td class="text-right text-capitalize font-weight-bold">`+ data.customer.name +`</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Penjual</td>
+                                        <td class="text-right font-weight-bold">`+ data.products.seller.name +`</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pesanan</td>
+                                        <td class="text-right font-weight-bold">`+ data.products.jasa_name +`</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Deadline</td>
+                                        <td class="text-right font-weight-bold">`+ new Date(data.deadline).toDateString() +`</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Catatan</td>
+                                        <td class="text-right font-weight-bold">`+ data.note +`</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tanggal Order</td>
+                                        <td class="text-right font-weight-bold">`+ new Date(data.created_at).toDateString() +`</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Invoice</td>
+                                        <td class="text-right text-primary font-weight-bold">`+ data.invoice +`</td>
+                                    </tr>`;
+                                    if(data.example) {
+                                        content+=`<tr>
+                                            <td>File Contoh</td>
+                                            <td class="text-right text-primary font-weight-bold">Download</td>
+                                        </tr>`;
+                                    }
+                                    if(data.revisi_detail) {
+                                        content += `
+                                        <tr>
+                                            <td>Revisi Detail</td>
+                                            <td class="text-right font-weight-bold">` + data.revisi_detail.detail + `</td>
+                                        </tr>
+                                    `;
+                                    }
+                                content += `</tbody>
+                            </table>
+                        </div>
+                    `;
+                    $('.modal-body').html(content);
+                },
+                error: function(data) {
+                    console.log(data);
+                },
+                beforeSend: function(data) {
+                    $('.modal-body').html("Loading...");
+                }
+            });
+        }
+
+        $('.submit-revisi').on('click', function() {
+            $.ajax({
+                url: "{{ url('revision') }}",
+                data: { reason: $('#reason').val(), id: btn.data('id') },
+                type: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                },
+                success: function(data) {
+                    path = window.location.pathname.replace('/notifications/', '');
+                    contents('pesanan_dikirim', path);
+                    $('#menu-success-2').addClass('menu-active');
+                    $('.menu-hider').addClass('menu-active');
+                    $('.success-message').text('Permintaan revisi berhasil dikirim');
+                    $('.close').click();
+                },
+                error: function(data) {
+                    $('#menu-warning-2').addClass('menu-active');
+                    $('.menu-hider').addClass('menu-active');
+                    $('.error-message').text('Permintaan revisi gagal karena ' + JSON.parse(data.responseText).statusMessage);
+                }
+            });
+        });
+        label = label.replace('_', ' ');
+        label = label.trim().replace(/^\w/, (c) => c.toUpperCase());
+        $('#orderModalLabel').html(label);
     });
 
     path = window.location.pathname.replace('/notifications/', '')

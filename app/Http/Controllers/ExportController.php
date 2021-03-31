@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Transaction;
+use App\Models\OrderJasaResult;
 // use App\Exports\Transactions;
 use PDF;
 use Lang;
@@ -43,6 +44,18 @@ class ExportController extends Controller
     }
     public function download(Request $request) {
         return Storage::download($request->invoice);
+        // return response()->json([$request->invoice]);
+    }
+
+    public function download_orders($type, $id) {
+        switch($type) {
+            case "orderan":
+                $data = OrderJasaResult::where('order_id', $id)->first();
+                return Storage::download($data->path);
+            break;
+            default:
+                abort(404);
+        }
         // return response()->json([$request->invoice]);
     }
 

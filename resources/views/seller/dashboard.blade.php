@@ -3,10 +3,10 @@
         <div class="mb-4">
           <div class="divider mb-4"></div>
           <div class="d-flex content mt-0 mb-1">
-            <div>
+            <div class="pp-studio-dashboard">
               <img
                 src="../images/empty.png"
-                data-src="{{ $seller->logo->small }}"
+                data-src="{{ $seller->logo->medium }}"
                 width="85"
                 class="rounded-circle me-3 shadow-xl preload-img"
               />
@@ -57,8 +57,8 @@
                 {{ $seller->description }}
             </p>
             <br/>
-            <a href="#" class="font-600 color-highlight"
-              >Exova Headquartes, Denpasar</a
+            <a class="font-600 color-highlight"
+              >{{ $seller->address->district['name'] . ', ' . $seller->address->province['name'] }}</a
             >
             <p class="opacity-60 font-12 pt-2">
               Owned by <a href="{{ url('/users/' . strtolower(str_replace(' ', '-', $seller->owner['name']))) }}" class="color-theme font-600">{{ $seller->owner['name'] }}</a>
@@ -113,8 +113,8 @@
       >
         <div class="text-center">
           <img
-            src="{{ $seller->logo['small'] }}"
-            width="150"
+            src="{{ $seller->logo['medium'] }}"
+            width="150" height="150"
             class="mx-auto mt-4 rounded-circle"
           />
           <p class="text-center font-15 mt-4">Unfollow @jane.louder84?</p>
@@ -145,11 +145,14 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+      <form class="update-profil" method="POST" action="{{ route('studio.profil.update', $seller->prefix . '-' . $seller->id ) }}">
+      @method('put')
+      @csrf
       <div class="modal-body">
         <div class="text-center mb-5 logo-field">
           <img
             src="../images/empty.png"
-            data-src="{{ $seller->logo->small }}"
+            data-src="{{ $seller->logo->medium }}"
             width="125"
             class="rounded-circle shadow-xl preload-img"
           />
@@ -158,23 +161,35 @@
           </div>
         </div>
         <div class="input-style input-style-always-active has-borders has-icon mb-4">    
+          <input type="text" class="form-control" id="st_name" disabled value="{{ $seller->name }}">
+          <label for="st_name" class="color-theme opacity-50 text-uppercase font-700 font-10">Nama Sudio</label>
+        </div>
+        <div class="input-style input-style-always-active has-borders has-icon mb-4">    
           <input type="text" class="form-control" name="studio_slogan" id="slogan" value="{{ $seller->slogan }}">
           <label for="slogan" class="color-theme opacity-50 text-uppercase font-700 font-10">Slogan</label>
         </div>
         <div class="input-style input-style-always-active has-borders has-icon mb-4">    
-          <input type="text" class="form-control" name="province" id="prov" >
+          <select type="text" class="form-control" name="province" id="prov"></select>
           <label for="prov" class="color-theme opacity-50 text-uppercase font-700 font-10">Provinsi</label>
         </div>
         <div class="input-style input-style-always-active has-borders has-icon mb-4">    
-          <input type="text" class="form-control" name="disctrict" id="dist" >
-          <label for="dist" class="color-theme opacity-50 text-uppercase font-700 font-10">Kabupaten</label>
+          <select type="text" class="form-control" name="district" id="dist" ></select>
+          <label for="dist" class="color-theme opacity-50 text-uppercase font-700 font-10">Kabupaten/Kota</label>
         </div>
         <div class="input-style input-style-always-active has-borders has-icon mb-4">    
-          <input type="text" class="form-control" name="villages" id="village" >
-          <label for="village" class="color-theme opacity-50 text-uppercase font-700 font-10">Kecamatan</label>
+          <select type="text" class="form-control" name="subdistrict" id="subdist" ></select>
+          <label for="subdistrict" class="color-theme opacity-50 text-uppercase font-700 font-10">Kecamatan</label>
         </div>
         <div class="input-style input-style-always-active has-borders has-icon mb-4">    
-          <input type="text" class="form-control" name="address_name" id="addr_name" >
+          <select type="text" class="form-control" name="village" id="villages" ></select>
+          <label for="villages" class="color-theme opacity-50 text-uppercase font-700 font-10">Kelurahan</label>
+        </div>
+        <div class="input-style input-style-always-active has-borders has-icon mb-4">    
+          <textarea type="text" class="form-control" name="address" id="addr" >{{ $seller->address->address }}</textarea>
+          <label for="addr" class="color-theme opacity-50 text-uppercase font-700 font-10">Alamat Lengkap</label>
+        </div>
+        <div class="input-style input-style-always-active has-borders has-icon mb-4">    
+          <input type="text" class="form-control" name="address_name" id="addr_name" value="{{ $seller->address_name }}">
           <label for="addr_name" class="color-theme opacity-50 text-uppercase font-700 font-10">Nama Alamat</label>
         </div>
         <div class="input-style input-style-always-active has-borders has-icon mb-4">    
@@ -183,9 +198,10 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-exova">Save changes</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Batal</button>
+        <button type="submit" class="btn btn-exova">Simpan</button>
       </div>
+      </form>
     </div>
   </div>
 </div>
@@ -194,6 +210,77 @@
 @section('scripts')
 <script>
   $(document).ready(function() {
+      // $('.update-profil').change(function(e) {
+      //   e.preventDefault();
+      //   $.ajax({
+      //     url: "{{ url('profil/studio/' . auth()->user()->id) }}",
+      //     data: new FormData(this),
+      //     type: "PUT",
+      //     cache: false,
+      //     processData: false,
+      //     contentType: false,
+      //     enctype: 'multipart/form-data',
+      //     dataType:'json',
+      //     headers: {
+      //       "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+      //     },
+      //     success: function(data) {
+      //       console.log(data);
+      //     },
+      //     error: function(data) {
+      //       console.log(data);
+      //     }
+      //   });
+      // });
+
+
+      let prov = $('#prov').val();
+      let content = ``;
+      $.getJSON("{{ url('provinces/') }}", function(data) {
+          $.each(data, function(i, index) {
+              content += `
+                  <option value="` + index.id + `">`+ index.name +`</option>
+              `;
+              $('#prov').html(content);
+          });
+      });
+      $('#prov').on('change', () => {
+        let content = ``;
+        let state = $('#prov').val();
+          $.getJSON("{{ url('regencies') }}/" + state, function(data) {
+              $.each(data, function(i, index) {
+                  content += `
+                      <option value="` + index.id + `">`+ index.name +`</option>
+                  `;
+                  $('#dist').html(content);
+              });
+          });
+      })
+      $('#dist').on('change', () => {
+          let content = ``;
+          let city = $('#dist').val();
+          $.getJSON("{{ url('districts') }}/" + city, function(data) {
+              $.each(data, function(i, index) {
+                  content += `
+                      <option value="` + index.id + `">`+ index.name +`</option>
+                  `;
+                  $('#subdist').html(content);
+              });
+          });
+      })
+      $('#subdist').on('change', () => {
+          let content = ``;
+          let districts = $('#subdist').val();
+          $.getJSON("{{ url('villages') }}/" + districts, function(data) {
+              $.each(data, function(i, index) {
+                  content += `
+                      <option value="` + index.id + `">`+ index.name +`</option>
+                  `;
+                  $('#villages').html(content);
+              });
+          });
+      })
+
     $('.change-logo').click(function() {
       let content = ``;
       content += `
