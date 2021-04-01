@@ -12,6 +12,8 @@ use App\Models\OrderJasaResult;
 use App\Models\OrderRevision;
 use App\Models\SubCategory;
 use App\Models\JasaPicture;
+use App\Models\JasaAdditional;
+use App\Models\Jasa;
 
 class ApiController extends Controller
 {
@@ -118,6 +120,22 @@ class ApiController extends Controller
     public function getPictures($id) {
         $return = JasaPicture::where('jasa_id', $id)->get();
         return response()->json($return);
+    }
+    public function getProducts($id) {
+        $seller = Jasa::with('seller.logo', 'subcategory.parent', 'additional', 'revisi', 'cover')
+        ->where([
+            ['jasa_id', $id],
+            ['jasa_status', 1]
+            ])
+        ->first();
+        return response()->json($seller);
+    }
+    public function getAdditional($id) {
+        $additional = JasaAdditional::where([
+            ['id', $id],
+            ])
+        ->first();
+        return response()->json($additional);
     }
 
 }

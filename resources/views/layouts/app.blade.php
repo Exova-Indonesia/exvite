@@ -73,12 +73,22 @@
           class="header-icon header-icon-1"
           ><i class="fas fa-shopping-cart"></i
         ></a>
+      @products
         <a
           href="{{ url('/notifications') }}"
           class="header-icon header-icon-4"
           ><i class="fas fa-bell"></i
         ></a>
+        @else
+        <a
+          href="{{ url('/') }}"
+          class="header-icon header-icon-4"
+          ><i class="fas fa-home"></i
+        ></a>
+        @endproducts
       </div>
+
+      @products
       <div id="footer-bar" class="footer-bar-6">
         <a href="{{ url('/studio') }}" class=" @if(Request::is('studio')) active-nav @endif"
           ><i class="fa fa-business-time"></i><span>Studio</span></a
@@ -86,7 +96,7 @@
         <a href="index-pages.html"
           ><i class="fa fa-heart"></i><span>Favorit</span></a
         >
-      <a href="{{ url('/') }}" class="circle-nav @if(Request::is('/')) active-nav @endif">
+      <a href="{{ url('/') }}" class="circle-nav @if(Request::is('/') || Request::is('products/' . strtolower(str_replace(' ', '-', $seller->jasa_name ?? '')))) active-nav @endif">
       <i class="fa fa-home"></i>
       <span>Beranda</span>
       <em></em><strong><u></u></strong></a>
@@ -97,6 +107,8 @@
           ><i class="fa fa-user"></i><span>Akun</span></a
         >
       </div>
+      @endproducts
+
       <div class="page-title page-title-fixed container">
         <h1>@if(Request::is('/')) 
           Exova
@@ -119,11 +131,19 @@
           class="page-title-icon shadow-xl bg-theme color-theme"
           ><i class="fa fa-shopping-cart"></i
         ></a>
+        @products
         <a
           href="{{ url('notifications') }}"
           class="page-title-icon shadow-xl bg-theme color-theme"
           ><i class="fa fa-bell"></i
         ></a>
+        @else
+        <a
+          href="{{ url('/') }}"
+          class="page-title-icon shadow-xl bg-theme color-theme"
+          ><i class="fa fa-home"></i
+        ></a>
+        @endproducts
       </div>
       <div class="page-title-clear"></div>
       <div

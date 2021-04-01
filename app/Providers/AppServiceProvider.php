@@ -40,6 +40,14 @@ class AppServiceProvider extends ServiceProvider
                 return 1;
             }
         });
+
+        Blade::if('products', function () {
+            if($this->app->request->segment(1) == 'products') {
+                return 0;
+            } else {
+                return 1;
+            }
+        });
     }
 
 

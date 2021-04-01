@@ -76,6 +76,8 @@ Route::middleware('auth')->prefix('/web/v2')->group(function() {
     Route::get('/subcategory/{id}', [App\Http\Controllers\ApiController::class, 'getSubCategory'])->name('api.subcategory');
     Route::get('/category', [App\Http\Controllers\ApiController::class, 'getCategory'])->name('api.category');
     Route::get('/products/pictures/{id}', [App\Http\Controllers\ApiController::class, 'getPictures'])->name('api.pictures');
+    Route::get('/products/{id}', [App\Http\Controllers\ApiController::class, 'getProducts'])->name('api.products');
+    Route::get('/products/additional/{id}', [App\Http\Controllers\ApiController::class, 'getAdditional'])->name('api.additional.products');
 });
     Route::get('/provinces', [App\Http\Controllers\ApiController::class, 'provinces']);
     Route::get('/regencies/{id}', [App\Http\Controllers\ApiController::class, 'regencies']);
