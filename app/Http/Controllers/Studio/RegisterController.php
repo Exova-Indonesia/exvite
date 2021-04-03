@@ -38,7 +38,7 @@ class RegisterController extends Controller
      */
     public function store(Request $request)
     {
-        $logo = StudioLogo::where('folder', $request->studio_logo)->first();
+        $logo = StudioLogo::where('id', $request->studio_logo)->first();
         Studio::create([
             'prefix' => 'EX-' . date('his') . rand(0, 9999),
             'user_id' => auth()->user()->id,
