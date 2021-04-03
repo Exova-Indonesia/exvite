@@ -58,7 +58,7 @@
             </p>
             <br/>
             <a class="font-600 color-highlight"
-              >{{ $seller->address->district['name'] . ', ' . $seller->address->province['name'] }}</a
+              >{{ $seller->address->district['name'] ?? '' }}, {{ $seller->address->province['name'] ?? '' }}</a
             >
             <p class="opacity-60 font-12 pt-2">
               Owned by <a href="{{ url('/users/' . strtolower(str_replace(' ', '-', $seller->owner['name']))) }}" class="color-theme font-600">{{ $seller->owner['name'] }}</a>
@@ -185,7 +185,7 @@
           <label for="villages" class="color-theme opacity-50 text-uppercase font-700 font-10">Kelurahan</label>
         </div>
         <div class="input-style input-style-always-active has-borders has-icon mb-4">    
-          <textarea type="text" class="form-control" name="address" id="addr" >{{ $seller->address->address }}</textarea>
+          <textarea type="text" class="form-control" name="address" id="addr" >{{ $seller->address->address ?? '' }}</textarea>
           <label for="addr" class="color-theme opacity-50 text-uppercase font-700 font-10">Alamat Lengkap</label>
         </div>
         <div class="input-style input-style-always-active has-borders has-icon mb-4">    
