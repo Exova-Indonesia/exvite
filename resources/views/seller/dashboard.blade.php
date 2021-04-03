@@ -58,7 +58,7 @@
             </p>
             <br/>
             <a class="font-600 color-highlight"
-              >{{ $seller->address->district['name'] ?? '' }}, {{ $seller->address->province['name'] ?? '' }}</a
+              >{{ $seller->address->district['name'] ?? ''}} {{ $seller->address->province['name'] ?? '' }}</a
             >
             <p class="opacity-60 font-12 pt-2">
               Owned by <a href="{{ url('/users/' . strtolower(str_replace(' ', '-', $seller->owner['name']))) }}" class="color-theme font-600">{{ $seller->owner['name'] }}</a>
