@@ -12,7 +12,7 @@ class Jasa extends Model
     protected $primaryKey = 'jasa_id';
     protected $fillable = [
         'jasa_id',
-        'user_id',
+        'studio_id',
         'jasa_name',
         'jasa_subcategory',
         'jasa_deskripsi',
@@ -29,7 +29,7 @@ class Jasa extends Model
     }
 
     public function seller() {
-        return $this->belongsTo(Studio::class, 'user_id');
+        return $this->belongsTo(Studio::class, 'studio_id');
     }
 
     public function revisi() {

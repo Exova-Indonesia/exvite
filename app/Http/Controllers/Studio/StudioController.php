@@ -49,7 +49,7 @@ class StudioController extends Controller
         $studio = Studio::where('user_id', auth()->user()->id)->first();
         $jasa = Jasa::create([
             'jasa_id' => date('ymd') . rand(),
-            'user_id' => $studio->id,
+            'studio_id' => $studio->id,
             'jasa_name' => $request->title,
             'jasa_deskripsi' => $request->description,
         ]);
@@ -66,7 +66,7 @@ class StudioController extends Controller
     {
         $seller = Studio::with(
             ['portfolio.subcategory.parent',
-             'owner', 'logo', 
+             'owner', 'logo',
              'address.province', 'address.district',
               'portfolio.cover', 'portfolio' => function($q) {
             $q->where('jasa_status', true);
@@ -100,7 +100,7 @@ class StudioController extends Controller
         $data = Jasa::with('seller', 'subcategory', 'revisi', 'additional', 'pictures')
         ->where([
             ['jasa_name', $slugs],
-            ['user_id', $studio->id],
+            ['studio_id', $studio->id],
             ])
         ->first();
         if($data) {
@@ -172,7 +172,7 @@ class StudioController extends Controller
             'description' => $request->description,
             'logo_id' => ($request->studio_logo) ? $request->studio_logo : $data->logo_id,
         ]);
-        
+
         // $address = StudioAddress::where('studio_id', $data->id);
         // if(! empty($address)) {
         //     $address->update([

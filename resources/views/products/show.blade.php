@@ -270,9 +270,11 @@
                           <select class="add-additional" id="form5">
                             <option value="{{ $p->id . '-' . 0 }}" selected hidden>Pilih Paket</option>
                             <option value="{{ $p->id . '-' . 0 }}">Tidak perlu</option>
-                            @for($i=1; $i<10; $i++)
-                            <option value="{{ $p->id . '-' . $i }}">+{{ $i * $p->add_day . ' Hari' . ' - ' . 'Rp' . number_format($i * $p->price, 0) }}</option>
-                            @endfor
+                            @if ($seller->additional)
+                              @for($i=1; $i<10; $i++)
+                              <option value="{{ $p->id . '-' . $i }}">+{{ $i * $p->add_day . ' Hari' . ' - ' . 'Rp' . number_format($i * $p->price, 0) }}</option>
+                              @endfor
+                            @endif
                           </select>
                           <span><i class="fa fa-chevron-down"></i></span>
                           <i class="fa fa-check disabled valid color-green-dark"></i>
@@ -320,13 +322,13 @@
                 ` + diskusi.content + `
               </p>
               <div class="text-right">
-                <span role="button" class="text-exova-2 font-500 show_comment">` + (diskusi.comment).length + ` Balasan</span> |  
+                <span role="button" class="text-exova-2 font-500 show_comment">` + (diskusi.comment).length + ` Balasan</span> |
                 <span role="button" class="text-exova-2 font-500 add_comment" data-label="comment" data-id="` + diskusi.id + `">Balas</span>
               </div>
             <div class="divider divider-margins mb-3"></div>
             <div class="container">`;
               $.each((diskusi.comment).slice(0, count), function(i, comment) {
-                content += ` 
+                content += `
                   <div class="content">
                     <div class="d-flex">
                       <div class="flex-grow-1">

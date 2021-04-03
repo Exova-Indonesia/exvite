@@ -11,7 +11,7 @@ class Studio extends Model
     protected $primaryKey = 'id';
     protected $fillable = [
         'prefix',
-        'user_id',
+        'studio_id',
         'name',
         'description',
         'address_id',
@@ -22,9 +22,9 @@ class Studio extends Model
     ];
 
     public function portfolio() {
-        return $this->hasMany(Jasa::class, 'user_id');
+        return $this->hasMany(Jasa::class, 'studio_id');
     }
-    
+
     public function logo() {
         return $this->belongsTo(StudioLogo::class, 'logo_id');
     }
