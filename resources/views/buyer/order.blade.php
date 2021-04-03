@@ -86,13 +86,15 @@
                         <ul class="list-group">
                             <li class="list-group-item">
                                 <div class="mb-2">
-                                <span class="text-muted">@lang('payments.cart.subtotal') ({{ count($order) }})</span>
-                                    <span class="float-right text-right buy_price_cart"></span>
+                                <div class="title-order">
+                                    <span class="text-muted">@lang('payments.cart.subtotal') ({{ count($order) }})</span>
+                                        <span class="float-right text-right buy_price_cart"></span>
+                                    </div>
                                 </div>
                             </li>
                             <li class="list-group-item">
                                 <strong>Total Tagihan</strong>
-                                <span class="float-right text-right buy_price_cart"></span>
+                                <span class="float-right text-right total_price"></span>
                             </li>
                             <button type="button" class="btn btn-success savenext">Simpan & Lanjutkan</button>
 

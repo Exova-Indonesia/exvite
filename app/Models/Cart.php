@@ -9,6 +9,7 @@ class Cart extends Model
 {
     use HasFactory;
     protected $table = 'cart_products';
+    protected $primaryKey = 'cart_id';
     protected $fillable = [
         'cart_id',
         'user_id',
@@ -17,9 +18,6 @@ class Cart extends Model
         'quantity',
         'note',
         'unit_price',
-        'example',
-        'example_ori',
-        'deadline',
     ];
     public function user() {
         return $this->belongsTo(User::class, 'user_id');
@@ -29,5 +27,11 @@ class Cart extends Model
     }
     public function plan() {
         return $this->belongsTo(Subscription::class, 'product_id');
+    }
+    public function details() {
+        return $this->hasOne(CartDetails::class, 'cart_id');
+    }
+    public function additional() {
+        return $this->hasMany(CartAdditional::class, 'cart_id');
     }
 }

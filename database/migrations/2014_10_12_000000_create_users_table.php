@@ -1,4 +1,4 @@
-<?php
++<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->char('phone', 13)->nullable();
             $table->bigInteger('sex')->nullable()->unsigned();
-            $table->bigInteger('avatar')->unsigned();
+            // $table->bigInteger('avatar')->unsigned();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->string('api_token')->nullable();

@@ -6,6 +6,8 @@ use Lang;
 use Auth;
 use App\Models\Subscription;
 use App\Models\Cart;
+use App\Models\CartDetails;
+use App\Models\CartAdditional;
 use App\Models\Jasa;
 use App\Models\OrderDetails;
 use App\Models\OrderJasa;
@@ -20,7 +22,7 @@ class CartController extends Controller
         // return response()->json($jasa);
     }
     public function cart_data() {
-        $jasa = Cart::where('user_id', Auth::user()->id)->get();
+        $jasa = Cart::with('additional.additional')->where('user_id', Auth::user()->id)->get();
         return response()->json($jasa);
     }
 
@@ -36,26 +38,34 @@ class CartController extends Controller
             return response()->json(['status' => Lang::get('validation.cart.next.failed'), 'code' => 401]);
         } else {
             $carts = array();
+            $additional = array();
             foreach($request->cart_id as $c) {
                 $type = Cart::where('cart_id', $c)->first();
                 $order_id = date('hi').rand();
                 $p = Cart::with('plan')->where('cart_id', $type->cart_id)->first();
                 switch($type->product_type) {
                     case "Jasa" :
-                        $p = Cart::with('user', 'jasa.seller', 'jasa.cover')->where('cart_id', $type->cart_id)->first();
+                        $p = Cart::with('user', 'jasa.seller', 'jasa.cover', 'jasa.subcategory', 'details', 'additional.additional')->where('cart_id', $type->cart_id)->first();
+                        foreach($p->additional as $a) {
+                            $additional[] = array(
+                                'additional_id' => $a->additional['id'],
+                                'quantity' => $a->quantity,
+                            );
+                        }
+
                         $carts[] = array(
-                        'id'=>$p->cart_id,
-                        'name' => $p->jasa->jasa_name,
-                        'price' => $p->unit_price,
-                        'picture' => $p->jasa->cover['small'],
-                        'quantity' => $p->quantity,
-                        'category' => $p->jasa->jasa_subcategory,
-                        'type' => $p->product_type,
-                        'note' => $p->note,
-                        'deadline' => $p->deadline,
-                        'example' => $p->example,
-                        'example_ori' => $p->example_ori,
-                    );
+                            'id'=>$p->cart_id,
+                            'name' => $p->jasa->jasa_name,
+                            'price' => $p->unit_price,
+                            'picture' => $p->jasa->cover['small'],
+                            'quantity' => $p->quantity,
+                            'category' => $p->jasa->subcategory['parent']['name'],
+                            'type' => $p->product_type,
+                            'note' => $p->details['note'],
+                            'deadline' => $p->details['deadline'],
+                            'example' => $p->details['example'],
+                            'additional' => $additional,
+                        );
                     break;
 
                     case "Subscription" :
@@ -85,11 +95,11 @@ class CartController extends Controller
                         'note' => $p->note,
                     );
                     break;
-                }
-                if(! in_array($request->session()->get('cart_shopping'), $carts)) {
-                    return $request->session()->put('cart_shopping', $carts);
+                    default: 
+                    return back();
                 }
             }
+            return $request->session()->put('cart_shopping', $carts);
         }
     }
     public function tes_session(Request $request) {
@@ -102,20 +112,42 @@ class CartController extends Controller
     }
 
     public function add(Request $request) {
-        $check = Cart::where([
-            ['user_id', Auth::user()->id],
-            ['product_id', $request->id]])->first();
-        if(!empty($check)) {
-            return response()->json(['statusMessage' => Lang::get('validation.cart.add.limit')], 400);
-        }
         $data = Jasa::where('jasa_id', $request->id)->first();
-        Cart::create([
+        $cart = Cart::firstOrCreate([
             'product_id' => $data->jasa_id,
             'user_id' => Auth::user()->id,
             'product_type' => "Jasa",
             'unit_price' => $data->jasa_price,
             'quantity' => 1,
         ]);
+        CartDetails::updateOrCreate([
+            'cart_id' => $cart->cart_id,
+        ],
+        [
+            'cart_id' => $cart->cart_id,
+            'notes' => $request->notes ?? '',
+            'example' => $request->example ?? '',
+            'deadline' => $request->deadline ?? null,
+        ]);
+        if(! empty($request->add)) {
+            foreach($request->add as $a) {
+                CartAdditional::updateOrCreate([
+                    'cart_id' => $cart->cart_id,
+                    'additional_id' => $a[0],
+                ],
+                [
+                    'cart_id' => $cart->cart_id,
+                    'additional_id' => $a[0],
+                    'quantity' => $a[1],
+                ]);
+                if($a[1] == 0) {
+                    CartAdditional::where([
+                        ['cart_id', $cart->cart_id],
+                        ['additional_id', $a[0]],
+                    ])->delete();
+                }
+            }
+        }
         return response()->json(['statusMessage' => Lang::get('validation.cart.add.success')]);
     }
 

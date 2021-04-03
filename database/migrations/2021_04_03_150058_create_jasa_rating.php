@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCartProducts extends Migration
+class CreateJasaRating extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,16 @@ class CreateCartProducts extends Migration
      */
     public function up()
     {
-        Schema::create('cart_products', function (Blueprint $table) {
-            $table->id('cart_id');
-            $table->bigInteger('product_id');
+        Schema::create('jasa_rating', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('jasa_id')->unsigned();
             $table->bigInteger('user_id')->unsigned();
-            $table->string('product_type');
-            $table->decimal('unit_price');
-            $table->string('quantity');
-            $table->timestamps();
+            $table->tinyInteger('rating');
+            $table->string('content');
 
+            $table->foreign('jasa_id')->references('jasa_id')->on('jasa_products')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
@@ -33,6 +33,6 @@ class CreateCartProducts extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cart_products');
+        Schema::dropIfExists('jasa_rating');
     }
 }

@@ -8497,6 +8497,18 @@ input[type="button"].btn-block {
 .text-primary {
     color: #0d6efd !important;
 }
+.text-exova-1 {
+    color: #479cf7 !important;
+}
+.text-exova-2 {
+    color: #f8694a !important;
+}
+.bg-exova-1 {
+    background-color: #479cf7 !important;
+}
+.bg-exova-2 {
+    background-color: #f8694a !important;
+}
 .text-secondary {
     color: #6c757d !important;
 }
@@ -11818,6 +11830,11 @@ h5,
 }
 a {
     text-decoration: none !important;
+    transition: all 0.4s;
+}
+a:hover {
+    color: #0d6efd !important;
+    transition: all 0.4s;
 }
 p {
     color: #727272;
@@ -15626,7 +15643,7 @@ textarea {
 }
 .input-style {
     position: relative;
-    margin-bottom: 15px !important;
+    /* margin-bottom: 15px !important; */
 }
 .input-style input,
 .input-style select,

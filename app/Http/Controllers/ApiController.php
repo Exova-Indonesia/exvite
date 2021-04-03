@@ -12,8 +12,10 @@ use App\Models\OrderJasaResult;
 use App\Models\OrderRevision;
 use App\Models\SubCategory;
 use App\Models\JasaPicture;
+use App\Models\JasaRevision;
 use App\Models\JasaAdditional;
 use App\Models\Jasa;
+use App\Models\JasaRating;
 
 class ApiController extends Controller
 {
@@ -122,7 +124,11 @@ class ApiController extends Controller
         return response()->json($return);
     }
     public function getProducts($id) {
-        $seller = Jasa::with('seller.logo', 'subcategory.parent', 'additional', 'revisi', 'cover')
+        $seller = Jasa::with('seller.logo', 
+        'subcategory.parent', 'additional', 
+        'revisi', 'cover', 'diskusi.comment.comment_child',
+        'diskusi.users', 'diskusi.comment.users', 
+        'diskusi.comment.comment_child.users')
         ->where([
             ['jasa_id', $id],
             ['jasa_status', 1]
@@ -135,7 +141,18 @@ class ApiController extends Controller
             ['id', $id],
             ])
         ->first();
+        if(! $additional) {
+        $additional = JasaRevision::where([
+            ['id', $id],
+            ])
+        ->first();
+        }
         return response()->json($additional);
+    }
+
+    public function getRating($id) {
+        $data = JasaRating::with('users.avatar')->where('jasa_id', $id)->get();
+        return response()->json($data);
     }
 
 }

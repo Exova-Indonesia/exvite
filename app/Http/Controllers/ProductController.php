@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Jasa;
+use App\Models\JasaFavorit;
+use App\Models\JasaDiskusi;
+use App\Models\JasaDiskusiComment;
+use App\Models\JasaDiskusiCommentChild;
 
 class ProductController extends Controller
 {
@@ -39,6 +43,34 @@ class ProductController extends Controller
     }
 
     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function add_diskusi(Request $request)
+    {
+        switch($request->label) {
+            case "diskusi":
+                JasaDiskusi::create([
+                    'user_id' => auth()->user()->id,
+                    'jasa_id' => $request->id,
+                    'content' => $request->content,
+                ]);
+            break;
+            case "comment":
+                JasaDiskusiComment::create([
+                    'user_id' => auth()->user()->id,
+                    'diskusi_id' => $request->id,
+                    'content' => $request->content,
+                ]);
+            break;
+            default:
+            return response()->json(['statusMessage' => 'Terjadi tindakan illegal!']);
+        }
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  int  $id
@@ -47,7 +79,11 @@ class ProductController extends Controller
     public function show($id)
     {
         $slugs = str_replace('-', ' ', $id);
-        $seller = Jasa::with('seller.logo', 'subcategory.parent', 'additional', 'revisi', 'cover')
+        $seller = Jasa::with(['seller.logo', 'seller.address', 
+        'subcategory.parent', 'additional', 'revisi', 'cover', 
+        'rating.users', 'seller.portfolio' => function($q) {
+            $q->take(4);
+        }])
         ->where([
             ['jasa_name', $slugs],
             ['jasa_status', 1]
@@ -91,6 +127,26 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         //
+    }
+
+    /**
+     * Add Favorite the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function add_favorite(Request $request)
+    {
+        $fav = JasaFavorit::firstOrCreate([
+            'user_id' => auth()->user()->id,
+            'jasa_id' => $request->id,
+        ]);
+        if($fav) {
+            return response()->json(['statusMessage' => 'Berhasil menambah ke favorit']);
+        } else {
+            return response()->json(['statusMessage' => 'Gagal menambah ke favorit'], 400);
+        }
     }
 
     /**

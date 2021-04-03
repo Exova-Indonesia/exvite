@@ -45,11 +45,13 @@ class NotificationController extends Controller
      */
     public function show($id)
     {
-        if(! in_array($id, ['penjualan', 'pembelian', 'update', 'pesan'])) {
-            return redirect(url('/notifications/update'));
+        if(in_array($id, ['penjualan', 'pembelian'])) {
+            return view('buyer.pesanan');
+        } else if(in_array($id, ['update', 'pesan'])) {
+            return view('notifications');
+        } else {
+            return redirect()->back();
         }
-        $balance = WalletController::index()->balance;
-        return view('notifications', ['balance' => $balance]);
     }
 
     /**

@@ -100,7 +100,7 @@
       <i class="fa fa-home"></i>
       <span>Beranda</span>
       <em></em><strong><u></u></strong></a>
-        <a href="{{ url('/bookings') }}" class=" @if(Request::is('notifications/pembelian') || Request::is('notifications/penjualan')) active-nav @endif"
+        <a href="{{ url('/notifications/pembelian') }}" class=" @if(Request::is('notifications/pembelian') || Request::is('notifications/penjualan')) active-nav @endif"
           ><i class="fa fa-shopping-bag"></i><span>Pesanan</span></a
         >
         <a href="{{ url('/profile') }}" class="@if(Request::is('profile')) active-nav @endif"
@@ -172,6 +172,24 @@
           <a href="#" class="close-menu btn btn-m btn-center-l button-s shadow-l rounded-s text-uppercase font-600 bg-white color-black">Hmmm, Yaudah deh</a>
       </div>
     <div class="menu-hider"></div>
+
+    <!-- Modal Review -->
+    <div class="modal fade" id="modalReview" tabindex="-1" role="dialog" aria-labelledby="modalReviewLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalReviewLabel">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
     </div>
     @yield('scripts')
 </body>

@@ -145,14 +145,14 @@
                                         <h5 class="font-14 price-rating">Rp{{ number_format($f->jasa_price, 0) }}<span class="float-right"><i class="fa fa-star text-warning"></i>{{ $f->jasa_rating }}</span></h5>
                                         </a>
                                         <div class="d-flex footer-products">
-                                            <div class="likers" role="button" data-id="{{ $f->jasa_id }}" title="Tambah ke favorit">
+                                            <div class="likers favorit-add" role="button" data-id="{{ $f->jasa_id }}" title="Tambah ke favorit">
                                                 <i class="fa fa-heart"></i>
                                             </div>
                                             <div class="cart-add" role="button" data-id="{{ $f->jasa_id }}" title="Tambah ke keranjang">
                                                 <i class="fa fa-shopping-cart"></i>
                                             </div>
-                                            <div class="comments font-11" role="button">
-                                                Tambah Diskusi
+                                            <div class="comments font-11" role="button" data-id="{{ $f->jasa_id }}" data-target="#modalReview" data-toggle="modal">
+                                                {{ $f->rating->count() }} Reviews
                                             </div>
                                         </div>
                                     </div>
@@ -213,6 +213,42 @@
 @section('scripts')
 <script>
   $(document).ready(function() {
+    $('#modalReview').on('show.bs.modal', function(e) {
+      let btn = $(e.relatedTarget);
+      $.ajax({
+        url: "{{ url('web/v2/rating') }}/" + btn.data('id'),
+        type: "GET",
+        success: function(data) {
+          let content = ``;
+          $.each(data, function(i, data) {
+            content += `
+              <div class="row m-0">
+                <div class="me-2">
+                  <img class="rounded-circle" src="` + data.users.avatar.small + `" width="50" height="50" alt="Profile Picture">
+                </div>
+                <div class="review-content">
+                  <h5 class="m-0">` + data.users.name + `</h5>
+                  <p class="m-0">` + data.content + `</p>
+                </div>
+                <div class="ml-auto text-right">
+                  <div><small>` + new Date(data.created_at).toDateString() + `</small></div>
+                  <div><small>` + numeral(data.rating).format('0.00') + ` <i class="fa fa-star text-warning"></i> </small></div>
+                </div>
+              </div>
+              <div class="divider m-3"></div>
+            `;
+          });
+          $('.modal-body').html(content)
+          $('.modal-title').html('Review & Rating')
+        },
+        error: function(data) {
+          // 
+        },
+        beforeSend: function(data) {
+          $('.modal-body').html('Loading...');
+        }
+      });
+    });
     $(".delete-cart").on("click", function (event) {
       $.ajaxSetup({
             headers: {
@@ -265,6 +301,28 @@
               $(".error-message").text(JSON.parse(data.responseText).statusMessage);
             },
         });
+    });
+    $(".favorit-add").on("click", function () {
+      let id;
+      id = $(this).attr("data-id");
+      $.ajax({
+        url: "{{ route('products.favorit') }}",
+        type: "POST",
+        data: { id: id },
+        headers: {
+          "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function (data) {
+          $('#menu-success-2').addClass('menu-active');
+          $('.menu-hider').addClass('menu-active');
+          $(".success-message").text(data.statusMessage);
+        },
+        error: function (data) {
+          $('#menu-warning-2').addClass('menu-active');
+          $('.menu-hider').addClass('menu-active');
+          $(".error-message").text(JSON.parse(data.responseText).statusMessage);
+        },
+      });
     });
   });
 </script>

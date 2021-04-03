@@ -78,6 +78,7 @@ Route::middleware('auth')->prefix('/web/v2')->group(function() {
     Route::get('/products/pictures/{id}', [App\Http\Controllers\ApiController::class, 'getPictures'])->name('api.pictures');
     Route::get('/products/{id}', [App\Http\Controllers\ApiController::class, 'getProducts'])->name('api.products');
     Route::get('/products/additional/{id}', [App\Http\Controllers\ApiController::class, 'getAdditional'])->name('api.additional.products');
+    Route::get('/rating/{id}', [App\Http\Controllers\ApiController::class, 'getRating'])->name('api.rating');
 });
     Route::get('/provinces', [App\Http\Controllers\ApiController::class, 'provinces']);
     Route::get('/regencies/{id}', [App\Http\Controllers\ApiController::class, 'regencies']);
@@ -167,6 +168,8 @@ Route::middleware('auth', 'cartsession')->group(function() {
 // Products Page
 Route::middleware('auth')->group(function() {
     Route::resource('/products', App\Http\Controllers\ProductController::class);
+    Route::post('/favorite/products', [App\Http\Controllers\ProductController::class, 'add_favorite'])->name('products.favorit');
+    Route::post('/diskusi/new', [App\Http\Controllers\ProductController::class, 'add_diskusi'])->name('diskusi.new');
 });
 
 
