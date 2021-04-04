@@ -7,6 +7,8 @@ use Storage;
 use Lang;
 use Validator;
 use App\Models\Cart;
+use App\Models\CartDetails;
+use App\Models\CartAdditional;
 use App\Models\OrderJasa;
 use App\Models\OrderRevision;
 use Illuminate\Http\Request;
@@ -51,19 +53,7 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $f = $request->file('example');
-        $f_name = 'example-from-order-' . $request->id . '-' . Auth::user()->id . '.' . $f->getClientOriginalExtension();
-        $r = Storage::putFileAs(Auth::user()->id . '/order/' . 'example/' . $request->id, $f, $f_name);
-
-        $v = Cart::where('cart_id', $request->id)->update([
-            'example' => asset('storage/' . $r),
-            'example_ori' => $f->getClientOriginalName(),
-        ]);
-        if($v) {
-            return response()->json(['status' => Lang::get('validation.cart.upload.success'), 'files' => $f->getClientOriginalName()]);
-        } else {
-            return response()->json(['status' => Lang::get('validation.cart.upload.failed'), 'files' => $f->getClientOriginalName()]);
-        }
+        // 
     }
 
     /**
@@ -75,7 +65,7 @@ class OrderController extends Controller
     public function show($id)
     {
         $data = OrderJasa::with(['customer', 'products.seller',
-        'products.cover', 'details',
+        'products.cover', 'details.additional',
         'revisiDetail' => function($query) {
             $query->latest('created_at');
         }])->where('order_id', $id)->first();
@@ -127,21 +117,37 @@ class OrderController extends Controller
     {
         switch($request->type) {
             case 'Date':
-                Cart::where('cart_id', $request->id)->update([
+                CartDetails::updateOrCreate([
+                    'cart_id' => $request->id,
+                ],
+                [
                     'deadline' => $request->content,
                 ]);
                 break;
             case 'Note':
-                Cart::where('cart_id', $request->id)->update([
-                    'note' => $request->content,
+                CartDetails::updateOrCreate([
+                    'cart_id' => $request->id,
+                ],
+                [
+                    'notes' => $request->content,
                 ]);
                 break;
-            case 'File':
-                Cart::where('cart_id', $request->id)->update([
-                    'example' => '',
-                    'example_ori' => '',
+            case 'Additional':
+                $data = explode('-', $request->content);
+                CartAdditional::updateOrCreate([
+                    'cart_id' => $request->id,
+                    'additional_id' => $data[0],
+                ],
+                [
+                    'additional_id' => $data[0],
+                    'quantity' => $data[1],
                 ]);
-                return response()->json(['status' => Lang::get('validation.cart.deletefile.success'), 'type' => 'File']);
+                if($data[1] == 0) {
+                    CartAdditional::where([
+                        ['cart_id', $request->id,],
+                        ['additional_id', $data[0]],
+                    ])->delete();
+                }
                 break;
             case 'orderan':
                 OrderJasa::where('order_id', $request->id)->update([

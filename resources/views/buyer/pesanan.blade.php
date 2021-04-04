@@ -367,7 +367,7 @@ $(document).ready(function() {
                                 <tbody>
                                     <tr>
                                         <td>Pembayaran</td>
-                                        <td class="text-right text-capitalize font-weight-bold">Rp`+ numeral(data.details.unit_price).format('0,0') +`</td>
+                                        <td class="text-right text-capitalize font-weight-bold">Rp`+ numeral(data.details.subtotal).format('0,0') +`</td>
                                     </tr>
                                     <tr>
                                         <td>Pembeli</td>
@@ -380,8 +380,17 @@ $(document).ready(function() {
                                     <tr>
                                         <td>Pesanan</td>
                                         <td class="text-right font-weight-bold">`+ data.products.jasa_name +`</td>
-                                    </tr>
-                                    <tr>
+                                    </tr>`;
+                                    $.each(data.details.additional, function(i, data) {
+                                        content +=
+                                        `<tr>
+                                            <td>Layanan Tambahan</td>
+                                            <td class="text-right font-weight-bold">`+ data.title +`</td>
+                                        </tr>`;
+                                    })
+
+                                    content +=
+                                    `<tr>
                                         <td>Deadline</td>
                                         <td class="text-right font-weight-bold">`+ new Date(data.deadline).toDateString() +`</td>
                                     </tr>

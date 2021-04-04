@@ -48,6 +48,24 @@ class AppServiceProvider extends ServiceProvider
                 return 1;
             }
         });
+
+        Blade::if('cart', function () {
+            if($this->app->request->segment(1) == 'cart') {
+                return 0;
+            } else {
+                return 1;
+            }
+        });
+
+        Blade::if('basemenu', function () {
+            $url = $this->app->request->segment(1);
+            $url2 = $this->app->request->segment(2);
+            if(($url == 'profile') || ($url == 'notifications') || ( $url == '')) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
     }
 
 

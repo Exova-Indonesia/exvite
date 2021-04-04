@@ -3,8 +3,8 @@
 <div class="container mb-5">
     <div class="col-lg-12">
         <div class="row m-0">
-            <div class="col-lg-7 col-sm-12 p-0 mx-1">
-                <div class="card mb-2 border-0">
+            <div class="col-lg-8 col-sm-12 p-0">
+                <div class="card mb-2 border-0 mx-1">
                     <div class="card-header border-0 bg-white">
                         <h5 class="m-0">Detail Pesanan</h5>
                     </div>
@@ -22,11 +22,10 @@
                                     </div>
                                 </div>
                             </li>
-                            <?php $i = 1; ?>
                             @foreach($order as $o)
                             <li class="list-group-item parent" data-id="{{ $o->cart_id }}">
                                 <div class="form-group p-0 col-md-12">
-                                    <div class="mb-2"><strong>Pesanan <?php echo $i++ ?></strong></div>
+                                    <div class="mb-2"><strong>Pesanan {{ $loop->iteration }}</strong></div>
                                     <div class="mb-3">
                                         <h5 class="m-0"> @if($o->product_type == 'Jasa') 
                                             {{ $o->jasa->seller->name }}
@@ -50,22 +49,34 @@
                                 @if($o->product_type == 'Jasa')
                                 <div class="row m-0">
                                     <div class="form-group col-lg-6 col-sm-12">
-                                        <div class="input-style input-style-always-active has-borders has-icon mb-4">    
-                                            <input type="date" data-id="{{ $o->cart_id }}" class="form-control" id="title" value="{{ date('Y-m-d', strtotime($o->deadline)) }}">
-                                            <label for="title" class="color-theme opacity-50 text-uppercase font-700 font-10">Deadline Proyek</label>
+                                        <div class="mx-1 input-style input-style-always-active has-borders has-icon mb-4">    
+                                            <input type="date" data-id="{{ $o->cart_id }}" class="form-control deadlines" value="{{ date('Y-m-d', strtotime($o->details['deadline'] ?? '')) }}">
+                                            <label for="dates" class="color-theme opacity-50 text-uppercase font-700 font-10">Deadline Proyek</label>
                                         </div>
-                                        @error('produk')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
                                     </div>
+                                    @foreach($o->jasa->additional as $key=>$a)
                                     <div class="form-group col-lg-6 col-sm-12">
-                                        <input type="file" data-id="{{ $o->cart_id }}" name="example" class="form-control" id="examples">
+                                        <div class="mx-1 input-style input-style-always-active has-borders has-icon mb-4">    
+                                            <select class="add-additional" name="additional" data-id="{{ $o->cart_id }}" id="form5">
+                                                <option value="{{ $a->id . '-' . 0 }}">Tidak perlu</option>
+                                                @if(count($o->additional) < 1)
+                                                <option value="{{ $a->id . '-' . 0 }}" selected hidden>Pilih Paket</option>
+                                                @endif
+                                                @foreach($o->additional as $x)
+                                                <option value="{{ $a->id . '-' . 0 }}" selected hidden>{{ $x->quantity }}</option>
+                                                @endforeach
+                                                @for($i=1; $i<10; $i++)
+                                                <option value="{{ $a->id . '-' . $i }}">
+                                                    +{{ $i * $a->add_day . ' Hari' . ' - ' . 'Rp' . number_format($i * $a->price, 0) }}</option>
+                                                @endfor
+                                            </select>
+                                            <label class="color-theme opacity-50 text-uppercase font-700 font-10">{{ $a->title }}</label>
+                                        </div>
                                     </div>
+                                    @endforeach
                                     <div class="form-group col-lg-12 mx-1">
                                         <div class="input-style input-style-always-active has-borders has-icon mb-4">    
-                                            <textarea type="text" data-id="{{ $o->cart_id }}" name="notes" class="form-control" id="notes">{{ $o->note }}</textarea>
+                                            <textarea type="text" data-id="{{ $o->cart_id }}" name="notes" class="form-control" id="notes">{{ $o->details['notes'] }}</textarea>
                                             <label for="note" class="color-theme opacity-50 text-uppercase font-700 font-10">Catatan</label>
                                         </div>
                                         <small class="text-mutes cstring{{ $o->cart_id }}"></small>
@@ -77,40 +88,27 @@
                         </ul>
                     </div>
                 </div>
-            <div class="col-lg-4 col-sm-12 mx-1">
+            <div class="col-lg-4 col-sm-12">
                 <div class="card">
-                    <div class="card-header bg-white border-0">
-                        <h5 class="m-0">@lang('payments.cart.paymenttitle')</h5>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <div class="mb-2">
-                                <div class="title-order">
-                                    <span class="text-muted">@lang('payments.cart.subtotal') ({{ count($order) }})</span>
-                                        <span class="float-right text-right buy_price_cart"></span>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <strong>Total Tagihan</strong>
-                                <span class="float-right text-right total_price"></span>
-                            </li>
-                            <button type="button" class="btn btn-success savenext">Simpan & Lanjutkan</button>
-
-                            <!-- <div class="mx-auto">
-                            <div class="row">
-                                <div>
-                                <img width="240px" height="192px" src="{{ asset('/images/icons/shopping_cart.svg') }}" alt="icon">
-                                </div>
-                                <div class="ml-2 my-auto">
-                                <span>
-                                @lang('payments.cart.empty')<br>
-                                <a href="/" class="btn btn-success">@lang('payments.cart.search')</a>
-                                </span>
-                                </div>
-                            </div> -->
-                        </ul> 
+                    <div class="checkout__order mx-1">
+                        <h5 class="text-uppercase m-0">Detail Pembayaran</h5>
+                        <div class="checkout__order__product pb-0">
+                            <ul class="p-0 my-2">
+                                <li>
+                                    <span class="top__text">Jasa</span>
+                                    <span class="top__text__right">Subtotal</span>
+                                </li>
+                                <li class="products_subtotal"></li>
+                            </ul>
+                        </div>
+                        <div class="additional_products">
+                        </div>
+                            <div class="checkout__order__total">
+                            <ul class="p-0 my-2">
+                                <li>Total <span class="total_price"></span></li>
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-exova w-100 savenext">Buat Pesanan</button>
                     </div>
                 </div>
             </div>
@@ -119,43 +117,6 @@
 </div>
 <script>
 $(document).ready(function() {
-    const uploadOptions = {
-        checkValidity: true,
-        labelFileTypeNotAllowed: `Format tidak sesuai`,
-        allowFileEncode: true,
-        allowFileTypeValidation: true,
-        credits: false,
-        labelIdle: `<span class="filepond--label-action">Pilih</span> contoh proyek`,
-        imagePreviewHeight: 175,
-        allowReplace: true,
-        allowFileSizeValidation: true,
-        // maxFiles: maxFiles,
-        maxTotalFileSize: '50MB',
-    }
-    FilePond.registerPlugin(
-        FilePondPluginFileEncode,
-        FilePondPluginImagePreview,
-        FilePondPluginImageExifOrientation,
-        FilePondPluginFileValidateSize,
-        FilePondPluginFileValidateType,
-    );
-    const pond = FilePond.create( document.querySelector('input[name="example"]'), uploadOptions );
-    pond.on('warning', (error, file) => {
-        if(error.body === "Max files") {
-            $('#menu-warning-2').addClass("menu-active");
-            $('.menu-hider').addClass("menu-active");
-            $('.error-message').html("Max files upload is 3");
-        }
-    });
-        FilePond.setOptions({
-        server: { 
-            url: "{{ route('upload.pictures') }}",
-            headers: { 
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-            },
-        },
-    });
-
     let content, id, data, words = 0, cart = [];
     const Toast = Swal.mixin({
         toast: true,
@@ -163,25 +124,64 @@ $(document).ready(function() {
         showConfirmButton: false,
         timer: 3000
     });
+        let calculatePrice = () => {
+            $.getJSON("{{ url('cart/data') }}", function (data) {
+                let subtotal = 0,
+                    total, dataLength,
+                    priceAddTotal = 0,
+                    addContent = `<div class="checkout__order__product pb-0">
+                    <ul class="p-0 my-2">
+                    <li>
+                    <span class="top__text">Tambahan</span>
+                    </li>
+                    <li>`,
+                    addProduct = ``;
+                    dataLength = data.length;
+                    let dataAddLength = 0;
+                    $.each(data, function (i, data) {
+                        $.each(data.additional, function (i, data) {
+                        let priceAdd =
+                            parseInt(data.quantity) *
+                            parseInt(data.additional.price);
+                        priceAddTotal += parseInt(priceAdd);
+                        addContent += `<div>`
+                            + data.additional.title + `(` +data.quantity +`)<span>Rp` +
+                            numeral(
+                                parseInt(data.quantity) *
+                                    parseInt(data.additional.price)
+                            ).format("0,0") +
+                            `</span></div>
+                        `;
+                    });
+                    dataAddLength = data.additional.length;
+                    let prod_price =
+                    parseInt(data.unit_price) * parseInt(data.quantity);
+                    subtotal += parseInt(prod_price);
+                    total = parseInt(subtotal) + parseInt(priceAddTotal);
+                });
+                addContent += `</li></ul></div>`;
+                addProduct +=`Pesanan (` + dataLength + `) <span>` + "Rp" + numeral(subtotal).format("0,0") + `</span>`;
+                if(dataAddLength !== 0) {
+                    $(".additional_products").html(addContent);
+                } else {
+                    $(".additional_products").html('');
+                }
+                $(".products_subtotal").html(addProduct);
+                $(".total_price").html("Rp" + numeral(total).format("0,0"));
+            });
+        };
+
+        calculatePrice();
     function store(id, content, type) {
-        $.ajaxSetup({
-            headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
         $.ajax({
             url: "{{ route('order.update', '"+id+"') }}",
             type: 'PUT',
             data: { id:id, content:content, type:type },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
             success: function(data) {
-                if(data.type == 'File') {
-                    Toast.fire({
-                        icon: 'error',
-                        title: data.status,
-                    })
-                    $('#progress' + id).html('');
-                    $('#uploadFile' + id).val('');
-                }
+                calculatePrice();
             },
             error: function() {
                 //
@@ -193,6 +193,11 @@ $(document).ready(function() {
         id = $(this).attr('data-id');
         content = $(this).val();
         store(id, content, 'Date');
+    });
+    $('select[name=additional]').on('change', function() {
+        id = $(this).attr('data-id');
+        content = $(this).val();
+        store(id, content, 'Additional');
     });
     $('textarea[name=notes]').on('keyup', function() {
         id = $(this).attr('data-id');
@@ -209,25 +214,15 @@ $(document).ready(function() {
         $('.parent').each(function() {
             cart.push($(this).attr('data-id'));
         });
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                'Access-Control-Allow-Origin': '*',
-            }
-        });
         $.ajax({
             url: "{{ route('cart.finish') }}",
             type: "POST",
             data: { cart_id: cart },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            },
             success: function (data) {
-                if (data.status) {
-                    Toast.fire({
-                        icon: 'error',
-                        title: data.status,
-                    })
-                } else {
-                    window.location = '/payments';
-                }
+                window.location = '/payments';
             },
             error: function () {
                 //

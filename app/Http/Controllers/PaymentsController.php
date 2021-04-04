@@ -15,6 +15,7 @@ use App\Models\OrderDetails;
 use App\Models\PayMethod;
 use App\Models\PaymentDetail;
 use App\Models\OrderJasa;
+use App\Models\OrderAdditional;
 use App\Models\OrderExample;
 use Illuminate\Http\Request;
 
@@ -44,6 +45,9 @@ class PaymentsController extends Controller
                 $subtotal_adm = 0;
                 $method = 'QRIS';
                 foreach($data as $d) {
+                    foreach($d['additional'] as $a) {
+                        $subtotal_adm += $a['price'] * $a['quantity'];
+                    }
                     $subtotal_adm += $d['price'] * $d['quantity'];
                 }
                 $fee = array(
@@ -54,6 +58,16 @@ class PaymentsController extends Controller
                 );
                 $item_details = array($fee);
                 foreach($data as $d) {
+                    $add_total = 0;
+                    foreach($d['additional'] as $a) {
+                        $item_details[] = array(
+                            'id'=>$a['additional_id'],
+                            'price'=>$a['price'],
+                            'name'=>$a['title'],
+                            'quantity'=>$a['quantity'],
+                        );
+                    $add_total += $a['price'] * $a['quantity'];
+                    }
                     $item_details[] = array(
                         'id'=>$d['id'],
                         'price'=>$d['price'],
@@ -61,7 +75,8 @@ class PaymentsController extends Controller
                         'quantity'=>$d['quantity'],
                     );
                     $subtotal += $d['price'] * $d['quantity'];
-                    PaymentsController::createOrders($d, $subtotal, $method, $subtotal*0.02, $this->payment_id);
+                    $subtotal = $add_total + $subtotal;
+                    PaymentsController::createOrders($d, $subtotal, $add_total, $method, $subtotal*0.02, $this->payment_id);
                 }
                 $billing_address = array(
                     'address'       => $user->address->address,
@@ -95,6 +110,7 @@ class PaymentsController extends Controller
                     'amount' => $total,
                     'status' => 'pending',
                 ]);
+                $request->session()->forget('cart_shopping');
                 $paymentUrl = \Midtrans\Snap::createTransaction($params)->redirect_url;
                 return response()->json(["link" => $paymentUrl, "method" => $request->method]);
                 break;
@@ -121,7 +137,6 @@ class PaymentsController extends Controller
             default:
                 return back()->with(['error' => Lang::get('validation.pay.nomethod')]);
         }
-        $request->session()->forget('cart_shopping');
     }
     function banks($data, $method) {
         $user = Auth::user();
@@ -134,16 +149,29 @@ class PaymentsController extends Controller
             );
             $item_details = array($fee);
             $subtotal = 0;
-            foreach($data as $d) {
-                $item_details[] = array(
-                    'id'=>$d['id'],
-                    'price'=>$d['price'],
-                    'name'=>$d['name'],
-                    'quantity'=>$d['quantity'],
-                );
-                $subtotal += $d['price'] * $d['quantity'];
-                PaymentsController::createOrders($d, $subtotal, $method, $adm_fee, $this->payment_id);
-            }
+            $add_total = 0;
+                foreach($data as $d) {
+                    $add_total = 0;
+                    foreach($d['additional'] as $a) {
+                        $item_details[] = array(
+                            'id'=>$a['additional_id'],
+                            'price'=>$a['price'],
+                            'name'=>$a['title'],
+                            'quantity'=>$a['quantity'],
+                        );
+                    $add_total += $a['price'] * $a['quantity'];
+                    }
+                    $item_details[] = array(
+                        'id'=>$d['id'],
+                        'price'=>$d['price'],
+                        'name'=>$d['name'],
+                        'quantity'=>$d['quantity'],
+                    );
+                    $subtotal += $d['price'] * $d['quantity'];
+                    $subtotal = $add_total + $subtotal;
+                    PaymentsController::createOrders($d, $subtotal, $add_total, $method, $adm_fee, $this->payment_id);
+                }
+
                 $billing_address = array(
                     'address'       => $user->address->address,
                     'city'          => $user->address->city,
@@ -176,13 +204,14 @@ class PaymentsController extends Controller
                 'amount' => $total,
                 'status' => 'pending',
             ]);
+            request()->session()->forget('cart_shopping');
             $paymentUrl = \Midtrans\Snap::createTransaction($params)->redirect_url;
             // $response = \Midtrans\CoreApi::charge($params);
             return redirect($paymentUrl);
             // return response()->json($paymentUrl);
     }
 
-    function createOrders($d, $subtotal, $method, $adm_fee, $payment_id) {
+    function createOrders($d, $subtotal, $add_total, $method, $adm_fee, $payment_id) {
         $data = Cart::where('cart_id', $d['id'])->first();
         $order_id = date('hi').rand();
         switch($d['type']) {
@@ -203,6 +232,7 @@ class PaymentsController extends Controller
                 ]);
                 break;
             case "Jasa":
+
                 OrderJasa::create([
                     'order_id' => $order_id,
                     'product_id'  =>$data->product_id,
@@ -217,13 +247,23 @@ class PaymentsController extends Controller
                     'order_id' => $order_id,
                     'path' => $d['example'],
                 ]);
-                OrderDetails::create([
+                $details = OrderDetails::create([
                     'order_id' =>$order_id,
                     'payment_id' => $payment_id,
                     'quantity' => $data->quantity,
                     'unit_price' => $data->unit_price,
-                    'subtotal' => $subtotal,
+                    'subtotal' => $data->unit_price*$data->quantity + $add_total,
+                    'additional' => count($data->additional),
                 ]);
+                foreach($data->additional as $d) {
+                    OrderAdditional::create([
+                        'orders_detail_id' =>$details->orders_detail_id,
+                        'additional_id' => $d->additional['id'],
+                        'quantity' => $d['quantity'],
+                        'price' => $d->additional['price'],
+                        'title' => $d->additional['title'],
+                    ]);
+                }
                 break;
                 default:
                 //

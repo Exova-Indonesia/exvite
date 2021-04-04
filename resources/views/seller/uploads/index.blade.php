@@ -115,7 +115,7 @@
                                 <option value="{{ $products->revisi['add_day'] }}" selected hidden>{{ $products->revisi['add_day'] }}</option>
                             @endif
                             @for($i=1; $i<=14; $i++)
-                            <option value="{{ $i }} Hari">{{ $i }} Hari</option>
+                            <option value="{{ $i }}">{{ $i }} Hari</option>
                             @endfor
                             </select>
                             <label for="rev_day" class="color-theme opacity-50 text-uppercase font-700 font-10">Tambahakan Waktu</label>
@@ -307,7 +307,7 @@
                 <div class="input-style col-lg-4 col-sm-5 px-1 input-style-always-active has-borders has-icon mb-4">    
                     <select type="text" class="form-control" placeholder="day" name="add_day">`
                     for(let i=1; i<=14; i++) {
-                        content+=`<option value="`+i+` Hari">`+i+` Hari</option>`
+                        content+=`<option value="`+i+`">`+i+` Hari</option>`
                     }
                     content+=`</select>
                         <label for="addtional_day" class="color-theme opacity-50 text-uppercase font-700 font-10">Tambahan Waktu</label>

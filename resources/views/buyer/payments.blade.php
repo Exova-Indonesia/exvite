@@ -69,36 +69,35 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12 px-1">
+            <div class="col-lg-4 col-sm-12 px-1">
                 <div class="card">
-                    <div class="card-header border-0">
-                        <h5 class="m-0">Payments Detail</h5>
+                <div class="checkout__order mx-1">
+                    <h5 class="text-uppercase m-0">Detail Pembayaran</h5>
+                    <div class="checkout__order__product pb-0">
+                        <ul class="p-0 my-2">
+                            <li>
+                                <span class="top__text"></span>
+                            </li>    
+                            <li>Metode Pembayaran<span class="method">QRIS</span></li>
+                            <li>Biaya Layanan<span class="serv_price"></span></li>
+                        </ul>
                     </div>
-                    <div class="card-body">
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <div>
-                                    <span>Metode Pembayaran</span>
-                                    <span class="float-right text-right method">QRIS</span>
-                                </div>
+                    <div class="checkout__order__product pb-0">
+                        <ul class="p-0 my-2">
+                            <li>
+                                <span class="top__text">Jasa</span>
+                                <span class="top__text__right">Total</span>
                             </li>
-                            <li class="list-group-item">
-                                <div class="mb-2">
-                                <span class="text-muted">Total Pembelian</span>
-                                    <span class="float-right text-right buy_price"></span>
-                                </div>
-                                <div class="mt-2">
-                                <span class="text-muted">Biaya Layanan</span>
-                                    <span class="float-right text-right serv_price"></span>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <strong>Total Pembayaran</strong>
-                                <span class="float-right text-right total"></span>
-                            </li>
-                            <button type="button" class="btn btn-success snap">Bayar</button>
-                        </ul> 
+			    			<li>Total Pembelian <span class="buy_price"></span></li>
+			    		</ul>
                     </div>
+                        <div class="checkout__order__total">
+                        <ul class="p-0 my-2">
+                            <li>Total <span class="total"></span></li>
+                        </ul>
+                    </div>
+                    <button type="button" class="btn btn-exova w-100 snap">Bayar</button>
+                </div>
                 </div>
             </div>
         </div>
@@ -123,12 +122,18 @@
             $(".buy_price").html("IDR " + numeral(subtotal).format("0,0"));
             $(".total").html("IDR " + numeral(total).format("0,0"));
         }
+
         $.getJSON("{{ url('payments/data') }}", function (data) {
             let buy_price,
-                subtotal = 0;
+            subtotal = 0;
             $.each(data[1], function (i, data) {
+                addSubtotal = 0;
+                $.each(data.additional, function(i, add) {
+                    addSubtotal += parseInt(add.price * add.quantity);
+                });
                 buy_price = parseInt(data.price);
                 subtotal += buy_price;
+                subtotal = subtotal + addSubtotal;
                 products +=
                     `
                 <div class="col-lg-12 col-sm-12 px-2">
@@ -167,14 +172,14 @@
                     type: "POST",
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Origin': 'http://exvite.test',
                     },
                     success: function (data) {
-                        console.log(data)
+                        // console.log(data)
                         window.location = data.link;
                     },
                     error: function (data) {
-                        console.log(data);
+                        // console.log(data);
                     }
                 })
             })

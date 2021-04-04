@@ -69,6 +69,7 @@ class ApiController extends Controller
             $q->where('user_id', $value);
         }])
         ->where('status', $submenu)
+        ->orderby('created_at', 'DESC')
         ->get();
         return response()->json($data);
     }
@@ -77,6 +78,7 @@ class ApiController extends Controller
         $data = OrderJasa::with(['customer', 'products.cover'])
         ->where('customer_id', $value)
         ->where('status', $submenu)
+        ->orderby('created_at', 'DESC')
         ->get();
         return response()->json($data);
     }

@@ -4,19 +4,19 @@
     @csrf
 <div class="container mb-5">
     <div class="col-lg-12">
+        @if(! count($data) < 1 )
         <div class="row">
-            <div class="@if(!empty($data[0])) col-lg-8 col-sm-12 @else col-sm-12 col-lg-12 @endif px-1">
+            <div class="@if(! count($data) < 1 ) col-lg-8 col-sm-12 @else col-sm-12 col-lg-12 @endif px-1">
                 <div class="card mb-2 border-0">
                     <div class="card-header border-0">
                         <h5 class="m-0"> @lang('payments.cart.title') </h5>
                     </div>
                     <div class="card-body pt-0">
                         <ul class="list-group">
-                        @if(!empty($data[0]))
                             @foreach($data as $j)
                             <li class="list-group-item border-dashed my-2 parent" data-id="{{ $j->cart_id }}">
                                 <div class="product-cart-body">
-                                    <div class="row">
+                                    <div class="row m-0">
                                         <div class="ml-2 cart-image">
                                             <img width="70" height="70" src="@if($j->product_type == 'Jasa') {{ $j->jasa['cover']['small'] }} @elseif($j->product_type == 'Subscription') https://assets.exova.id/img/1.png @endif" alt="Products Icons">
                                         </div>
@@ -44,40 +44,41 @@
             </div>
             <div class="col-lg-4 col-sm-12 px-1">
                 <div class="card">
-                    <div class="card-header border-0">
-                        <h5 class="m-0">@lang('payments.cart.paymenttitle')</h5>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <div class="mb-2">
-                                <span class="text-muted">@lang('payments.cart.subtotal')</span>
-                                    <span class="float-right text-right buy_price_cart"></span>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <strong>@lang('payments.cart.total')</strong>
-                                <span class="float-right text-right buy_price_cart"></span>
-                            </li>
-                            <button type="button" class="btn btn-success next">@lang('payments.cart.next')</button>
-                            @else
-                            <div class="mx-auto">
-                            <div class="row">
-                                <div>
-                                <img width="240px" height="192px" src="{{ asset('/images/icons/empty_cart.svg') }}" alt="icon">
-                                </div>
-                                <div class="ml-2 my-auto">
-                                <span>
-                                @lang('payments.cart.empty')<br>
-                                <a href="/" class="btn btn-success">@lang('payments.cart.search')</a>
-                                </span>
-                                </div>
-                            </div>
-                            @endif
-                        </ul> 
+                    <div class="checkout__order mx-1">
+                        <h5 class="text-uppercase m-0">@lang('payments.cart.paymenttitle')</h5>
+                        <div class="checkout__order__product pb-0">
+                            <ul class="p-0 my-2">
+                                <li class="products_subtotal"></li>
+                            </ul>
+                        </div>
+                            <div class="checkout__order__total">
+                            <ul class="p-0 my-2">
+                                <li>@lang('payments.cart.total') <span class="total_price"></span></li>
+                            </ul>
+                        </div>
+                        <button type="button" class="btn btn-exova w-100 next">@lang('payments.cart.next')</button>
                     </div>
                 </div>
             </div>
+            @else
+            <div class="card">
+                <div class="d-flex my-5">
+                    <div class="text-center m-auto">
+                        <div class="row m-0">
+                            <div class="m-auto">
+                                <img width="240px" height="192px" src="{{ asset('/images/icons/empty_cart.svg') }}" alt="icon">
+                            </div>
+                            <div class="ml-2 my-auto">
+                                <span>
+                                    @lang('payments.cart.empty')<br>
+                                    <a href="/" class="btn btn-success">@lang('payments.cart.search')</a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
         </div>
     </div>
 </div>
@@ -105,19 +106,32 @@
 @section('scripts')
 <script>
   $(document).ready(function() {
-    $(".delete-cart").on("click", function (event) {
-      $.ajaxSetup({
-            headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-                    "content"
-                ),
-                "Access-Control-Allow-Origin": "*",
-            },
+    let calculatePrice = () => {
+        $.getJSON("{{ url('cart/data') }}", function (data) {
+            let subtotal = 0, addProduct = ``,
+                total, dataLength, priceAddTotal = 0;
+                dataLength = data.length;
+            $.each(data, function(i, data) {
+                let prod_price =
+                parseInt(data.unit_price) * parseInt(data.quantity);
+                subtotal += parseInt(prod_price);
+                total = parseInt(subtotal) + parseInt(priceAddTotal);
+            })
+
+            addProduct +=`Pesanan (` + dataLength + `) <span>` + "Rp" + numeral(subtotal).format("0,0") + `</span>`;
+            $(".products_subtotal").html(addProduct);
+            $(".total_price").html("Rp" + numeral(total).format("0,0"));
         });
+    };
+    calculatePrice();
+    $(".delete-cart").on("click", function (event) {
         $.ajax({
             url: "{{ url('cart') }}",
             type: "DELETE",
             data: "id=" + $(this).attr("data-id"),
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
             success: function (data) {
               $('#menu-success-2').addClass('menu-active');
               $('.menu-hider').addClass('menu-active');

@@ -15,15 +15,12 @@ class CreateOrders extends Migration
     {
         Schema::create('jasa_orders', function (Blueprint $table) {
             $table->id('order_id');
-            $table->bigInteger('order_detail_id');
             $table->bigInteger('product_id')->unsigned();
             $table->bigInteger('customer_id')->unsigned();
             $table->string('type');
-            $table->string('note')->nullable();
             $table->string('invoice');
-            $table->string('revision');
             $table->string('status');
-            $table->dateTime('deadline');
+            $table->boolean('is_deleted')->default(false);
             $table->timestamps();
 
             // $table->foreign('product_id')->references('jasa_id')->on('jasa_products')->onDelete('cascade');

@@ -46,6 +46,7 @@ Route::middleware('auth')->prefix('upload')->group(function() {
 
 Route::get('/welcome', function (Request $request) {
     return response()->json($request->session()->get('cart_shopping'));
+    // $data = App\Models\Cart::where('cart_id', 1110088696)->delete();
 });
 
 Route::get('/components/sidebar', function (Request $request) {

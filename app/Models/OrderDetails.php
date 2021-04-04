@@ -16,6 +16,11 @@ class OrderDetails extends Model
         'payment_id',
         'quantity',
         'unit_price',
-        'subtotal'
+        'subtotal',
+        'additional'
     ];
+
+    public function additional() {
+        return $this->hasMany(OrderAdditional::class, 'orders_detail_id');
+    }
 }

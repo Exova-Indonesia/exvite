@@ -17,7 +17,7 @@ class CartController extends Controller
 {
     public function index() {
         $balance = WalletController::index()->balance;
-        $jasa = Cart::with('user', 'jasa.seller', 'plan', 'jasa.cover')->where('user_id', Auth::user()->id)->get();
+        $jasa = Cart::with('user', 'jasa.seller', 'plan', 'jasa.cover', 'additional.additional')->where('user_id', Auth::user()->id)->get();
         return view('buyer.cart', ['balance' => $balance, 'data'=> $jasa]);
         // return response()->json($jasa);
     }
@@ -38,8 +38,8 @@ class CartController extends Controller
             return response()->json(['status' => Lang::get('validation.cart.next.failed'), 'code' => 401]);
         } else {
             $carts = array();
-            $additional = array();
             foreach($request->cart_id as $c) {
+                $additional = array();
                 $type = Cart::where('cart_id', $c)->first();
                 $order_id = date('hi').rand();
                 $p = Cart::with('plan')->where('cart_id', $type->cart_id)->first();
@@ -50,6 +50,8 @@ class CartController extends Controller
                             $additional[] = array(
                                 'additional_id' => $a->additional['id'],
                                 'quantity' => $a->quantity,
+                                'price' => $a->additional['price'],
+                                'title' => $a->additional['title'],
                             );
                         }
 

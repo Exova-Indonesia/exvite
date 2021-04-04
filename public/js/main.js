@@ -479,44 +479,6 @@
             });
         });
 
-        $.getJSON(url + "cart/data", function (data) {
-            let subtotal = 0,
-                total,
-                priceAddTotal = 0,
-                addContent = ``;
-            $.each(data, function (i, data) {
-                $.each(data.additional, function (i, data) {
-                    let priceAdd =
-                        parseInt(data.quantity) *
-                        parseInt(data.additional.price);
-                    priceAddTotal += parseInt(priceAdd);
-                    addContent =
-                        `
-                        <div>
-                        <span class="text-muted">` +
-                        data.additional.title +
-                        `(` +
-                        data.quantity +
-                        `)</span>
-                        <span class="float-right text-right">Rp` +
-                        numeral(
-                            parseInt(data.quantity) *
-                                parseInt(data.additional.price)
-                        ).format("0,0") +
-                        `</span>
-                        </div>
-                    `;
-                    $(".title-order").append(addContent);
-                });
-                let prod_price =
-                    parseInt(data.unit_price) * parseInt(data.quantity);
-                subtotal += parseInt(prod_price);
-                total = parseInt(subtotal) + parseInt(priceAddTotal);
-            });
-            $(".buy_price_cart").html("Rp" + numeral(subtotal).format("0,0"));
-            $(".total_price").html("Rp" + numeral(total).format("0,0"));
-        });
-
         $(".next").on("click", function () {
             let cart = [];
             $(".parent").each(function () {

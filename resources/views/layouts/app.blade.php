@@ -73,7 +73,7 @@
           class="header-icon header-icon-1"
           ><i class="fas fa-shopping-cart"></i
         ></a>
-      @products
+      @basemenu
         <a
           href="{{ url('/notifications') }}"
           class="header-icon header-icon-4"
@@ -85,10 +85,10 @@
           class="header-icon header-icon-4"
           ><i class="fas fa-home"></i
         ></a>
-        @endproducts
+        @endbasemenu
       </div>
 
-      @products
+      @basemenu
       <div id="footer-bar" class="footer-bar-6">
         <a href="{{ url('/studio') }}" class=" @if(Request::is('studio')) active-nav @endif"
           ><i class="fa fa-business-time"></i><span>Studio</span></a
@@ -107,7 +107,7 @@
           ><i class="fa fa-user"></i><span>Akun</span></a
         >
       </div>
-      @endproducts
+      @endbasemenu
 
       <div class="page-title page-title-fixed container">
         <h1>@if(Request::is('/')) 
@@ -116,6 +116,8 @@
           Produk
           @elseif(Request::segment(1) == 'cart')
           Keranjang
+          @elseif(Request::segment(1) == 'order')
+          Order
           @elseif(Request::segment(1) == 'profile')
           Profil
           @endif</h1>
@@ -126,12 +128,20 @@
           ><i class="fa fa-bars"></i
         ></a>
         @endif
+        @cart
         <a
           href="{{ url('cart') }}"
           class="page-title-icon shadow-xl bg-theme color-theme"
           ><i class="fa fa-shopping-cart"></i
         ></a>
-        @products
+        @else
+        <a
+          href="{{ url('notifications') }}"
+          class="page-title-icon shadow-xl bg-theme color-theme"
+          ><i class="fa fa-bell"></i
+        ></a>
+        @endcart
+        @basemenu
         <a
           href="{{ url('notifications') }}"
           class="page-title-icon shadow-xl bg-theme color-theme"
@@ -143,7 +153,7 @@
           class="page-title-icon shadow-xl bg-theme color-theme"
           ><i class="fa fa-home"></i
         ></a>
-        @endproducts
+        @endbasemenu
       </div>
       <div class="page-title-clear"></div>
       <div
@@ -184,7 +194,7 @@
             </button>
           </div>
           <div class="modal-body">
-            
+
           </div>
         </div>
       </div>

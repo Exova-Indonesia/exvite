@@ -17,7 +17,8 @@ class CreateOrdersDetails extends Migration
             $table->id('orders_detail_id');
             $table->bigInteger('order_id')->unsigned();
             $table->bigInteger('payment_id')->unsigned();
-            $table->integer('quantity');
+            $table->integer('quantity')->default(1);
+            $table->integer('additional')->default(0);
             $table->integer('unit_price');
             $table->integer('subtotal');
             $table->timestamps();
