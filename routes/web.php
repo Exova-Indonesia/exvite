@@ -35,7 +35,6 @@ Route::middleware('auth')->group(function() {
     Route::get('/share/{id}', [App\Http\Controllers\Studio\StudioController::class, 'share']);
     Route::get('/studios/{slug}', [App\Http\Controllers\Studio\StudioController::class, 'studios'])->name('view.studio');
     Route::delete('picture/{id}', [App\Http\Controllers\Studio\StudioController::class, 'destroy_picture']);
-    Route::delete('products/{id}', [App\Http\Controllers\Studio\StudioController::class, 'destroy_product']);
     Route::put('profil/studio/{id}', [App\Http\Controllers\Studio\StudioController::class, 'edit_profil'])->name('studio.profil.update');
 });
 
@@ -45,8 +44,9 @@ Route::middleware('auth')->prefix('upload')->group(function() {
 });
 
 Route::get('/welcome', function (Request $request) {
-    return response()->json($request->session()->get('cart_shopping'));
+    // return response()->json($request->session()->get('cart_shopping'));
     // $data = App\Models\Cart::where('cart_id', 1110088696)->delete();
+    return auth()->user()->studio->id;
 });
 
 Route::get('/components/sidebar', function (Request $request) {
@@ -69,8 +69,8 @@ Route::get('/transaksi', function () {
 
 // Web Api
 Route::middleware('auth')->prefix('/web/v2')->group(function() {
-    Route::get('/orders/penjualan/{submenu}', [App\Http\Controllers\ApiController::class, 'penjualan'])->name('penjualan');
-    Route::get('/orders/pembelian/{submenu}', [App\Http\Controllers\ApiController::class, 'pembelian'])->name('pembelian');
+    Route::get('/orders/penjualan/{submenu}/{search}', [App\Http\Controllers\ApiController::class, 'penjualan'])->name('penjualan');
+    Route::get('/orders/pembelian/{submenu}/{search}', [App\Http\Controllers\ApiController::class, 'pembelian'])->name('pembelian');
     Route::get('/notification/update', [App\Http\Controllers\ApiController::class, 'update'])->name('update');
     Route::get('/notification/pesan', [App\Http\Controllers\ApiController::class, 'pesan'])->name('pesan');
     Route::post('/uploads/orders/{id}/{label}', [App\Http\Controllers\ApiController::class, 'store_order_files'])->name('order.files');

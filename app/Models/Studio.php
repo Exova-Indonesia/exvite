@@ -11,7 +11,7 @@ class Studio extends Model
     protected $primaryKey = 'id';
     protected $fillable = [
         'prefix',
-        'studio_id',
+        'user_id',
         'name',
         'description',
         'address_id',

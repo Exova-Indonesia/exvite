@@ -77,5 +77,8 @@ class User extends Authenticatable implements MustVerifyEmail
     public function points() {
         return $this->hasMany(Points::class, 'user_id');
     }
+    public function studio() {
+        return $this->hasOne(Studio::class, 'user_id');
+    }
 
 }

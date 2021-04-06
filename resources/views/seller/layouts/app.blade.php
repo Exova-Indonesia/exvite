@@ -81,26 +81,26 @@
     @owner()
       <div id="footer-bar" class="footer-bar-6">
 
-        <a href="{{ url('/mystudio/dashboard') }}" class="@if(Request::is('mystudio/dashboard')) active-nav @endif"
+        <a href="{{ url('mystudio/dashboard') }}" class="@if(Request::is('mystudio/dashboard')) active-nav @endif"
           ><i class="fa fa-business-time"></i><span>Dashboard</span></a
         >
-        <a href="{{ url('/mystudio/orders') }}" class="@if(Request::is('mystudio/orders')) active-nav @endif"
+        <a href="{{ url('mystudio/orders') }}" class="@if(Request::is('mystudio/orders')) active-nav @endif"
           ><i class="fa fa-heart"></i><span>Pesanan</span></a
         >
-      <a href="{{ url('/mystudio/upload') }}" class="circle-nav @if(Request::is('mystudio/upload') || Request::is('mystudio/manage/' . strtolower(str_replace(' ', '-', $products->jasa_name ?? '')))) active-nav @endif">
+      <a href="{{ url('mystudio/upload') }}" class="circle-nav @if(Request::is('mystudio/upload') || Request::is('manage/' . strtolower(str_replace(' ', '-', $products->jasa_name ?? '')))) active-nav @endif">
         <i class="fa fa-upload"></i>
         <span>Upload</span>
       </a>
         <a href="{{ url('mystudio/revenue') }}"
           ><i class="fa fa-shopping-bag"></i><span>Pendapatan</span></a
         >
-        <a href="{{ url('/mystudio/profile') }}" class=" @if(Request::is('mystudio/profile')) active-nav @endif"
+        <a href="{{ url('mystudio/profile') }}" class=" @if(Request::is('mystudio/profile')) active-nav @endif"
           ><i class="fa fa-user"></i><span>Statistik</span></a
         >
       </div>
     @endowner
       <div class="page-title page-title-fixed container">
-        <h1 class="text-capitalize">{{ Request::segment(2) }}</h1>
+        <h1 class="text-capitalize">@if(Request::segment(1) == 'manage') Edit @else {{ Request::segment(2) }} @endif</h1>
         <a
           href="{{ url('/') }}"
           class="page-title-icon shadow-xl bg-theme color-theme"

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Lang;
 use Illuminate\Http\Request;
 use App\Models\Jasa;
 use App\Models\JasaFavorit;
@@ -86,12 +87,10 @@ class ProductController extends Controller
         }])
         ->where([
             ['jasa_name', $slugs],
-            ['jasa_status', 1]
             ])
         ->first();
         $similliar = Jasa::with('seller.logo', 'subcategory', 'cover')
         ->where([
-            ['jasa_status', true],
             ['jasa_name', 'LIKE', '%' . explode(' ', $seller->name)[0] . '%'],
             ])
         ->get();
@@ -138,6 +137,10 @@ class ProductController extends Controller
      */
     public function add_favorite(Request $request)
     {
+        $data = Jasa::where('jasa_id', $request->id)->first();
+        if($data->studio_id == auth()->user()->studio->id) {
+            return response()->json(['statusMessage' => Lang::get('validation.favorit.failed')], 400);
+        }
         $fav = JasaFavorit::firstOrCreate([
             'user_id' => auth()->user()->id,
             'jasa_id' => $request->id,
@@ -157,6 +160,7 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Jasa::where('jasa_id', $id)->delete();
+        return response()->json(['message' => 'Berhasil menghapus', 'url' => "{{ url('/mystudio') }}"]);
     }
 }

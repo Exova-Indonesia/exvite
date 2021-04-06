@@ -287,12 +287,19 @@
                 <div class="sub-price"></div>
               <div class="divider my-3"></div>
                 <div class="text-center">
+                @if($seller->studio['user_id'] == (auth()->user()->id ?? ''))
                   <button
                     role="button"
                     data-id = "{{ $seller->jasa_id }}"
                     class="btn btn-exova font-500 rounded-s submit-bookings text-uppercase"
                     >Booking Sekarang</button
                   >
+                  @else
+                  <a href="{{ URL('manage/' . strtolower(str_replace(' ','-', $seller->jasa_name))) }}"
+                    class="btn btn-exova font-500 rounded-s submit-bookings text-uppercase"
+                    >Edit</a
+                  >
+                @endif
               </div>
             </div>
           `;

@@ -17,7 +17,8 @@ class CreateJasaAdditional extends Migration
             $table->id();
             $table->bigInteger('jasa_id')->unsigned()->nullable();
             $table->string('title')->nullable();
-            $table->integer('price')->nullable();
+            $table->integer('quantity')->default(1);
+            $table->integer('price')->default(0);
             $table->string('add_day')->nullable();
             $table->timestamps();
 

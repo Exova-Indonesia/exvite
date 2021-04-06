@@ -153,10 +153,15 @@ return [
         'add' => [
             'success' => 'Berhasil menambah ke keranjang',
             'limit' => 'Kamu hanya bisa menambahkan 1 produk yang sama dalam keranjang',
+            'failed' => 'Kamu tidak bisa membeli jasa kamu sendiri',
         ],
         'note' => [
             'membership' => 'Langganan',
         ],
+    ],
+    'favorit' => [
+        'add' => '',
+        'failed' => 'Kamu tidak bisa menambah jasa kamu sendiri ke favorit',
     ],
     'user' => [
         'profile' => [

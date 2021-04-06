@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
 class Jasa extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     protected $table = 'jasa_products';
     protected $primaryKey = 'jasa_id';
     protected $fillable = [
@@ -20,10 +21,13 @@ class Jasa extends Model
         'jasa_price_old',
         'jasa_revision',
         'jasa_thumbnail',
-        'jasa_status',
         'jasa_rating',
         'jasa_sold',
+        'deleted_at',
     ];
+
+    protected $dates = ['deleted_at'];
+
     public function subcategory() {
         return $this->belongsTo(SubCategory::class, 'jasa_subcategory');
     }

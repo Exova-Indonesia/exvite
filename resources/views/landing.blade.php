@@ -7,61 +7,19 @@
         >
           <div class="splide__track">
             <div class="splide__list">
+              @foreach($category as $s)
               <div class="splide__slide ps-3">
                 <div
                   data-card-height="220"
                   class="card shadow-xl rounded-m bg-6"
                 >
                   <div class="card-bottom text-center">
-                    <h4 class="color-white font-800 mb-3">PWA Ready</h4>
+                    <h4 class="color-white font-800 mb-3">{{ $s->name }}</h4>
                   </div>
                   <div class="card-overlay bg-gradient"></div>
                 </div>
               </div>
-              <div class="splide__slide ps-3">
-                <div
-                  data-card-height="220"
-                  class="card shadow-xl rounded-m bg-16"
-                >
-                  <div class="card-bottom text-center">
-                    <h4 class="color-white font-800 mb-3">Bootstrap</h4>
-                  </div>
-                  <div class="card-overlay bg-gradient"></div>
-                </div>
-              </div>
-              <div class="splide__slide ps-3">
-                <div
-                  data-card-height="220"
-                  class="card shadow-xl rounded-m bg-19"
-                >
-                  <div class="card-bottom text-center">
-                    <h4 class="color-white font-800 mb-3">Dark Mode</h4>
-                  </div>
-                  <div class="card-overlay bg-gradient"></div>
-                </div>
-              </div>
-              <div class="splide__slide ps-3">
-                <div
-                  data-card-height="220"
-                  class="card shadow-xl rounded-m bg-31"
-                >
-                  <div class="card-bottom text-center">
-                    <h4 class="color-white font-800 mb-3">SCSS & RTL</h4>
-                  </div>
-                  <div class="card-overlay bg-gradient"></div>
-                </div>
-              </div>
-              <div class="splide__slide ps-3">
-                <div
-                  data-card-height="220"
-                  class="card shadow-xl rounded-m bg-33"
-                >
-                  <div class="card-bottom text-center">
-                    <h4 class="color-white font-800 mb-3">Mobile Kit</h4>
-                  </div>
-                  <div class="card-overlay bg-gradient"></div>
-                </div>
-              </div>
+              @endforeach
             </div>
           </div>
         </div>
@@ -91,10 +49,10 @@
                                 <h1 class="color-white font-19">Saldo</h1>
                             </div>
                                 <div class="card-center pe-3">
-                                    <h4 class="color-white text-end">****6345</h4>
+                                    <h4 class="color-white text-end">****{{ substr($balance->wallet_id, -4) }}</h4>
                                 </div>
                             <div class="card-bottom ps-3 pb-2">
-                                <h5 class="color-white">Rp20,000,000</h5>
+                                <h5 class="color-white">Rp{{ number_format($balance->balance, 0) }}</h5>
                             </div>
                             <div class="card-overlay bg-gradient"></div>
                         </a>

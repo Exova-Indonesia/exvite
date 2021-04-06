@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOrders extends Migration
+class CreateStudioLoversTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,14 @@ class CreateOrders extends Migration
      */
     public function up()
     {
-        Schema::create('jasa_orders', function (Blueprint $table) {
-            $table->id('order_id');
-            $table->bigInteger('product_id')->unsigned();
+        Schema::create('studio_lovers', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('studio_id')->unsigned();
             $table->bigInteger('customer_id')->unsigned();
-            $table->string('type');
-            $table->string('invoice');
-            $table->string('note');
-            $table->string('deadline');
-            $table->string('status');
             $table->softDeletes();
             $table->timestamps();
 
-            // $table->foreign('product_id')->references('jasa_id')->on('jasa_products')->onDelete('cascade');
+            $table->foreign('studio_id')->references('id')->on('studios')->onDelete('cascade');
             $table->foreign('customer_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
@@ -37,6 +32,6 @@ class CreateOrders extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('jasa_orders');
+        Schema::dropIfExists('studio_lovers');
     }
 }

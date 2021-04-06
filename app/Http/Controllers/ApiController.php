@@ -59,7 +59,7 @@ class ApiController extends Controller
     // }
 
 
-    public function penjualan($submenu) {
+    public function penjualan($submenu, $search) {
         if($submenu == 'pesanan_masuk') {
             $submenu = 'menunggu_konfirmasi';
         }
@@ -67,15 +67,19 @@ class ApiController extends Controller
         $data = OrderJasa::with(['products.seller'])
         ->with(['products.cover', 'products.seller' => function($q) use($value) {
             $q->where('user_id', $value);
+        }, 'products' => function($q) use($search) {
+            ($search == 'null') ? $q->withTrashed() : $q->where('jasa_name', 'LIKE', '%'.$search.'%')->withTrashed();
         }])
         ->where('status', $submenu)
         ->orderby('created_at', 'DESC')
         ->get();
         return response()->json($data);
     }
-    public function pembelian($submenu) {
+    public function pembelian($submenu, $search) {
         $value = auth()->user()->id;
-        $data = OrderJasa::with(['customer', 'products.cover'])
+        $data = OrderJasa::with(['customer', 'products.cover', 'products' => function($q) use($search) {
+            ($search == 'null') ? $q->withTrashed() : $q->where('jasa_name', 'LIKE', '%'.$search.'%')->withTrashed();
+        }])
         ->where('customer_id', $value)
         ->where('status', $submenu)
         ->orderby('created_at', 'DESC')
@@ -133,7 +137,6 @@ class ApiController extends Controller
         'diskusi.comment.comment_child.users')
         ->where([
             ['jasa_id', $id],
-            ['jasa_status', 1]
             ])
         ->first();
         return response()->json($seller);

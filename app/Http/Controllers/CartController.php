@@ -115,6 +115,9 @@ class CartController extends Controller
 
     public function add(Request $request) {
         $data = Jasa::where('jasa_id', $request->id)->first();
+        if($data->studio_id == auth()->user()->studio->id) {
+            return response()->json(['statusMessage' => Lang::get('validation.cart.add.failed')], 400);
+        }
         $cart = Cart::firstOrCreate([
             'product_id' => $data->jasa_id,
             'user_id' => Auth::user()->id,

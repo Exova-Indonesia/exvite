@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
 class OrderJasa extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
     protected $primaryKey = 'order_id';
     protected $table = 'jasa_orders';
     protected $fillable = [
@@ -16,12 +18,17 @@ class OrderJasa extends Model
         'product_id',
         'customer_id',
         'type',
-        'note',
         'invoice',
         'status',
         'deadline',
-        'example',
+        'note',
+        'deleted_at',
+
     ];
+    protected $dates = ['deleted_at'];
+
+
+    
     public function products() {
         return $this->belongsTo(Jasa::class, 'product_id');
     }
@@ -30,8 +37,5 @@ class OrderJasa extends Model
     }
     public function details() {
         return $this->hasOne(OrderDetails::class, 'order_id');
-    }
-    public function revisiDetail() {
-        return $this->hasOne(OrderRevision::class, 'order_id');
     }
 }

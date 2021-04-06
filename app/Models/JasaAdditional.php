@@ -15,5 +15,7 @@ class JasaAdditional extends Model
         'jasa_id',
         'price',
         'add_day',
+        'quantity',
+        'type',
     ];
 }

@@ -31,7 +31,7 @@
                                             {{ $o->jasa->seller->name }}
                                         @elseif($o->product_type == 'Create') @else @endif </h5>
                                         <small> @if($o->product_type == 'Jasa') 
-                                            {{ $o->jasa->seller->address->district['name'] }}
+                                            {{ $o->jasa->seller->address->district['name'] ?? '' }}
                                         @elseif($o->product_type == 'Create') @else @endif </small>
                                     </div>
                                     <div class="row mb-3">

@@ -58,7 +58,7 @@
             </p>
             <br/>
             <a class="font-600 color-highlight"
-              >{{ $seller->address->district['name'] ?? ''}} {{ $seller->address->province['name'] ?? '' }}</a
+              >{{ ($seller->address->district['name']) ? $seller->address->district['name'] . ', ' : '' }} {{ $seller->address->province['name'] ?? '' }}</a
             >
             <p class="opacity-60 font-12 pt-2">
               Owned by <a href="{{ url('/users/' . strtolower(str_replace(' ', '-', $seller->owner['name']))) }}" class="color-theme font-600">{{ $seller->owner['name'] }}</a>
@@ -76,11 +76,60 @@
               lovers
             </div>
             <div class="col-4">
-              <h6 class="mb-0 color-theme">385</h6>
+              <h6 class="mb-0 color-theme">{{ $sells }}</h6>
               sells
             </div>
           </div>
           <div class="divider mb-3"></div>
+
+          <div class="row m-0">
+            <a href="{{ url('mystudio/pesanan') }}" class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-exova">
+                <div class="inner">
+                  <h3>{{ $orders->where('status', 'menunggu_konfirmasi')->count() }}</h3>
+
+                  <p class="m-0">Pesanan baru</p>
+                </div>
+              </div>
+            </a>
+            <!-- ./col -->
+            <a href="{{ url('mystudio/pesanan') }}" class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-success">
+                <div class="inner">
+                  <h3>53<sup style="font-size: 20px">%</sup></h3>
+
+                  <p class="m-0">Dalam proses</p>
+                </div>
+              </div>
+            </a>
+            <!-- ./col -->
+            <a href="{{ url('mystudio/pesanan') }}" class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-warning">
+                <div class="inner">
+                  <h3>44</h3>
+
+                  <p class="m-0">Pesanan direvisi</p>
+                </div>
+              </div>
+            </a>
+            <!-- ./col -->
+            <a href="{{ url('mystudio/chats') }}" class="col-lg-3 col-6">
+              <!-- small box -->
+              <div class="small-box bg-danger">
+                <div class="inner">
+                  <h3>12</h3>
+
+                  <p class="m-0">Chat baru</p>
+                </div>
+              </div>
+            </a>
+            <!-- ./col -->
+          </div>
+        </div>
+
           <div class="section-title">
             <h2 class="s-title d-block">Terlaris</h2>
           </div>

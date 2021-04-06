@@ -1,9 +1,9 @@
 (function ($) {
     "use strict";
-    var url = "http://exvite.test/";
+    let url = "http://exvite.test/";
     $(document).ready(function () {
         $("#search").keyup(function (e) {
-            var query = $(this).val();
+            let query = $(this).val();
             if (!$(this).val()) {
                 $("#result").css("display", "none");
                 $("#result").html();
@@ -70,12 +70,12 @@
 
     /*==================================================================
     [ Validate ]*/
-    var input = $(".validate-input .input100");
+    let input = $(".validate-input .input100");
 
     $(".validate-form").on("submit", function () {
-        var check = true;
+        let check = true;
 
-        for (var i = 0; i < input.length; i++) {
+        for (let i = 0; i < input.length; i++) {
             if (validate(input[i]) == false) {
                 showValidate(input[i]);
                 check = false;
@@ -114,13 +114,13 @@
     }
 
     function showValidate(input) {
-        var thisAlert = $(input).parent();
+        let thisAlert = $(input).parent();
 
         $(thisAlert).addClass("alert-validate");
     }
 
     function hideValidate(input) {
-        var thisAlert = $(input).parent();
+        let thisAlert = $(input).parent();
 
         $(thisAlert).removeClass("alert-validate");
     }
@@ -132,9 +132,9 @@
         timer: 3000,
     });
     function delay(callback, ms) {
-        var timer = 0;
+        let timer = 0;
         return function () {
-            var context = this,
+            let context = this,
                 args = arguments;
             clearTimeout(timer);
             timer = setTimeout(function () {
@@ -144,8 +144,8 @@
     }
     $(".saldo_withdraw").keyup(
         delay(function () {
-            var amount = $(this).val();
-            var select = $("#select_form").find(":selected").val();
+            let amount = $(this).val();
+            let select = $("#select_form").find(":selected").val();
             $.ajaxSetup({
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
@@ -182,7 +182,7 @@
 
     $(".saldo_withdraw").keyup(
         delay(function () {
-            var amount = $(this).val();
+            let amount = $(this).val();
             $.ajaxSetup({
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
@@ -217,8 +217,8 @@
 
     $(".saldo_send").keyup(
         delay(function () {
-            var amount = $(this).val();
-            var select = $("#select_send").find(":selected").val();
+            let amount = $(this).val();
+            let select = $("#select_send").find(":selected").val();
             $.ajaxSetup({
                 headers: {
                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
@@ -254,7 +254,7 @@
     );
 
     $("#check").click(function () {
-        var user = $("#transfer_to").val();
+        let user = $("#transfer_to").val();
         $.ajaxSetup({
             headers: {
                 "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
@@ -321,9 +321,9 @@
 
     // $($('#bank_name').data('select2').$container).addClass('form-control')
 
-    $(function () {
-        $("#history_transaction").DataTable();
-    });
+    // $(function () {
+    //     $("#history_transaction").DataTable();
+    // });
 
     // $(".shortcut-highlight").on("click", function () {
     //     $(".shortcut-highlight").removeClass("highlight-active");
@@ -519,6 +519,29 @@
     });
 })(jQuery);
 
+function countdown(deadline) {
+    let countDownDate = new Date(deadline).getTime();
+    // Get today's date and time
+    let now = new Date().getTime();
+
+    // Find the distance between now and the count down date
+    let distance = countDownDate - now;
+
+    // Time calculations for days, hours, minutes and seconds
+    let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    let hours = Math.floor(
+        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+
+    // If the count down is finished, write some text
+    if (distance < 0) {
+        return "0d " + "0h " + "0m";
+    }
+
+    return days + "d " + hours + "h " + minutes + "m ";
+}
+
 /*
 window.onscroll = function() {scrollFunction()};
 
@@ -659,5 +682,5 @@ let steps = [
     },
 ];
 
-//var tourguide = new Tourguide({steps: steps});
+//let tourguide = new Tourguide({steps: steps});
 //tourguide.start();

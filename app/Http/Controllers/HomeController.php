@@ -11,6 +11,7 @@ use App\Models\SearchHistory;
 use App\Models\Plan;
 use App\Models\Jasa;
 use App\Models\Highlight;
+use App\Models\SubCategory;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -39,12 +40,10 @@ class HomeController extends Controller
         */
         if(Auth::user()) {
         $seller = Jasa::with('seller.logo', 'subcategory', 'cover')
-        ->where([
-                ['jasa_status', true],
-            ])
         ->get();
         $balance = Wallet::where('user_id', Auth::user()->id)->first();
         $bank = Bank::where('user_id', Auth::user()->id)->get();
+        $category = SubCategory::all()->random(12);
         } else {
         $balance = '';
         $bank = '';
@@ -57,6 +56,7 @@ class HomeController extends Controller
             'bank' => $bank, 
             'highlight' => $highlight,
             'seller' => $seller,
+            'category' => $category,
         ]);
         // return response()->json([
         //     'highlight' => $highlight,

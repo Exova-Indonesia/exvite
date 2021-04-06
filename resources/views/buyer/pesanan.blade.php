@@ -1,24 +1,31 @@
 @extends('layouts.app')
 @section('content')
-<div class="container">
-    <div class="col">
-        <div class="row">
-            <div class="scroll-notif">
-                <span class="shortcut-notif" id="pembelian">Pembelian</span>
-                <span class="shortcut-notif" id="penjualan">Penjualan</span>
+<div class="page-content">
+    <div class="container">
+        <div class="col">
+            <div class="row">
+                <div class="scroll-notif">
+                    <span class="shortcut-notif" id="pembelian">Pembelian</span>
+                    <span class="shortcut-notif" id="penjualan">Penjualan</span>
+                </div>
             </div>
-        </div>
-        <h3 class="notif-title"></h3>
-            <div class="sub-menu"></div>
-            <div class="notif-content"></div>
-        <div class="file-minimize-upload" id="upload-bar">
-            <div class="header-upload-bar">
-                <span role="button" class="close-upload-bar"><i class="fas fa-times"></i></span>
-                <span class="count-files float-right"></span>
-            </div>
-            <div class="file-minimize-body">
-                <input type="file" name="order_files" data-allow-reorder="true"
-                data-max-files="1" id="upload-order-files" data-status="0">
+            <h3 class="notif-title"></h3>
+                <div class="sub-menu"></div>
+                <div class="col-lg-3 col-sm-12 ml-auto">
+                    <div class="input-style mt-3 input-style-always-active has-icon mb-4">    
+                        <input type="text" class="form-control border rounded-pill" name="search" id="search_id" placeholder="Cari pesanan disini" autocomplete="off">
+                    </div>
+                </div>
+                <div class="notif-content"></div>
+            <div class="file-minimize-upload" id="upload-bar">
+                <div class="header-upload-bar">
+                    <span role="button" class="close-upload-bar"><i class="fas fa-times"></i></span>
+                    <span class="count-files float-right"></span>
+                </div>
+                <div class="file-minimize-body">
+                    <input type="file" name="order_files" data-allow-reorder="true"
+                    data-max-files="1" id="upload-order-files" data-status="0">
+                </div>
             </div>
         </div>
     </div>
@@ -58,14 +65,18 @@ $(document).ready(function() {
     }
 });
 
-    contents = (params, base) => {
+    contents = (params, base, search) => {
         let title, content = '', submenu = ``;
+        if(search == '') {
+            search = 'null';
+        }
         id = params.trim().replace(' ', '_').toLowerCase();
         title = params.replace('_', ' ');
         title = title.trim().replace(/^\w/, (c) => c.toUpperCase());
-        $.getJSON( "{{ url('/') }}" + '/web/v2/orders/' + base + '/' + id, function(data) {
+        $('#search_id').attr('data-content', id);
+        $.getJSON( "{{ url('/') }}" + '/web/v2/orders/' + base + '/' + id + '/' + search, function(data) {
             $.each(data, function(i, data) {
-                if(data.status) {
+                if(data.products !== null) {
                     content += `
                     <div class="row m-0 flex-nowrap p-2">
                         <div class="notif-image">
@@ -75,43 +86,43 @@ $(document).ready(function() {
                                 <h5 class="mb-1">` + data.products['jasa_name'] + `</h5>
                                 <span>` + title + `</span>
                                 <div>
-                                    <small>Sisa Waktu : ` + new Date(data.deadline).toDateString() + `</small>
+                                    <small>Sisa Waktu : `+ countdown(data.deadline) + `</small>
                                 </div>
                             </div>
                             <div class="notif-btn ml-auto">
-                                <button class="detail-btn btn btn-exova" data-label="detail_pesanan" data-id="` + data.order_id + `" data-toggle="modal" data-target="#orderModal"><i class="fas fa-eye" title="Lihat Detail"></i></button>
+                            <button class="detail-btn btn btn-exova" data-label="detail_pesanan" data-id="` + data.order_id + `" data-toggle="modal" data-target="#orderModal"><i class="fas fa-eye" title="Lihat Detail"></i></button>
+                            `;
+                            if(id === 'menunggu_pembayaran') {
+                                content += `
+                                    <button class="delete-btn btn btn-danger" data-id="` + data.order_id + `"><i class="fas fa-trash"></i></button>
                                 `;
-                                if(id === 'menunggu_pembayaran') {
-                                    content += `
-                                        <button class="delete-btn btn btn-danger"><i class="fas fa-trash"></i></button>
-                                    `;
-                                } else if(id === 'pesanan_masuk') {
-                                    content += `
-                                        <button class="accept-btn btn btn-success" data-content="pesanan_diproses" data-id="` + data.order_id + `" title="Terima Pesanan"><i class="fas fa-check"></i></button>
-                                    `;
-                                } else if(id === 'pesanan_dikirim' && base === 'pembelian') {
-                                    content += `
-                                        <button class="accept-btn btn btn-success" data-content="pesanan_selesai" data-id="` + data.order_id + `" title="Selesaikan Pesanan"><i class="fas fa-check"></i></button>
-                                        <button class="download-btn btn btn-success" data-id="` + data.order_id + `" title="Download"><i class="fas fa-download"></i></button>
-                                        <button class="revisi-btn btn btn-primary" data-label="permintaan_revisi" data-id="` + data.order_id + `" data-toggle="modal" data-target="#orderModal" title="Minta Revisi"><i class="fas fa-pencil-alt"></i></button>
-                                    `;
-                                } else if(id === 'pesanan_diproses' && base === 'penjualan') {
-                                        content += `
-                                            <button class="upload-btn btn btn-success" data-label="pesanan_diproses" data-id="`+ data.order_id +`" title="Upload Pesanan"><i class="fas fa-upload"></i></button>
-                                        `;
-                                    } else if(id === 'pesanan_selesai' && base === 'pembelian') {
-                                        content += `
-                                            <button class="download-btn btn btn-success" data-id="` + data.order_id + `" title="Download"><i class="fas fa-download"></i></button>
-                                        `;
-                                    } else if(id === 'permintaan_revisi' && base === 'penjualan') {
-                                        content += `
-                                            <button class="upload-btn btn btn-success" data-label="permintaan_revisi" data-id="`+ data.order_id +`" title="Upload Revisian"><i class="fas fa-upload"></i></button>
-                                        `;
-                                    }
-                                    content += `
-                                        </div>
-                                    </div>
-                                    `;
+                            } else if(id === 'pesanan_masuk') {
+                                content += `
+                                    <button class="accept-btn btn btn-success" data-content="pesanan_diproses" data-id="` + data.order_id + `" title="Terima Pesanan"><i class="fas fa-check"></i></button>
+                                `;
+                            } else if(id === 'pesanan_dikirim' && base === 'pembelian') {
+                                content += `
+                                    <button class="accept-btn btn btn-success" data-content="pesanan_selesai" data-id="` + data.order_id + `" title="Selesaikan Pesanan"><i class="fas fa-check"></i></button>
+                                    <button class="download-btn btn btn-success" data-id="` + data.order_id + `" title="Download"><i class="fas fa-download"></i></button>
+                                    <button class="revisi-btn btn btn-primary" data-label="permintaan_revisi" data-id="` + data.order_id + `" data-toggle="modal" data-target="#orderModal" title="Minta Revisi"><i class="fas fa-pencil-alt"></i></button>
+                                `;
+                            } else if(id === 'pesanan_diproses' && base === 'penjualan') {
+                                content += `
+                                    <button class="upload-btn btn btn-success" data-label="pesanan_diproses" data-id="`+ data.order_id +`" title="Upload Pesanan"><i class="fas fa-upload"></i></button>
+                                `;
+                            } else if(id === 'pesanan_selesai' && base === 'pembelian') {
+                                content += `
+                                    <button class="download-btn btn btn-success" data-id="` + data.order_id + `" title="Download"><i class="fas fa-download"></i></button>
+                                `;
+                            } else if(id === 'permintaan_revisi' && base === 'penjualan') {
+                                content += `
+                                    <button class="upload-btn btn btn-success" data-label="permintaan_revisi" data-id="`+ data.order_id +`" title="Upload Revisian"><i class="fas fa-upload"></i></button>
+                                `;
+                            }
+                        content += `
+                            </div>
+                        </div>
+                        `;
 
                 }
             })
@@ -132,9 +143,6 @@ $(document).ready(function() {
                         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
                     },
                     success: function(data) {
-                        if(data.status === 125) {
-                            window.location = data.url;
-                        }
                         Toast.fire({
                             icon: 'success',
                             title: 'Berhasil',  
@@ -145,7 +153,26 @@ $(document).ready(function() {
                     }
                 });
             });
-                $('.decline-btn').on('click', function() {
+
+            $('.delete-btn').on('click', function() {
+                $.ajax({
+                    url: "{{ url('order') }}/" + $(this).attr('data-id'),
+                    data: { id: $(this).attr('data-id') },
+                    type: "DELETE",
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                    },
+                    success: function(data) {
+                        path = window.location.pathname.replace('/notifications/', '');
+                        contents('menunggu_pembayaran', path, 'null');
+                    },
+                    error: function(data) {
+                        // console.log(data)
+                    }
+                });
+            });
+            
+            $('.decline-btn').on('click', function() {
                 Swal.fire({
                     title: 'Apakah kamu yakin?',
                     text: "Kamu tidak akan bisa mengembalikan ini",
@@ -228,7 +255,7 @@ $(document).ready(function() {
                         }
                         if(totalFiles === completedFiles) {
                             path = window.location.pathname.replace('/notifications/', '');
-                            contents(label, path);
+                            contents(label, path, 'null');
                         }
                     }
                     pond.onprocessfile = (error, response) => {
@@ -310,7 +337,7 @@ $(document).ready(function() {
                 <span class="shortcut-product" data-id="pesanan_selesai">Pesanan Selesai</span>
             </div>
             `;
-            contents((path === 'penjualan') ? 'Pesanan Masuk' : 'Menunggu Pembayaran', path);
+            contents((path === 'penjualan') ? 'Pesanan Masuk' : 'Menunggu Pembayaran', path, 'null');
 
         }
         $('.sub-menu').html(submenu);
@@ -319,7 +346,7 @@ $(document).ready(function() {
         $(".shortcut-product").removeClass("notif-active");
         $(this).addClass("notif-active");
         path = window.location.pathname.replace('/notifications/', '')
-        contents($(this).attr('data-id'), path);
+        contents($(this).attr('data-id'), path, 'null');
     });
 
     }
@@ -329,6 +356,10 @@ $(document).ready(function() {
         let notif = $(this).html();
         reload(notif);
     });
+
+        $("#search_id").on("keyup", function () {
+            contents($(this).attr('data-content'), path, $(this).val());
+        });
 
         $('#orderModal').on('show.bs.modal', function(e) {
         let btn = $(e.relatedTarget);
@@ -384,15 +415,15 @@ $(document).ready(function() {
                                     $.each(data.details.additional, function(i, data) {
                                         content +=
                                         `<tr>
-                                            <td>Layanan Tambahan</td>
-                                            <td class="text-right font-weight-bold">`+ data.title +`</td>
+                                            <td>`+ data.title +`</td>
+                                            <td class="text-right font-weight-bold">`+ data.quantity +`x +` + data.add_day + ` Hari</td>
                                         </tr>`;
                                     })
 
                                     content +=
                                     `<tr>
                                         <td>Deadline</td>
-                                        <td class="text-right font-weight-bold">`+ new Date(data.deadline).toDateString() +`</td>
+                                        <td class="text-right font-weight-bold">`+new Date(data.deadline).toString() +`</td>
                                     </tr>
                                     <tr>
                                         <td>Catatan</td>
@@ -400,7 +431,7 @@ $(document).ready(function() {
                                     </tr>
                                     <tr>
                                         <td>Tanggal Order</td>
-                                        <td class="text-right font-weight-bold">`+ new Date(data.created_at).toDateString() +`</td>
+                                        <td class="text-right font-weight-bold">`+ new Date(data.created_at).toString() +`</td>
                                     </tr>
                                     <tr>
                                         <td>Invoice</td>
@@ -427,7 +458,7 @@ $(document).ready(function() {
                     $('.modal-body').html(content);
                 },
                 error: function(data) {
-                    console.log(data);
+                    // console.log(data);
                 },
                 beforeSend: function(data) {
                     $('.modal-body').html("Loading...");
@@ -445,7 +476,7 @@ $(document).ready(function() {
                 },
                 success: function(data) {
                     path = window.location.pathname.replace('/notifications/', '');
-                    contents('pesanan_dikirim', path);
+                    contents('pesanan_dikirim', path, 'null');
                     $('#menu-success-2').addClass('menu-active');
                     $('.menu-hider').addClass('menu-active');
                     $('.success-message').text('Permintaan revisi berhasil dikirim');
@@ -458,6 +489,7 @@ $(document).ready(function() {
                 }
             });
         });
+
         label = label.replace('_', ' ');
         label = label.trim().replace(/^\w/, (c) => c.toUpperCase());
         $('#orderModalLabel').html(label);

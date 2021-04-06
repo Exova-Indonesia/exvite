@@ -94,39 +94,6 @@
         <div class="divider"></div>
         <div class="row my-2">
             <div class="col-lg-4 col-sm-12">
-                <h3 class="font-500">Revision</h3>
-                <p>Lorem</p>
-            </div>
-            <div class="col-lg-8 col-sm-12">
-                <div class="upload-jasa-field p-4 shadow-sm">
-                    <div class="row m-0">
-                        <div class="input-style col-lg-2 col-sm-12 px-1 input-style-always-active has-borders has-icon mb-4">    
-                            <input type="hidden" class="form-control" id="revisi_id" value="{{ $products->revisi['id'] }}">
-                            <input type="number" min="0" max="10" class="form-control" name="revisi_count" id="rev_count" value="{{ $products->revisi['count'] }}" autocomplete="off">
-                            <label for="rev_count" class="color-theme opacity-50 text-uppercase font-700 font-10">Revision</label>
-                        </div>
-                        <div class="input-style col-lg-5 col-sm-12 px-1 input-style-always-active has-borders has-icon mb-4">    
-                            <input type="text" class="form-control" name="revisi_price" id="rev_price" value="Rp{{ number_format($products->revisi['price'], 0) }}" autocomplete="off">
-                            <label for="rev_price" class="color-theme opacity-50 text-uppercase font-700 font-10">Revision Price</label>
-                        </div>
-                        <div class="input-style col-lg-5 col-sm-12 px-1 input-style-always-active has-borders has-icon mb-4">    
-                            <select type="text" class="form-control" name="revisi_waktu" id="rev_day">
-                            @if(! empty($products->revisi['add_day']))
-                                <option value="{{ $products->revisi['add_day'] }}" selected hidden>{{ $products->revisi['add_day'] }}</option>
-                            @endif
-                            @for($i=1; $i<=14; $i++)
-                            <option value="{{ $i }}">{{ $i }} Hari</option>
-                            @endfor
-                            </select>
-                            <label for="rev_day" class="color-theme opacity-50 text-uppercase font-700 font-10">Tambahakan Waktu</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="divider"></div>
-        <div class="row my-2">
-            <div class="col-lg-4 col-sm-12">
                 <h3 class="font-500">Layanan Tambahan</h3>
                 <p>Lorem</p>
             </div>
@@ -140,15 +107,19 @@
                                     <input type="hidden" class="form-control" name="id" value="{{ $d->id }}">
                                         <label for="addtional_name" class="color-theme opacity-50 text-uppercase font-700 font-10">Title</label>
                                 </div>
-                                <div class="input-style col-lg-4 col-sm-5 px-1 input-style-always-active has-borders has-icon mb-4">    
+                                <div class="input-style col-lg-3 col-sm-5 px-1 input-style-always-active has-borders has-icon mb-4">    
                                     <input type="text" class="form-control add_price" name="add_price" placeholder="price" autocomplete="off" value="Rp{{ number_format($d->price, 0) }}">
                                         <label for="addtional_price" class="color-theme opacity-50 text-uppercase font-700 font-10">Price</label>
                                 </div>
-                                <div class="input-style col-lg-4 col-sm-5 px-1 input-style-always-active has-borders has-icon mb-4">    
+                                <div class="input-style col-lg-2 col-sm-5 px-1 input-style-always-active has-borders has-icon mb-4">    
+                                    <input type="text" class="form-control" name="quantity" placeholder="quantity" autocomplete="off" value="{{ $d->quantity }}">
+                                        <label for="addtional_price" class="color-theme opacity-50 text-uppercase font-700 font-10">Quantity</label>
+                                </div>
+                                <div class="input-style col-lg-3 col-sm-5 px-1 input-style-always-active has-borders has-icon mb-4">    
                                     <select type="text" class="form-control" placeholder="day" name="add_day">
-                                        <option value="{{ $d->add_day }}" selected hidden>{{ $d->add_day }}</option>
+                                        <option value="{{ $d->add_day }}" selected hidden>{{ $d->add_day }} Hari</option>
                                         @for($i=1; $i<=14; $i++)
-                                        <option value="{{ $i }} Hari">{{ $i }} Hari</option>
+                                        <option value="{{ $i }}">{{ $i }} Hari</option>
                                         @endfor
                                     </select>
                                         <label for="addtional_day" class="color-theme opacity-50 text-uppercase font-700 font-10">Tambahan Waktu</label>
@@ -225,7 +196,7 @@
                     if(data.id === {{ $products->jasa_thumbnail ?? 0 }}) {
                         dataPic += `<div class="cover-picture"><span>Cover</span></div>`;
                     }
-                    dataPic += `<img class="p-1 my-pictures-portfolio" src="` + data.small + `" alt="">
+                    dataPic += `<img class="p-1 my-pictures-portfolio" src="` + data.medium + `" alt="">
                         </div>
                     `;
                 })
@@ -300,11 +271,15 @@
                     <input type="text" class="form-control" name="add_name" placeholder="name" autocomplete="off">
                         <label for="addtional_name" class="color-theme opacity-50 text-uppercase font-700 font-10">Title</label>
                 </div>
-                <div class="input-style col-lg-4 col-sm-5 px-1 input-style-always-active has-borders has-icon mb-4">    
+                <div class="input-style col-lg-2 col-sm-12 px-1 input-style-always-active has-borders has-icon mb-4">    
+                    <input type="number" min="0" class="form-control" name="quantity" placeholder="quantity" autocomplete="off">
+                        <label for="addtional_name" class="color-theme opacity-50 text-uppercase font-700 font-10">Quantity</label>
+                </div>
+                <div class="input-style col-lg-3 col-sm-5 px-1 input-style-always-active has-borders has-icon mb-4">    
                     <input type="text" class="form-control add_price" name="add_price" placeholder="price" autocomplete="off">
                         <label for="addtional_price" class="color-theme opacity-50 text-uppercase font-700 font-10">Price</label>
                 </div>
-                <div class="input-style col-lg-4 col-sm-5 px-1 input-style-always-active has-borders has-icon mb-4">    
+                <div class="input-style col-lg-3 col-sm-5 px-1 input-style-always-active has-borders has-icon mb-4">    
                     <select type="text" class="form-control" placeholder="day" name="add_day">`
                     for(let i=1; i<=14; i++) {
                         content+=`<option value="`+i+`">`+i+` Hari</option>`
@@ -360,16 +335,15 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                 },
                 success: function(data) {
-                    if(data.status == 200) {
-                        $('.success-message').html(data.message);
-                        $('#menu-success-2').addClass('menu-active');
-                        $('.menu-hider').removeClass("menu-active");
-                        setInterval(() => {
-                            window.location = data.url;
-                        }, 1000);
-                    }
+                    $('.success-message').html(data.message);
+                    $('#menu-success-2').addClass('menu-active');
+                    $('.menu-hider').removeClass("menu-active");
+                    setInterval(() => {
+                        window.location = data.url;
+                    }, 1000);
                 },
                 error: function(data) {
+                    // 
                 }
             });
                 $('#EX-' + count).remove();
@@ -393,6 +367,7 @@
                 info['revisi_count'] = $('#rev_count').val()
                 info['revisi_price'] = $('#rev_price').val(),
                 info['revisi_waktu'] = $('#rev_day').val(),
+                info['revisi_type'] = 'Revision',
                 info['cover'] = $('#cover').val(),
                 info['rev_id'] = $('#revisi_id').val(),
                 $('input[name=jasa_picture').each(function(index, picture) {

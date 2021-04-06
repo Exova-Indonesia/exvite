@@ -65,9 +65,8 @@ class OrderController extends Controller
     public function show($id)
     {
         $data = OrderJasa::with(['customer', 'products.seller',
-        'products.cover', 'details.additional',
-        'revisiDetail' => function($query) {
-            $query->latest('created_at');
+        'products.cover', 'details.additional.additional', 'products' => function($q) {
+            $q->withTrashed();
         }])->where('order_id', $id)->first();
         return response()->json($data);
     }
@@ -153,7 +152,7 @@ class OrderController extends Controller
                 OrderJasa::where('order_id', $request->id)->update([
                     'status' => $request->status,
                 ]);
-                return response()->json(['status' => 125, 'url' => '/']);
+                // return response()->json(['status' => 125, 'url' => '/']);
                 break;
             default:
             //
@@ -168,6 +167,6 @@ class OrderController extends Controller
      */
     public function destroy($id)
     {
-        //
+        OrderJasa::where('order_id', $id)->delete();
     }
 }

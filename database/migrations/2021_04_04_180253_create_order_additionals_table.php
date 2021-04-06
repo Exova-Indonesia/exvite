@@ -20,6 +20,7 @@ class CreateOrderAdditionalsTable extends Migration
             $table->string('title')->nullable();
             $table->integer('price')->nullable();
             $table->integer('quantity')->nullable();
+            $table->integer('add_day')->nullable();
             $table->timestamps();
 
             $table->foreign('orders_detail_id')->references('orders_detail_id')->on('orders_details')->onDelete('cascade');
