@@ -36,4 +36,8 @@ class Studio extends Model
     public function address() {
         return $this->hasOne(StudioAddress::class, 'studio_id');
     }
+
+    public function lovers() {
+        return $this->hasMany(StudioLover::class, 'studio_id');
+    }
 }

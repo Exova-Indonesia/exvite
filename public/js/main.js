@@ -321,9 +321,13 @@
 
     // $($('#bank_name').data('select2').$container).addClass('form-control')
 
-    // $(function () {
-    //     $("#history_transaction").DataTable();
-    // });
+    $(function () {
+        $("#history_transaction").DataTable();
+    });
+
+    $(document).ready(function () {
+        $("#table-products").DataTable();
+    });
 
     // $(".shortcut-highlight").on("click", function () {
     //     $(".shortcut-highlight").removeClass("highlight-active");

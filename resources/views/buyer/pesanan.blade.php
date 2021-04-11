@@ -94,11 +94,17 @@ $(document).ready(function() {
                             `;
                             if(id === 'menunggu_pembayaran') {
                                 content += `
+                                    <button class="delete-btn btn btn-success" data-id="` + data.order_id + `"><i class="fas fa-credit-card"></i></button>
                                     <button class="delete-btn btn btn-danger" data-id="` + data.order_id + `"><i class="fas fa-trash"></i></button>
                                 `;
                             } else if(id === 'pesanan_masuk') {
                                 content += `
+                                    <button class="reject-btn btn btn-danger" data-content="pesanan_ditolak" data-id="` + data.order_id + `" title="Tolak Pesanan"><i class="fas fa-times"></i></button>
                                     <button class="accept-btn btn btn-success" data-content="pesanan_diproses" data-id="` + data.order_id + `" title="Terima Pesanan"><i class="fas fa-check"></i></button>
+                                `;
+                            } else if(id === 'menunggu_konfirmasi' && base === 'pembelian') {
+                                content += `
+                                    <button class="reject-btn btn btn-danger" data-content="pesanan_dibatalkan" data-id="` + data.order_id + `" title="Tolak Pesanan"><i class="fas fa-times"></i></button>
                                 `;
                             } else if(id === 'pesanan_dikirim' && base === 'pembelian') {
                                 content += `
@@ -143,6 +149,31 @@ $(document).ready(function() {
                         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
                     },
                     success: function(data) {
+                        path = window.location.pathname.replace('/notifications/', '');
+                        contents('menunggu_konfirmasi', path, 'null');
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Berhasil',  
+                        });
+                    },
+                    error: function(data) {
+                        // console.log(data)
+                    }
+                });
+            });
+            $(".reject-btn").on("click", function () {
+                $.ajax({
+                    url: "{{ url('order/reject') }}",
+                    type: 'PUT',
+                    data: { 
+                        id: $(this).attr('data-id'), type: 'reject', status: $(this).attr('data-content')
+                    },
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                    },
+                    success: function(data) {
+                        path = window.location.pathname.replace('/notifications/', '');
+                        contents('pesanan_masuk', path, 'null');
                         Toast.fire({
                             icon: 'success',
                             title: 'Berhasil',  

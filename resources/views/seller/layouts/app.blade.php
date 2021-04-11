@@ -22,6 +22,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- add before </body> -->
     <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
@@ -35,8 +36,7 @@
     <script src="{{ asset('datatables/jquery.dataTables.js') }}" defer></script>
     <script src="{{ asset('datatables-bs4/js/dataTables.bootstrap4.js') }}" defer></script>
     <!-- <script src="{{ asset('tourguide.js/tourguide.min.js') }}" defer></script> -->
-    <!-- <script src="{{ asset('sweetalert2/sweetalert2.min.js') }}" defer></script> -->
-    <!-- <script src="{{ asset('js/main.js') }}" defer></script> -->
+    <script src="{{ asset('js/main.js') }}" defer></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="{{ asset('scripts/bootstrap.min.js') }}" defer></script>
 
@@ -55,7 +55,6 @@
     <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('datatables-bs4/css/dataTables.bootstrap4.css') }}">
     <!-- <link rel="stylesheet" href="{{ asset('tourguide.js/tourguide.css') }}"> -->
-    <link rel="stylesheet" href="{{ asset('sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
 
 </head>
   <body class="theme-light" data-highlight="highlight-red">
@@ -84,18 +83,18 @@
         <a href="{{ url('mystudio/dashboard') }}" class="@if(Request::is('mystudio/dashboard')) active-nav @endif"
           ><i class="fa fa-business-time"></i><span>Dashboard</span></a
         >
+        <a href="{{ url('mystudio/produk') }}" class="@if(Request::is('mystudio/produk')) active-nav @endif"
+          ><i class="fa fa-shopping-bag"></i><span>Produk</span></a
+        >
+        <a href="{{ url('mystudio/upload') }}" class="circle-nav @if(Request::is('mystudio/upload') || Request::is('manage/' . strtolower(str_replace(' ', '-', $products->jasa_name ?? '')))) active-nav @endif">
+          <i class="fa fa-upload"></i>
+          <span>Upload</span>
+        </a>
         <a href="{{ url('mystudio/orders') }}" class="@if(Request::is('mystudio/orders')) active-nav @endif"
           ><i class="fa fa-heart"></i><span>Pesanan</span></a
         >
-      <a href="{{ url('mystudio/upload') }}" class="circle-nav @if(Request::is('mystudio/upload') || Request::is('manage/' . strtolower(str_replace(' ', '-', $products->jasa_name ?? '')))) active-nav @endif">
-        <i class="fa fa-upload"></i>
-        <span>Upload</span>
-      </a>
-        <a href="{{ url('mystudio/revenue') }}"
-          ><i class="fa fa-shopping-bag"></i><span>Pendapatan</span></a
-        >
-        <a href="{{ url('mystudio/profile') }}" class=" @if(Request::is('mystudio/profile')) active-nav @endif"
-          ><i class="fa fa-user"></i><span>Statistik</span></a
+        <a href="{{ url('mystudio/statistik') }}" class=" @if(Request::is('mystudio/statistik')) active-nav @endif"
+          ><i class="fa fa-chart-bar"></i><span>Statistik</span></a
         >
       </div>
     @endowner

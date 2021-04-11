@@ -2,11 +2,15 @@
 
 namespace App\Providers;
 
+use App\Helpers\Studios;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\RateLimiter;
 use App\Models\Studio;
+use App\Models\StudioLover;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,7 +21,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        App::bind('studio', function() {
+            return new Studios;
+        });
     }
 
     /**
@@ -27,6 +33,23 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Blade::if('lover', function () {
+        if(! empty($this->app->request->route('slug'))) {
+            $studio = Studio::where([
+                ['name', str_replace('-', ' ', $this->app->request->segment(2))]
+                ])->first();
+            $lover = StudioLover::where([
+                ['studio_id', $studio->id ?? ''],
+                ['customer_id', auth()->user()->id],
+                ])->first();
+            if($lover) {
+                    return 1;
+                }
+            } else {
+                return 0;
+            }
+        });
+
         Blade::if('owner', function () {
             if(! empty($this->app->request->route('slug'))) {
                 $studio = Studio::where([

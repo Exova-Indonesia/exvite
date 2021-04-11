@@ -5,7 +5,10 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+// use Illuminate\Support\Str;
 use Carbon\Carbon;
+use App\Facades\Studios;
+use App\Models\OrderSuccess;
 use App\Models\User;
 use App\Mail\InvoiceMail;
 use App\Exports\Transactions;
@@ -13,6 +16,7 @@ use App\Models\Transaction;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\MailResetPasswordNotification;
 use App\Notifications\TransactionMail;
+use App\Models\Jasa;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +40,8 @@ Route::middleware('auth')->group(function() {
     Route::get('/studios/{slug}', [App\Http\Controllers\Studio\StudioController::class, 'studios'])->name('view.studio');
     Route::delete('picture/{id}', [App\Http\Controllers\Studio\StudioController::class, 'destroy_picture']);
     Route::put('profil/studio/{id}', [App\Http\Controllers\Studio\StudioController::class, 'edit_profil'])->name('studio.profil.update');
+    Route::post('lover', [App\Http\Controllers\Studio\StudioController::class, 'love'])->name('studio.love');
+    Route::delete('lover', [App\Http\Controllers\Studio\StudioController::class, 'unlove'])->name('studio.unlove');
 });
 
 Route::middleware('auth')->prefix('upload')->group(function() {
@@ -44,9 +50,7 @@ Route::middleware('auth')->prefix('upload')->group(function() {
 });
 
 Route::get('/welcome', function (Request $request) {
-    // return response()->json($request->session()->get('cart_shopping'));
-    // $data = App\Models\Cart::where('cart_id', 1110088696)->delete();
-    return auth()->user()->studio->id;
+    $jasa = Jasa::query()->restore();
 });
 
 Route::get('/components/sidebar', function (Request $request) {
@@ -171,6 +175,7 @@ Route::middleware('auth')->group(function() {
     Route::resource('/products', App\Http\Controllers\ProductController::class);
     Route::post('/favorite/products', [App\Http\Controllers\ProductController::class, 'add_favorite'])->name('products.favorit');
     Route::post('/diskusi/new', [App\Http\Controllers\ProductController::class, 'add_diskusi'])->name('diskusi.new');
+    Route::post('/views/products', [App\Http\Controllers\ProductController::class, 'views'])->name('products.views');
 });
 
 

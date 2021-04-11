@@ -38,14 +38,25 @@
                 class="mt-3 btn btn-xs font-600 btn-border border-highlight color-highlight"
                 >Pesan</button
               >
+              @lover
               <button
                 href="#"
-                data-menu="menu-follow"
-                class="mt-3 ms-2 btn btn-xs font-600 btn-border border-highlight color-highlight"
+                data-id="{{ $seller->id }}"
+                class="mt-3 ms-2 btn btn-xs font-600 btn-border border-highlight color-highlight unlove"
               >
-                <i class="fa fa-user"></i
+                <i class="fa fa-heart"></i
                 ><i class="ms-2 font-11 fa fa-check"></i>
               </button>
+              @else
+              <button
+                role="button"
+                data-id="{{ $seller->id }}"
+                class="mt-3 ms-2 btn btn-xs font-600 btn-border border-highlight color-highlight add-love"
+              >
+                <i class="fa fa-heart"></i
+                ><i class="ms-2 font-11 fa fa-plus"></i>
+              </button>
+              @endlover
                 @endowner
             </div>
           </div>
@@ -58,29 +69,36 @@
             </p>
             <br/>
             <a class="font-600 color-highlight"
-              >{{ ($seller->address->district['name']) ? $seller->address->district['name'] . ', ' : '' }} {{ $seller->address->province['name'] ?? '' }}</a
+              >{{ ($seller->address->district['name'] ?? '') ? $seller->address->district['name'] . ', ' : '' }} {{ $seller->address->province['name'] ?? '' }}</a
             >
             <p class="opacity-60 font-12 pt-2">
-              Owned by <a href="{{ url('/users/' . strtolower(str_replace(' ', '-', $seller->owner['name']))) }}" class="color-theme font-600">{{ $seller->owner['name'] }}</a>
+              Owned by <a href="{{ url('/users/' . Str::slug($seller->owner['name'])) }}" class="color-theme font-600">{{ $seller->owner['name'] }}</a>
             </p>
           </div>
 
-          <div class="divider mb-2"></div>
+          <!-- <div class="divider mb-2"></div> -->
           <div class="row mb-2 text-center">
             <div class="col-4">
-              <h6 class="mb-0 color-theme">{{ $seller->portfolio->count() }}</h6>
-              portfolios
+              <div class="card mx-1">
+                <h6 class="mb-0 color-theme">{{ $seller->portfolio->count() }}</h6>
+                portfolios
+              </div>
             </div>
             <div class="col-4">
-              <h6 class="mb-0 color-theme">1,8m</h6>
-              lovers
+              <div class="card mx-1">
+                <h6 class="mb-0 color-theme">{{ $seller->lovers->count() }}</h6>
+                lovers
+              </div>
             </div>
             <div class="col-4">
-              <h6 class="mb-0 color-theme">{{ $sells }}</h6>
-              sells
+              <div class="card mx-1">
+                <h6 class="mb-0 color-theme">{{ $seller->portfolio->sum('jasa_sold') }}</h6>
+                sells
+              </div>
             </div>
           </div>
-          <div class="divider mb-3"></div>
+          <!-- <div class="divider mb-3"></div> -->
+        @owner
 
           <div class="row m-0">
             <a href="{{ url('mystudio/pesanan') }}" class="col-lg-3 col-6">
@@ -98,7 +116,7 @@
               <!-- small box -->
               <div class="small-box bg-success">
                 <div class="inner">
-                  <h3>53<sup style="font-size: 20px">%</sup></h3>
+                  <h3>{{ $orders->where('status', 'pesanan_diproses')->count() }}</h3>
 
                   <p class="m-0">Dalam proses</p>
                 </div>
@@ -109,7 +127,7 @@
               <!-- small box -->
               <div class="small-box bg-warning">
                 <div class="inner">
-                  <h3>44</h3>
+                  <h3>{{ $orders->where('status', 'permintaan_revisi')->count() }}</h3>
 
                   <p class="m-0">Pesanan direvisi</p>
                 </div>
@@ -128,8 +146,8 @@
             </a>
             <!-- ./col -->
           </div>
-        </div>
 
+        @endowner
           <div class="section-title">
             <h2 class="s-title d-block">Terlaris</h2>
           </div>
@@ -179,6 +197,7 @@
             class="close-menu color-theme font-15 text-center py-3 d-block"
             >Cancel</a
           >
+      </div>
   </div>
 </div>
 @endsection
@@ -259,28 +278,39 @@
 @section('scripts')
 <script>
   $(document).ready(function() {
-      // $('.update-profil').change(function(e) {
-      //   e.preventDefault();
-      //   $.ajax({
-      //     url: "{{ url('profil/studio/' . auth()->user()->id) }}",
-      //     data: new FormData(this),
-      //     type: "PUT",
-      //     cache: false,
-      //     processData: false,
-      //     contentType: false,
-      //     enctype: 'multipart/form-data',
-      //     dataType:'json',
-      //     headers: {
-      //       "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-      //     },
-      //     success: function(data) {
-      //       console.log(data);
-      //     },
-      //     error: function(data) {
-      //       console.log(data);
-      //     }
-      //   });
-      // });
+    $('.add-love').on('click', function() {
+      $.ajax({
+        url: "{{ route('studio.love') }}",
+        data: { id: $(this).attr('data-id') },
+        type: "POST",
+        headers: {
+          "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function() {
+          $('.add-love').html(`<i class="fa fa-heart"></i><i class="ms-2 font-11 fa fa-check"></i>`);
+        },
+        error: function() {
+          // 
+        },
+      });
+    });
+
+    $('.unlove').on('click', function() {
+      $.ajax({
+        url: "{{ route('studio.unlove') }}",
+        data: { id: $(this).attr('data-id') },
+        type: "DELETE",
+        headers: {
+          "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function() {
+          $('.unlove').html(`<i class="fa fa-heart"></i><i class="ms-2 font-11 fa fa-plus"></i>`);
+        },
+        error: function() {
+          // 
+        },
+      });
+    });
 
 
       let prov = $('#prov').val();

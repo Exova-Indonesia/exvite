@@ -16,9 +16,10 @@ class CreatePaymentDetails extends Migration
         Schema::create('payment_details', function (Blueprint $table) {
             $table->id('payment_id');
             $table->string('payment_method');
+            $table->integer('amount');
             $table->integer('discount');
             $table->integer('admin_fee');
-            $table->integer('amount');
+            $table->integer('total');
             $table->string('status');
             $table->timestamps();
         });

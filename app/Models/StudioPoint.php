@@ -3,16 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
-class StudioLover extends Model
+class StudioPoint extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
     protected $fillable = [
-        'customer_id',
         'studio_id',
-        'deleted_at'
+        'value',
+        'source',
     ];
     protected $dates = ['deleted_at'];
 }

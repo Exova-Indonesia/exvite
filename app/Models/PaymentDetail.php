@@ -16,5 +16,10 @@ class PaymentDetail extends Model
         'admin_fee',
         'amount',
         'status',
+        'total',
     ];
+
+    public function setTotal() {
+        return $this->total = $this->amount + $this->admin_fee - $this->discount;
+    }
 }

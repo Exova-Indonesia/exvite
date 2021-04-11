@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers\studio;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Studio;
-use App\Models\StudioLogo;
 use App\Models\Jasa;
-use App\Models\OrderJasa;
-use App\Models\JasaRevision;
-use App\Models\JasaPicture;
-use App\Models\JasaAdditional;
+use App\Models\Studio;
 use App\Models\Category;
+use App\Models\JasaView;
+use App\Models\OrderJasa;
+use App\Models\StudioLogo;
+use App\Models\JasaPicture;
+use App\Models\OrderCancel;
+use App\Models\StudioLover;
+use App\Models\JasaRevision;
+use App\Models\OrderSuccess;
+use Illuminate\Http\Request;
 use App\Models\StudioAddress;
+use App\Models\StudioVisitor;
+use App\Models\JasaAdditional;
+use App\Http\Controllers\Controller;
 
 class StudioController extends Controller
 {
@@ -37,6 +42,22 @@ class StudioController extends Controller
     public function create()
     {
         //
+    }
+
+    public function love(Request $request)
+    {
+        StudioLover::firstOrCreate([
+            'studio_id' => $request->id,
+            'customer_id' => auth()->user()->id,
+        ]);
+    }
+
+    public function unlove(Request $request)
+    {
+        StudioLover::where([
+            ['studio_id', $request->id],
+            ['customer_id', auth()->user()->id],
+            ])->forceDelete();
     }
 
     /**
@@ -75,20 +96,64 @@ class StudioController extends Controller
             'portfolio.subcategory.parent',
             'owner', 'logo',
             'address.province', 'address.district',
-            'portfolio.cover', 'portfolio')
+            'portfolio.cover', 'portfolio.views')
         ->where([
             ['user_id', auth()->user()->id],
             ])
         ->first();
-        $sells = Jasa::where('studio_id', auth()->user()->studio->id)->sum('jasa_sold');
-        $orders = OrderJasa::with(['products' => function($q) {
-            $q->where('studio_id', auth()->user()->studio->id);
+        // $sells = Jasa::where('studio_id', auth()->user()->studio->id)->sum('jasa_sold');
+        $orders = OrderJasa::with(['success', 'products' => function($q) {
+            $q->where('studio_id', studio()->id);
+        }])->get();
+        $success = OrderSuccess::with(['orders.products' => function($q) {
+            $q->where('studio_id', studio()->id);
         }])->get();
         $category = Category::all();
+        foreach($seller->portfolio->sortby('jasa_sold')->take(3) as $p) {
+            $jasaChart[] = $p->jasa_name;
+            $jasaJual[] = $p->jasa_sold;
+            $jasaTampil[] = $p->views()->count();
+        }
+        $jasaTampilCount = 0;
+        foreach($seller->portfolio as $p) {
+            $jasaTampilCount += $p->views()->count();
+        }
+        $cancel = OrderCancel::where([
+            ['studio_id', studio()->id],
+            ])->get();
+        $growthJasa = new Jasa;
+        $growthJasa->studio_id = studio()->id;
+
+        $growthView = new JasaView;
+        $growthView->studio_id = studio()->id;
+
+        $growthSells = new OrderSuccess;
+        $growthSells->studio_id = studio()->id;
+
+        $growthCancel = new OrderCancel;
+        $growthCancel->studio_id = studio()->id;
+
+        $visitors = new StudioVisitor;
+        $visitors->studio_id = studio()->id;
+
+        $revenue = new OrderSuccess;
+        $revenue->studio_id = studio()->id;
         switch($id) {
             case "dashboard":
-                return view('seller.dashboard', ['seller' => $seller, 'sells' => $sells, 'orders' => $orders]);
+                return view('seller.dashboard', ['seller' => $seller, 'orders' => $orders]);
                 // return response()->json(['seller' => $seller, 'sells' => $sells, 'orders' => $orders]);
+                break;
+            case "produk":
+                return view('seller.products', ['seller' => $seller, 'orders' => $orders, 'jasa_name' => $jasaChart,
+                'jasa_jual' => $jasaJual, 'jasa_tampil' => $jasaTampil, 'jasa_count' => $jasaTampilCount, 
+                'cancel' => $cancel, 'growthJasa' => $growthJasa->setGrowth(), 'growthView' => $growthView->setGrowth(),
+                'growthSells' => $growthSells->setGrowth(), 'growthCancel' => $growthCancel->setGrowth()]);
+                // return response()->json(['seller' => $seller, 'orders' => $orders, 'jasa_name' => $jasaChart]);
+                break;
+            case "statistik":
+                return view('seller.statistics', ['seller' => $seller, 'orders' => $orders, 'success' => $success, 
+                'visitors' => $visitors, 'revenue' => $revenue]);
+                // return response()->json(['seller' => $seller, 'orders' => $orders, 'success' => $success]);
                 break;
             case "upload":
                 return view('seller.uploads.title', ['seller' => $seller, 'category' => $category]);
@@ -143,9 +208,11 @@ class StudioController extends Controller
 
     public function studios($slug) {
         $slugs = str_replace('-', ' ', $slug);
-        $seller = Studio::with(['portfolio.subcategory.parent', 'owner', 'logo', 'portfolio.cover', 'portfolio' => function($q) {
-            $q->where('jasa_status', true);
-        }])
+        $seller = Studio::with(
+            'portfolio.subcategory.parent',
+            'owner', 'logo',
+            'address.province', 'address.district',
+            'portfolio.cover', 'portfolio')
         ->where([
             ['name', $slugs],
             ['is_complete', 1],

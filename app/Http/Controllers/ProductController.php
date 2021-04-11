@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Lang;
 use Illuminate\Http\Request;
 use App\Models\Jasa;
+use App\Models\JasaView;
 use App\Models\JasaFavorit;
 use App\Models\JasaDiskusi;
 use App\Models\JasaDiskusiComment;
@@ -20,6 +21,15 @@ class ProductController extends Controller
     public function index()
     {
         return view('products.show');
+    }
+
+
+    public function views(Request $request)
+    {
+        JasaView::create([
+            'jasa_id' => $request->jasid,
+            'user_id' => $request->id,
+        ]);
     }
 
     /**

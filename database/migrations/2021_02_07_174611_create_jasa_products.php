@@ -25,6 +25,7 @@ class CreateJasaProducts extends Migration
             $table->text('jasa_thumbnail')->nullable();
             $table->integer('jasa_rating')->default(0);
             $table->integer('jasa_sold')->default(0);
+            $table->integer('jasa_cancel')->default(0);
             $table->softDeletes();
             $table->timestamps();
 

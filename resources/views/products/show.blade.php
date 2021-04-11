@@ -639,6 +639,14 @@
             },
         });
     });
+    $.ajax({
+      url: "{{ route('products.views') }}",
+      type: "POST",
+      data: { id: "{{ auth()->user()->id }}", jasid:"{{ $seller->jasa_id }}" },
+      headers: {
+        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+      },
+    });
   });
 </script>
 @endsection

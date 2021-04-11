@@ -24,6 +24,7 @@ class CreateStudios extends Migration
             $table->bigInteger('address_id')->nullable();
             $table->bigInteger('logo_id');
             $table->boolean('is_complete')->default(false);
+            $table->boolean('is_official')->default(false);
             $table->boolean('suspend')->default(false);
             $table->timestamps();
 

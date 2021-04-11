@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
-
+use Carbon\Carbon;
 class Jasa extends Model
 {
     use HasFactory, SoftDeletes;
@@ -55,5 +55,22 @@ class Jasa extends Model
     }
     public function rating() {
         return $this->hasMany(JasaRating::class, 'jasa_id');
+    }
+    public function views() {
+        return $this->hasMany(JasaView::class, 'jasa_id');
+    }
+    public function getViews() {
+        return $this->views()->count();
+    }
+
+    public function setGrowth() {
+        $now = $this->whereDay('created_at', now()->day)->count();
+        if($this->whereDay('created_at', now()->day - 1)->count() == 0) { 
+            $yesterday = 0; 
+            return  $now - $yesterday * 100;
+        } else { 
+            $yesterday = $this->whereDay('created_at', now()->day - 1)->count(); 
+            return  $now - $yesterday / $yesterday * 100;
+        }
     }
 }

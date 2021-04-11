@@ -105,9 +105,10 @@ class PaymentsController extends Controller
                 PaymentDetail::create([
                     'payment_id' => $this->payment_id,
                     'payment_method' => $method,
-                    'discount' => 0,
-                    'admin_fee' => round($subtotal*0.02),
-                    'amount' => $total,
+                    'discount' => $discount ?? 0,
+                    'admin_fee' => $adm_fee,
+                    'amount' => $subtotal,
+                    'total' => $total,
                     'status' => 'pending',
                 ]);
                 $request->session()->forget('cart_shopping');
@@ -199,11 +200,13 @@ class PaymentsController extends Controller
             PaymentDetail::create([
                 'payment_id' => $this->payment_id,
                 'payment_method' => $method,
-                'discount' => 0,
+                'discount' => $discount ?? 0,
                 'admin_fee' => $adm_fee,
-                'amount' => $total,
+                'amount' => $subtotal,
+                'total' => $total,
                 'status' => 'pending',
             ]);
+
             request()->session()->forget('cart_shopping');
             $paymentUrl = \Midtrans\Snap::createTransaction($params)->redirect_url;
             // $response = \Midtrans\CoreApi::charge($params);

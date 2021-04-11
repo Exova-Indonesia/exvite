@@ -10,6 +10,10 @@ use App\Models\Cart;
 use App\Models\CartDetails;
 use App\Models\CartAdditional;
 use App\Models\OrderJasa;
+use App\Models\OrderCancel;
+use App\Models\Jasa;
+use App\Models\OrderSuccess;
+use App\Models\StudioPoint;
 use App\Models\OrderRevision;
 use Illuminate\Http\Request;
 
@@ -53,6 +57,7 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+
         // 
     }
 
@@ -123,6 +128,7 @@ class OrderController extends Controller
                     'deadline' => $request->content,
                 ]);
                 break;
+
             case 'Note':
                 CartDetails::updateOrCreate([
                     'cart_id' => $request->id,
@@ -131,6 +137,7 @@ class OrderController extends Controller
                     'notes' => $request->content,
                 ]);
                 break;
+
             case 'Additional':
                 $data = explode('-', $request->content);
                 CartAdditional::updateOrCreate([
@@ -148,11 +155,43 @@ class OrderController extends Controller
                     ])->delete();
                 }
                 break;
+
             case 'orderan':
                 OrderJasa::where('order_id', $request->id)->update([
                     'status' => $request->status,
                 ]);
-                // return response()->json(['status' => 125, 'url' => '/']);
+                $order = OrderJasa::with('details', 'products')->where('order_id', $request->id)->first();
+                if($request->status == 'pesanan_selesai') {
+                    $total = new OrderSuccess;
+                    $total->order_id = $request->id;
+                    $total->studio_id = $order->products->studio_id;
+                    $total->amount = $order->details->subtotal;
+                    $total->setPaid();
+                    $total->save();
+
+                    Jasa::where('jasa_id', $order->products->jasa_id)->increment('jasa_sold');
+                    StudioPoint::create([
+                        'studio_id' => $order->products->studio_id,
+                        'order_id' => $request->id,
+                        'value' => 10,
+                        'source' => 'Pesanan Selesai',
+                    ]);
+                }
+                return response()->json(['status' => 125, 'url' => '/']);
+                break;
+
+            case 'reject':
+                $order = OrderJasa::with('details', 'products')->where('order_id', $request->id)->first();
+                OrderJasa::where('order_id', $request->id)->update([
+                    'status' => $request->status,
+                ]);
+                Jasa::where('jasa_id', $order->products->jasa_id)->increment('jasa_cancel');
+                OrderCancel::create([
+                    'customer_id' => auth()->user()->id,
+                    'studio_id' => $order->products->studio_id,
+                    'order_id' => $request->id,
+                    'status' => $request->status,
+                ]);
                 break;
             default:
             //

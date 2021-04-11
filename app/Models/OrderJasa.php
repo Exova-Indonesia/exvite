@@ -38,4 +38,10 @@ class OrderJasa extends Model
     public function details() {
         return $this->hasOne(OrderDetails::class, 'order_id');
     }
+    public function success() {
+        return $this->hasOne(OrderSuccess::class, 'order_id');
+    }
+    public function cancel() {
+        return $this->hasOne(OrderCancel::class, 'order_id');
+    }
 }
