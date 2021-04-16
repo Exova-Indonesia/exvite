@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Transaction;
-use App\Models\OrderJasaResult;
-// use App\Exports\Transactions;
 use PDF;
-use Lang;
 use File;
+use Lang;
+// use App\Exports\Transactions;
+use Excel;
 use Storage;
 use Response;
-use Excel;
+use App\Models\Transaction;
+use Illuminate\Http\Request;
 use App\Jobs\VerifyEmailJobs;
+use App\Exports\RevenueExport;
+use App\Models\OrderJasaResult;
 
 class ExportController extends Controller
 {
@@ -70,6 +71,11 @@ class ExportController extends Controller
 
         $response->header("Content-Type", $type);
         return $response;
+    }
+
+    public function excel()
+    {
+        return (new RevenueExport)->download( 'revenue-' . dates(now()) . '.xlsx');
     }
 
 }

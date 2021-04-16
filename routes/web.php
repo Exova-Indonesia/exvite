@@ -3,20 +3,22 @@
 // namespace App\Http\Controllers;
 // use Auth;
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-// use Illuminate\Support\Str;
 use Carbon\Carbon;
-use App\Facades\Studios;
-use App\Models\OrderSuccess;
+use App\Models\Jasa;
+// use Illuminate\Support\Str;
 use App\Models\User;
+use App\Facades\Studios;
 use App\Mail\InvoiceMail;
-use App\Exports\Transactions;
+use App\Models\StudioRank;
 use App\Models\Transaction;
+use App\Models\OrderSuccess;
+use Illuminate\Http\Request;
+use App\Exports\Transactions;
+use App\Models\StudioVisitor;
+use Illuminate\Support\Facades\Route;
+use App\Notifications\TransactionMail;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\MailResetPasswordNotification;
-use App\Notifications\TransactionMail;
-use App\Models\Jasa;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +44,7 @@ Route::middleware('auth')->group(function() {
     Route::put('profil/studio/{id}', [App\Http\Controllers\Studio\StudioController::class, 'edit_profil'])->name('studio.profil.update');
     Route::post('lover', [App\Http\Controllers\Studio\StudioController::class, 'love'])->name('studio.love');
     Route::delete('lover', [App\Http\Controllers\Studio\StudioController::class, 'unlove'])->name('studio.unlove');
+    Route::post('studio/visitors', [App\Http\Controllers\Studio\StudioController::class, 'visitors'])->name('studio.visitors');
 });
 
 Route::middleware('auth')->prefix('upload')->group(function() {
@@ -50,7 +53,7 @@ Route::middleware('auth')->prefix('upload')->group(function() {
 });
 
 Route::get('/welcome', function (Request $request) {
-    $jasa = Jasa::query()->restore();
+    // 
 });
 
 Route::get('/components/sidebar', function (Request $request) {
@@ -137,6 +140,7 @@ Route::get('/history/export/all', [App\Http\Controllers\ExportController::class,
 Route::post('/download', [App\Http\Controllers\ExportController::class, 'download'])->name('download');
 Route::get('/download/{type}/{id}', [App\Http\Controllers\ExportController::class, 'download_orders'])->name('download.orderan');
 Route::get('/view/{path}', [App\Http\Controllers\ExportController::class, 'view'])->name('view');
+Route::get('/exports/revenue', [App\Http\Controllers\ExportController::class, 'excel'])->name('export.excel');
 // Route::get('/tests', [App\Http\Controllers\WalletController::class, 'tests']);
 
 // Payments

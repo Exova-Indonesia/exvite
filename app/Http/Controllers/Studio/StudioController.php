@@ -8,9 +8,11 @@ use App\Models\Category;
 use App\Models\JasaView;
 use App\Models\OrderJasa;
 use App\Models\StudioLogo;
+use App\Models\StudioRank;
 use App\Models\JasaPicture;
 use App\Models\OrderCancel;
 use App\Models\StudioLover;
+use App\Models\StudioPoint;
 use App\Models\JasaRevision;
 use App\Models\OrderSuccess;
 use Illuminate\Http\Request;
@@ -92,6 +94,7 @@ class StudioController extends Controller
      */
     public function show($id)
     {
+        $points = StudioPoint::where('studio_id', studio()->id)->sum('value');
         $seller = Studio::with(
             'portfolio.subcategory.parent',
             'owner', 'logo',
@@ -125,7 +128,6 @@ class StudioController extends Controller
         $growthJasa->studio_id = studio()->id;
 
         $growthView = new JasaView;
-        $growthView->studio_id = studio()->id;
 
         $growthSells = new OrderSuccess;
         $growthSells->studio_id = studio()->id;
@@ -138,6 +140,12 @@ class StudioController extends Controller
 
         $revenue = new OrderSuccess;
         $revenue->studio_id = studio()->id;
+
+        $visitors = new StudioVisitor;
+        $visitors->studio_id = studio()->id;
+
+        $ranks = StudioRank::get();
+
         switch($id) {
             case "dashboard":
                 return view('seller.dashboard', ['seller' => $seller, 'orders' => $orders]);
@@ -152,7 +160,7 @@ class StudioController extends Controller
                 break;
             case "statistik":
                 return view('seller.statistics', ['seller' => $seller, 'orders' => $orders, 'success' => $success, 
-                'visitors' => $visitors, 'revenue' => $revenue]);
+                'visitors' => $visitors, 'revenue' => $revenue, 'visitors' => $visitors, 'points' => $points, 'ranks' => $ranks]);
                 // return response()->json(['seller' => $seller, 'orders' => $orders, 'success' => $success]);
                 break;
             case "upload":
@@ -238,6 +246,20 @@ class StudioController extends Controller
     public function edit($id)
     {
         //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function visitors(Request $request)
+    {
+        StudioVisitor::create([
+            'user_id' => auth()->user()->id,
+            'studio_id' => $request->id,
+        ]);
     }
 
     public function edit_profil(Request $request, $id)

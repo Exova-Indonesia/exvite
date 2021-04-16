@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OrderSuccess extends Model
 {
@@ -31,23 +32,49 @@ class OrderSuccess extends Model
     }
     
     public function setGrowth() {
-        $now = $this->whereDay('created_at', now()->day)->count();
-        if($this->whereDay('created_at', now()->day - 1)->count() == 0) { 
+        $now = $this->where('studio_id', $this->studio_id)->whereDay('created_at', now()->day)->count();
+        if($this->where('studio_id', $this->studio_id)->whereDay('created_at', now()->day - 1)->count() == 0) { 
             $yesterday = 0; 
             return  $now - $yesterday * 100;
         } else { 
-            $yesterday = $this->whereDay('created_at', now()->day - 1)->count(); 
+            $yesterday = $this->where('studio_id', $this->studio_id)->whereDay('created_at', now()->day - 1)->count(); 
             return  $now - $yesterday / $yesterday * 100;
         }
     }
     public function setRevenueGrowth() {
-        $now = $this->whereDay('created_at', now()->day)->sum('paid');
-        if($this->whereDay('created_at', now()->day - 1)->sum('paid') == 0) { 
+        $now = $this->where('studio_id', $this->studio_id)->whereDay('created_at', now()->day)->sum('paid');
+        if($this->where('studio_id', $this->studio_id)->whereDay('created_at', now()->day - 1)->sum('paid') == 0) { 
             $yesterday = 0; 
             return  $now - $yesterday * 100;
         } else { 
-            $yesterday = $this->whereDay('created_at', now()->day - 1)->sum('paid'); 
+            $yesterday = $this->where('studio_id', $this->studio_id)->whereDay('created_at', now()->day - 1)->sum('paid'); 
             return  $now - $yesterday / $yesterday * 100;
         }
+    }
+    
+    public function getRevenueStatistics()
+    {
+        return $this->where('studio_id', $this->studio_id)->get()
+        ->groupBy(function ($val) {
+            return Carbon::parse($val->created_at)->format('m');
+        });
+    }
+
+    public function getLabels()
+    {
+        $labels = array();
+        foreach($this->getRevenueStatistics() as $key=>$data) {
+            $labels[] = $key;
+        }
+        return $labels;
+    }
+
+    public function getData()
+    {
+        $data = array();
+        foreach($this->getRevenueStatistics() as $key=>$d) {
+            $data[] = $d->count();
+        }
+        return $data;
     }
 }

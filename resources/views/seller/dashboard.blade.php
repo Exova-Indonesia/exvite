@@ -408,6 +408,17 @@
           },
       });
     });
+
+    if({{ $seller->user_id }} !== {{ auth()->user()->id }}) {
+      $.ajax({
+        url: "{{ route('studio.visitors') }}",
+        type: "POST",
+        data: { id:"{{ $seller->id }}" },
+        headers: {
+          "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+      });
+    }
   });
 </script>
 @endsection

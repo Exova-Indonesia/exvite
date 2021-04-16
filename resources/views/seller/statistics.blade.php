@@ -5,7 +5,7 @@
       <!-- small box -->
       <div class="small-box bg-exova">
         <div class="inner">
-          <h4>{{ $visitors->count() }}</h4>
+          <h4>{{ $visitors->where('studio_id', studio()->id)->count() }}</h4>
           <p class="m-0">Pengunjung
             <span class="font-12">
             @if($visitors->setGrowth() < 0)
@@ -24,7 +24,7 @@
       <!-- small box -->
       <div class="small-box bg-exova-2">
         <div class="inner">
-          <h4>Rp{{ number_format($revenue->sum('paid'), 0) }}</h4>
+          <h4>{{ rupiah($revenue->sum('paid')) }}</h4>
           <p class="m-0">Pendapatan 
             <span class="font-12">
             @if($revenue->setRevenueGrowth() < 0)
@@ -69,7 +69,7 @@
     <div class="col-lg-8 col-sm-12">
         <div class="card">
             <div class="card-header">
-                <h5>Traffic</h5>
+                <h5>Pengunjung Harian</h5>
             </div>
             <canvas class="max-height-370" id="chart-statistics"></canvas>
         </div>
@@ -82,28 +82,18 @@
                     <div class="statistik-border">
                         <div class="ranked">
                         <h2>Total Point Anda</h2>
-                        <h3><a>0</a></h3>
+                        <h3>{{ $points }}</h3>
                         <h3> Newbie </h3>
-                        <img src="https://assets.exova.id/img/rank/1.png" title="Rank">
-                        <h4> 50 points menuju Junior </h4>
+                        <img src="{{ $ranks->where('points', '>', $points)->first()->icon }}" title="{{ $ranks->where('points', '>', $points)->first()->name }}">
+                        <h4> {{ $ranks->where('points', '>', $points)->first()->points - $points }} points menuju {{ $ranks->where('points', '>', $ranks->where('points', '>', $points)->first()->points)->first()->name }} </h4>
                         <div class="rank-step">
                         <ul class="p-0">
-                            <li>
-                            <img src="https://assets.exova.id/img/rank/1.png" title="Rank">
-                            <p>Newbie</p>
-                            </li>
-                            <li>
-                            <img src="https://assets.exova.id/img/rank/2.png" title="Rank">
-                            <p>Junior</p>
-                            </li>
-                            <li>
-                            <img src="https://assets.exova.id/img/rank/3.png" title="Rank">
-                            <p>Senior</p>
-                            </li>
-                            <li>
-                            <img src="https://assets.exova.id/img/rank/4.png" title="Rank">
-                            <p>Master</p>
-                            </li>
+                        @foreach($ranks as $r)
+                          <li>
+                          <img src="{{ $r->icon }}" title="{{ $r->name }}">
+                          <p>{{ $r->name }}</p>
+                          </li>
+                        @endforeach
                         </ul>
                     </div>
                 </div>   
@@ -129,7 +119,7 @@
     <div class="col-lg-12 col-sm-12">
         <div class="card">
             <div class="card-header mb-3">
-                <h5>Statistik Pendapatan <button class="btn btn-exova float-right"><i class="fa fa-print"></i> Cetak</button></h5>
+                <h5>Statistik Pendapatan <a href="{{ route('export.excel') }}" class="btn btn-exova float-right"><i class="fa fa-print"></i> Cetak</a></h5>
             </div>
             <div class="table-responsive">
                 <table id="table-products" class="table table-bordered table-striped">
@@ -147,9 +137,9 @@
                         <tr>
                             <td class="text-center">{{ $loop->iteration }}</td>
                             <td>{{ $s->orders['products']['jasa_name'] }}</td>
-                            <td>Rp{{ number_format($s->paid, 0) }}</td>
-                            <td>Rp{{ number_format($s->amount, 0) }}</td>
-                            <td>{{  date('F j, Y', strtotime($s->created_at)) }}</td>
+                            <td>{{ rupiah($s->paid) }}</td>
+                            <td>{{ rupiah($s->amount) }}</td>
+                            <td>{{ parse_date($s->created_at) }}</td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -170,15 +160,15 @@
         const ctx = $('#chart-statistics');
         const ctxSex = $('#sex-statistics');
         const ctxRev = $('#revenue-statistics');
-        const labels = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
+        const labels = {!! json_encode($visitors->getLabels()) !!};
         const sex = ["Wanita", "Pria"];
-        const rev = ["Januari", "Februari", "Januari", "Februari", "Januari", "Februari"];
+        const rev = {!! json_encode($revenue->getLabels()) !!};
         const data = {
           labels: labels,
           datasets: [
           {
             label: 'Pengunjung',
-            data: [55, 49, 10, 56, 45, 34, 12],
+            data: {!! json_encode($visitors->getData()) !!},
             fill: false,
             backgroundColor: '#479cf7',
             pointColor: '#3b8bba',
@@ -196,7 +186,7 @@
           datasets: [
           {
             label: 'Pengunjung',
-            data: [55, 49],
+            data: ["{{ $visitors->setByGender(2) }}", "{{ $visitors->setByGender(1) }}"],
             fill: false,
             backgroundColor: ['#479cf7', '#F8694A'],
             pointColor: '#3b8bba',
@@ -210,7 +200,7 @@
           datasets: [
           {
             label: 'Pengunjung',
-            data: [55, 49],
+            data: {!! json_encode($revenue->getData()) !!},
             fill: false,
             backgroundColor: ['#479cf7'],
             pointColor: '#3b8bba',

@@ -248,22 +248,6 @@
                 </div>
                 <div class="col-lg-12 col-sm-12">
                   <div class="row m-0">
-                      @if(! empty($seller->revisi))
-                      <div class="col-lg-3 col-sm-12 input-style mx-1 has-borders no-icon input-style-always-active mb-4">
-                        <label for="form5" class="color-highlight font-500">Revisi</label>
-                        <select class="add-additional" id="form6">
-                          <option value="0-0" selected hidden>Pilih Paket</option>
-                          <option value="0-0">Tidak perlu</option>
-                          @for($i=1; $i<10; $i++)
-                          <option value="{{ $seller->revisi['id'] . '-' . $i }}">{{ $i * $seller->revisi['count'] . 'X' . ', ' . '+' . $seller->revisi['add_day'] . ' Hari' . ' - ' . 'Rp' . number_format($i * $seller->revisi['price'], 0) }}</option>
-                          @endfor
-                        </select>
-                        <span><i class="fa fa-chevron-down"></i></span>
-                        <i class="fa fa-check disabled valid color-green-dark"></i>
-                        <i class="fa fa-check disabled invalid color-red-dark"></i>
-                        <em></em>
-                      </div>
-                      @endif
                       @foreach($seller->additional as $p)
                         <div class="col-lg-3 col-sm-12 input-style mx-1 has-borders no-icon input-style-always-active mb-4">
                           <label for="form5" class="color-highlight font-500">{{ $p->title }}</label>
@@ -287,17 +271,17 @@
                 <div class="sub-price"></div>
               <div class="divider my-3"></div>
                 <div class="text-center">
-                @if($seller->studio['user_id'] == (auth()->user()->id ?? ''))
+                @if($seller->seller['user_id'] == (auth()->user()->id ?? ''))
+                  <a href="{{ URL('manage/' . strtolower(str_replace(' ','-', $seller->jasa_name))) }}"
+                    class="btn btn-exova font-500 rounded-s submit-bookings text-uppercase"
+                    >Edit</a
+                  >
+                  @else
                   <button
                     role="button"
                     data-id = "{{ $seller->jasa_id }}"
                     class="btn btn-exova font-500 rounded-s submit-bookings text-uppercase"
                     >Booking Sekarang</button
-                  >
-                  @else
-                  <a href="{{ URL('manage/' . strtolower(str_replace(' ','-', $seller->jasa_name))) }}"
-                    class="btn btn-exova font-500 rounded-s submit-bookings text-uppercase"
-                    >Edit</a
                   >
                 @endif
               </div>

@@ -59,15 +59,15 @@ return [
         |
         */
         'properties'             => [
-            'creator'        => '',
-            'lastModifiedBy' => '',
-            'title'          => '',
-            'description'    => '',
-            'subject'        => '',
-            'keywords'       => '',
-            'category'       => '',
-            'manager'        => '',
-            'company'        => '',
+            'creator'        => studio()->name,
+            'lastModifiedBy' => now(),
+            'title'          => 'Revenue',
+            'description'    => 'Latest Revenue',
+            'subject'        => 'Revenue',
+            'keywords'       => 'Revenue,export,spreadsheet',
+            'category'       => 'Revenue',
+            'manager'        => config('app.name'),
+            'company'        => config('app.name'),
         ],
     ],
 
