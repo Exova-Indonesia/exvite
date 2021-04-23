@@ -16,17 +16,9 @@
         <h5>Menampilkan hasil untuk {{ $title }}</h5>
     </div>
     <div class="col-lg-12">
-        <div class="row justify-content-center">
+        <div class="row">
             @forelse($products as $p)
-            <div class="col-lg-2 col-sm-6 p-1">
-                <div class="card">
-                    <img class="p-3 card-img-top" src="{{ $p->jasa_thumbnail }}" alt="Thumbnail">
-                    <div class="card-body">
-                        <h5 class="card-text">{{ $p->jasa_name }}</h5>
-                        <p class="card-text">{{ $p->jasa_deskripsi }}</p>
-                    </div>
-                </div>
-            </div>
+                <x-productcard :products="$p" />
             @empty
                 <div class="unfinded-products">
                     <img width="250px" class="my-2" src="{{ asset('images/icons/noactivity.svg') }}" alt="No Products">

@@ -3,22 +3,27 @@
 namespace App\Http\Controllers;
 
 use Auth;
-use Storage;
 use Lang;
+use Storage;
 use Validator;
 use App\Models\Cart;
-use App\Models\CartDetails;
-use App\Models\CartAdditional;
-use App\Models\OrderJasa;
-use App\Models\OrderCancel;
 use App\Models\Jasa;
-use App\Models\OrderSuccess;
+use App\Models\Studio;
+use App\Models\Wallet;
+use App\Models\OrderJasa;
+use App\Models\CartDetails;
+use App\Models\OrderCancel;
 use App\Models\StudioPoint;
-use App\Models\OrderRevision;
+use App\Models\OrderSuccess;
 use Illuminate\Http\Request;
+use App\Models\OrderRevision;
+use App\Models\CartAdditional;
 
 class OrderController extends Controller
 {
+    public function __construct() {
+        return $this->middleware(['auth', 'cartsession'])->except('show');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -69,8 +74,8 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $data = OrderJasa::with(['customer', 'products.seller',
-        'products.cover', 'details.additional.additional', 'products' => function($q) {
+        $data = OrderJasa::with(['customer', 'products.seller', 'details.payments', 
+        'products.cover', 'details.additionals.additional', 'products' => function($q) {
             $q->withTrashed();
         }])->where('order_id', $id)->first();
         return response()->json($data);
@@ -96,6 +101,7 @@ class OrderController extends Controller
         ]);
         OrderJasa::where('order_id', $request->id)->update([
             'status' => 'permintaan_revisi',
+            'batal_otomatis' => $countLimit->deadline,
         ]);
     }
 
@@ -157,6 +163,15 @@ class OrderController extends Controller
                 break;
 
             case 'orderan':
+                $order = OrderJasa::where('order_id', $request->id)->first();
+                OrderJasa::where('order_id', $request->id)->update([
+                    'status' => $request->status,
+                    'batal_otomatis' => $order->deadline,
+                ]);
+                return response()->json(['status' => 125, 'url' => '/']);
+                break;
+
+            case 'finish':
                 OrderJasa::where('order_id', $request->id)->update([
                     'status' => $request->status,
                 ]);
@@ -169,6 +184,12 @@ class OrderController extends Controller
                     $total->setPaid();
                     $total->save();
 
+                    $studio = Studio::where('id', $order->products->studio_id)->first();
+                    $wallet = Wallet::where('user_id', $studio->user_id)->first();
+                    Wallet::where('user_id', $studio->user_id)->update([
+                        'revenue' => $wallet->revenue + $total->setPaid(),
+                        'balance' => $wallet->balance + $total->setPaid(),
+                    ]);
                     Jasa::where('jasa_id', $order->products->jasa_id)->increment('jasa_sold');
                     StudioPoint::create([
                         'studio_id' => $order->products->studio_id,
@@ -177,7 +198,7 @@ class OrderController extends Controller
                         'source' => 'Pesanan Selesai',
                     ]);
                 }
-                return response()->json(['status' => 125, 'url' => '/']);
+                // return $wallet;
                 break;
 
             case 'reject':

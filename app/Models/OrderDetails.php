@@ -20,7 +20,15 @@ class OrderDetails extends Model
         'additional'
     ];
 
-    public function additional() {
+    public function additionals() {
         return $this->hasMany(OrderAdditional::class, 'orders_detail_id');
+    }
+
+    public function products() {
+        return $this->belongsTo(OrderJasa::class, 'order_id');
+    }
+
+    public function payments() {
+        return $this->belongsTo(PaymentDetail::class, 'payment_id');
     }
 }

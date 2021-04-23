@@ -1,7 +1,5 @@
-@component('mail::message')
-
-{{-- Pemanis --}}
-
+@extends('emails.layouts.app')
+@section('head')
 <div class="d-flex">
     <div class="m-auto">
         <div class="text-center text-white">
@@ -10,19 +8,8 @@
         <div><h2 class="text-center text-capitalize">Payment {{ $details->wal_status }}</h2></div>
     </div>
 </div>
-
-
-{{-- Greeting --}}
-@if (! empty($greeting))
-# {{ $greeting }}
-@endif
-
-{{-- Intro Lines --}}
-@foreach ($introLines as $line)
-{{ $line }}
-
-@endforeach
-
+@endsection
+@section('content')
 @if (! empty($details))
 @component('mail::table')
 <div>
@@ -78,21 +65,4 @@
 </table>
 @endcomponent
 @endif
-
-{{-- Outro Lines --}}
-@foreach ($outroLines as $line)
-{{ $line }}
-
-@endforeach
-
-Terima kasih telah senantiasa menggunakan layanan Exova! <br>
-Semoga kita semua selalu sehat, bahagia, dan kaya raya
-
-{{-- Salutation --}}
-@if (! empty($salutation))
-{{ $salutation }}
-@else
-@lang('Hormat Kami,')<br>
-{{ config('app.name') }}
-@endif
-@endcomponent
+@endsection

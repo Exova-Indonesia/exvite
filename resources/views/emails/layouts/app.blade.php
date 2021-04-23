@@ -1,13 +1,12 @@
 @component('mail::message')
+
+
+@yield('header')
+
+
 {{-- Greeting --}}
 @if (! empty($greeting))
 # {{ $greeting }}
-@else
-@if ($level === 'error')
-# @lang('Ups!')
-@else
-# @lang('Halo!')
-@endif
 @endif
 
 {{-- Intro Lines --}}
@@ -15,6 +14,8 @@
 {{ $line }}
 
 @endforeach
+
+@yield('content')
 
 {{-- Action Button --}}
 @isset($actionText)
@@ -33,12 +34,6 @@
 @endcomponent
 @endisset
 
-@if (! empty($details))
-# {{ $details }}
-@else
- # Indtoduction 
-@endif
-
 {{-- Outro Lines --}}
 @foreach ($outroLines as $line)
 {{ $line }}
@@ -55,17 +50,4 @@ Semoga kita semua selalu sehat, bahagia, dan kaya raya
 @lang('Hormat Kami,')<br>
 {{ config('app.induk') }}
 @endif
-
-{{-- Subcopy --}}
-@isset($actionText)
-@slot('subcopy')
-@lang(
-    "Jika kamu ada masalah dengan \":actionText\",\n".
-    'klik link di berikut',
-    [
-        'actionText' => $actionText,
-    ]
-) <span class="break-all">[{{ $displayableActionUrl }}]({{ $actionUrl }})</span>
-@endslot
-@endisset
 @endcomponent

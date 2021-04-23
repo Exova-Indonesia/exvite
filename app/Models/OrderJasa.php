@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Events\Ordered;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OrderJasa extends Model
 {
@@ -21,12 +22,17 @@ class OrderJasa extends Model
         'invoice',
         'status',
         'deadline',
+        'batal_otomatis',
+        'revision',
         'note',
         'deleted_at',
 
     ];
     protected $dates = ['deleted_at'];
 
+    // protected $dispatchesEvents = [
+    //     'created' => Ordered::class,
+    // ];
 
     
     public function products() {

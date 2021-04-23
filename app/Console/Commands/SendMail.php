@@ -4,9 +4,10 @@ namespace App\Console\Commands;
 
 use Auth;
 use Carbon\Carbon;
-use App\Models\UserSubscription;
 use App\Models\User;
+use App\Models\OrderJasa;
 use Illuminate\Console\Command;
+use App\Models\UserSubscription;
 
 class SendMail extends Command
 {
@@ -15,7 +16,7 @@ class SendMail extends Command
      *
      * @var string
      */
-    protected $signature = 'email:welcome';
+    protected $signature = 'email:deadline';
 
     /**
      * The console command description.
@@ -41,12 +42,9 @@ class SendMail extends Command
      */
     public function handle()
     {
-        $data = User::whereHas('subs', function($q) {
-            $now = date("Y-m-d H:i", strtotime(Carbon::now()));
-            $q->where('ends_at', $now);
-        })->get();
-            foreach($data as $d){
-                $d->notify(new \App\Notifications\MailResetPasswordNotification($d->name));
+    $data = OrderJasa::with('products.seller.owner')->whereDate('deadline', now()->format('Y-m-d'))->get();
+        foreach($data as $d){
+            $d->products->seller->owner->notify(new \App\Notifications\DeadlineAlert($d->products->seller->owner->name));
         }
     }
 }

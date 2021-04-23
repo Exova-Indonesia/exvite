@@ -7,12 +7,14 @@ use App\Models\Studio;
 use App\Models\Category;
 use App\Models\JasaView;
 use App\Models\OrderJasa;
+use App\Models\JasaVideos;
 use App\Models\StudioLogo;
 use App\Models\StudioRank;
 use App\Models\JasaPicture;
 use App\Models\OrderCancel;
 use App\Models\StudioLover;
 use App\Models\StudioPoint;
+use Illuminate\Support\Str;
 use App\Models\JasaRevision;
 use App\Models\OrderSuccess;
 use Illuminate\Http\Request;
@@ -81,7 +83,6 @@ class StudioController extends Controller
             'jasa_id' => $jasa->jasa_id,
             'title' => 'Revisi',
             'price' => 0,
-            'type' => 'Revision',
         ]);
         return redirect('manage/' . strtolower(str_replace(' ', '-', $request->title)));
     }
@@ -298,20 +299,46 @@ class StudioController extends Controller
         $jasa = Jasa::where('jasa_id', $id)->first();
         $studio = Studio::where('user_id', auth()->user()->id)->first();
 
-        if($request->picture) {
+        if(isset($request->picture)) {
             foreach($request->picture as $jp) {
                 JasaPicture::where('id', $jp)->update([
                     'jasa_id' => $id,
                 ]);
             }
         }
+        if(isset($request->info['cover_picture'])) {
+            $thumbnail = $request->info['cover_picture'];
+            JasaPicture::where('id', $request->info['cover_picture'])->update([
+                'jasa_id' => $id,
+            ]);
+        }
 
+        if($request->video) {
+            foreach($request->video as $vid_id) {
+                JasaVideos::where('id', $vid_id)->update([
+                    'jasa_id' => $id,
+                ]);
+            };
+        }
+
+        $revision = JasaAdditional::updateOrCreate([
+            'id' => $request->info['rev_id'],
+            'jasa_id' => $id,
+            'title' => 'Revisi',
+        ],[
+            'jasa_id' => $id,
+            'title' => 'Revisi',
+            'add_day' => $request->info['revisi_waktu'],
+            'price' => parse_rupiah($request->info['revisi_price']),
+            'quantity' => $request->info['revisi_count'],
+        ]);
+        
         Jasa::where('jasa_id', $id)->update([
             'jasa_name' => $request->info['title'],
             'jasa_deskripsi' => $request->info['description'],
             'jasa_subcategory' => $request->info['subcategory'],
-            'jasa_price' =>  preg_replace(['/[Rp,.]/'],'',$request->info['price_start']),
-            'jasa_thumbnail' => ($request->picture == [null]) ? $jasa->jasa_thumbnail : $request->picture[0],
+            'jasa_price' =>  parse_rupiah($request->info['price_start']),
+            'jasa_thumbnail' => $thumbnail ?? $jasa->jasa_thumbnail,
             'jasa_revision' => $revision->id ?? $jasa->jasa_revision,
         ]);
         $add = array();
@@ -323,13 +350,13 @@ class StudioController extends Controller
                     'title' => $name['add_name'],
                     'jasa_id' => $id,
                     'quantity' => intval($name['quantity']),
-                    'price' => preg_replace(['/[Rp,.]/'],'', $name['add_price'] ?? 0),
+                    'price' => parse_rupiah($name['add_price'] ?? 0),
                     'add_day' => $name['add_day'],
                 ]);
             }
         }
         // return response()->json($request->all());
-        return response()->json(['status' => 200, 'url' => url('share/' . strtolower(str_replace(' ', '-', $request->title))), 'message' => 'Berhasil Mengubah']);
+        return response()->json(['status' => 200, 'url' => url('share/' . Str::slug($jasa->jasa_name)), 'message' => 'Berhasil Mengubah']);
     }
 
     /**
@@ -348,11 +375,15 @@ class StudioController extends Controller
         $jasa = Jasa::where('jasa_thumbnail', $id)->first();
         JasaPicture::where('id', $id)->delete();
         if(! empty($jasa)) {
-            $pic = JasaPicture::where('jasa_id', $jasa->jasa_id)->first();
             $jasa = Jasa::where('jasa_thumbnail', $id)
             ->update([
-                'jasa_thumbnail' => $pic->id ?? '',
+                'jasa_thumbnail' => '',
                 ]);
             }
+    }
+
+    public function destroy_video($id)
+    {
+        JasaVideos::where('id', $id)->delete();
     }
 }

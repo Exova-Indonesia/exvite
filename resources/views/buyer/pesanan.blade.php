@@ -1,12 +1,27 @@
 @extends('layouts.app')
+@section('src-scripts')
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.min.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.min.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.min.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-rename/dist/filepond-plugin-file-rename.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+@endsection
+@section('src-styles')
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
+    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet" />
+@endsection
+
 @section('content')
 <div class="page-content">
     <div class="container">
         <div class="col">
             <div class="row">
                 <div class="scroll-notif">
-                    <span class="shortcut-notif" id="pembelian">Pembelian</span>
+                    <span class="shortcut-notif" id="pembelian" data-content="menunggu_pembayaran">Pembelian</span>
                     <span class="shortcut-notif" id="penjualan">Penjualan</span>
+                    <span class="shortcut-notif" id="dibatalkan">Dibatalkan</span>
                 </div>
             </div>
             <h3 class="notif-title"></h3>
@@ -76,7 +91,7 @@ $(document).ready(function() {
         $('#search_id').attr('data-content', id);
         $.getJSON( "{{ url('/') }}" + '/web/v2/orders/' + base + '/' + id + '/' + search, function(data) {
             $.each(data, function(i, data) {
-                if(data.products !== null) {
+                if(data.status !== null) {
                     content += `
                     <div class="row m-0 flex-nowrap p-2">
                         <div class="notif-image">
@@ -84,17 +99,23 @@ $(document).ready(function() {
                             </div>
                             <div class="notif-content-more">
                                 <h5 class="mb-1">` + data.products['jasa_name'] + `</h5>
-                                <span>` + title + `</span>
-                                <div>
-                                    <small>Sisa Waktu : `+ countdown(data.deadline) + `</small>
-                                </div>
-                            </div>
+                                <span>` + title + `</span>`;
+                                if(['pembelian', 'penjualan'].includes(base)) {
+                                    content += `
+                                        <div><small>Sisa Waktu : `+ countdown(data.batal_otomatis) + `</small></div>
+                                    `;
+                                } else if(['dibatalkan'].includes(base)) {
+                                    content += `
+                                        <div><small>Status : `+ (data.status).trim().replace(/^\w/, (c) => c.toUpperCase()).replace('_', ' ') + `</small></div>
+                                    `;
+                                }
+                            content +=`</div>
                             <div class="notif-btn ml-auto">
                             <button class="detail-btn btn btn-exova" data-label="detail_pesanan" data-id="` + data.order_id + `" data-toggle="modal" data-target="#orderModal"><i class="fas fa-eye" title="Lihat Detail"></i></button>
                             `;
                             if(id === 'menunggu_pembayaran') {
                                 content += `
-                                    <button class="delete-btn btn btn-success" data-id="` + data.order_id + `"><i class="fas fa-credit-card"></i></button>
+                                    <button class="repay-btn btn btn-success" data-label="detail_pembayaran" data-id="` + data.details.payments.payment_id + `"><i class="fas fa-credit-card"></i></button>
                                     <button class="delete-btn btn btn-danger" data-id="` + data.order_id + `"><i class="fas fa-trash"></i></button>
                                 `;
                             } else if(id === 'pesanan_masuk') {
@@ -108,7 +129,7 @@ $(document).ready(function() {
                                 `;
                             } else if(id === 'pesanan_dikirim' && base === 'pembelian') {
                                 content += `
-                                    <button class="accept-btn btn btn-success" data-content="pesanan_selesai" data-id="` + data.order_id + `" title="Selesaikan Pesanan"><i class="fas fa-check"></i></button>
+                                    <button class="finish-btn btn btn-success" data-content="pesanan_selesai" data-id="` + data.order_id + `" title="Selesaikan Pesanan"><i class="fas fa-check"></i></button>
                                     <button class="download-btn btn btn-success" data-id="` + data.order_id + `" title="Download"><i class="fas fa-download"></i></button>
                                     <button class="revisi-btn btn btn-primary" data-label="permintaan_revisi" data-id="` + data.order_id + `" data-toggle="modal" data-target="#orderModal" title="Minta Revisi"><i class="fas fa-pencil-alt"></i></button>
                                 `;
@@ -161,6 +182,30 @@ $(document).ready(function() {
                     }
                 });
             });
+            
+            $(".finish-btn").on("click", function () {
+                $.ajax({
+                    url: "{{ url('order/finish') }}",
+                    type: 'PUT',
+                    data: { 
+                        id: $(this).attr('data-id'), type: 'finish', status: $(this).attr('data-content')
+                    },
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                    },
+                    success: function(data) {
+                        path = window.location.pathname.replace('/notifications/', '');
+                        contents('pesanan_dikirim', path, 'null');
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Berhasil',  
+                        });
+                    },
+                    error: function(data) {
+                        // console.log(data)
+                    }
+                });
+            });
             $(".reject-btn").on("click", function () {
                 $.ajax({
                     url: "{{ url('order/reject') }}",
@@ -202,6 +247,23 @@ $(document).ready(function() {
                     }
                 });
             });
+
+            
+            $('.repay-btn').on('click', function() {
+                $.ajax({
+                    url: "{{ url('/repayment') }}/" + $(this).attr('data-id'),
+                    type: 'GET',
+                    success: function(data) {
+                        window.open(data.url, '_blank');
+                    },
+                    error: function(data) {
+                        // console.log(data);
+                    },
+                    beforeSend: function(data) {
+                        $('.modal-body').html("Loading...");
+                    }
+                });
+            })
             
             $('.decline-btn').on('click', function() {
                 Swal.fire({
@@ -350,26 +412,34 @@ $(document).ready(function() {
         path = window.location.pathname.replace('/notifications/', '')
 
         $('#' + path).addClass("notif-active");
-        if(['penjualan', 'pembelian'].includes(path)) {
+        if(['penjualan', 'pembelian', 'dibatalkan'].includes(path)) {
             submenu += `<div class="scroll-notif">`;
 
-            if(['penjualan'].includes(path)) {
-                submenu += `<span class="shortcut-product notif-active" data-id="pesanan_masuk">Pesanan Masuk</span>`;
-            } else if(['pembelian'].includes(path)) {
+            if(['penjualan', 'pembelian'].includes(path)) {
+                if(['penjualan'].includes(path)) {
+                    submenu += `<span class="shortcut-product notif-active" data-id="pesanan_masuk">Pesanan Masuk</span>`;
+                } else if(['pembelian'].includes(path)) {
+                    submenu += `
+                        <span class="shortcut-product notif-active" data-id="menunggu_pembayaran">Menunggu Pembayaran</span>
+                        <span class="shortcut-product" data-id="menunggu_konfirmasi">Menunggu Konfirmasi</span>
+                    `;
+                }
                 submenu += `
-                    <span class="shortcut-product notif-active" data-id="menunggu_pembayaran">Menunggu Pembayaran</span>
-                    <span class="shortcut-product" data-id="menunggu_konfirmasi">Menunggu Konfirmasi</span>
+                    <span class="shortcut-product" data-id="pesanan_diproses">Pesanan Diproses</span>
+                    <span class="shortcut-product" data-id="pesanan_dikirim">Pesanan Dikirim</span>
+                    <span class="shortcut-product" data-id="permintaan_revisi">Permintaan Revisi</span>
+                    <span class="shortcut-product" data-id="pesanan_selesai">Pesanan Selesai</span>
+                </div>
                 `;
+            } else if(['dibatalkan'].includes(path)) {
+                submenu += `
+                    <span class="shortcut-product notif-active" data-id="pesanan_dibatalkan">Pesanan Dibatalkan</span>
+                    <span class="shortcut-product" data-id="pesanan_ditolak">Pesanan Ditolak</span>
+                    <span class="shortcut-product" data-id="batal_otomatis">Batal Otomatis</span>
+                </div>
+                `;    
             }
-            submenu += `
-                <span class="shortcut-product" data-id="pesanan_diproses">Pesanan Diproses</span>
-                <span class="shortcut-product" data-id="pesanan_dikirim">Pesanan Dikirim</span>
-                <span class="shortcut-product" data-id="permintaan_revisi">Permintaan Revisi</span>
-                <span class="shortcut-product" data-id="pesanan_selesai">Pesanan Selesai</span>
-            </div>
-            `;
-            contents((path === 'penjualan') ? 'Pesanan Masuk' : 'Menunggu Pembayaran', path, 'null');
-
+            contents((path === 'penjualan') ? 'Pesanan Masuk' : (path === 'pembelian') ? 'Menunggu Pembayaran' : 'Pesanan Dibatalkan', path, 'null');
         }
         $('.sub-menu').html(submenu);
 
@@ -466,7 +536,7 @@ $(document).ready(function() {
                                     </tr>
                                     <tr>
                                         <td>Invoice</td>
-                                        <td class="text-right text-primary font-weight-bold">`+ data.invoice +`</td>
+                                        <td class="text-right text-primary font-weight-bold">`+ data.details.payments.invoice +`</td>
                                     </tr>`;
                                     if(data.example) {
                                         content+=`<tr>
@@ -479,8 +549,14 @@ $(document).ready(function() {
                                         <tr>
                                             <td>Revisi Detail</td>
                                             <td class="text-right font-weight-bold">` + data.revisi_detail.detail + `</td>
-                                        </tr>
-                                    `;
+                                        </tr>`;
+                                    }
+                                    if(['pesanan_ditolak', 'pesanan_dibatalkan', 'batal_otomatis'].includes(data.status)) {
+                                        content +=`
+                                        <tr>
+                                            <td>Status Pembatalan</td>
+                                            <td class="text-right font-weight-bold">`+ (data.status).trim().replace(/^\w/, (c) => c.toUpperCase()).replace('_', ' ') +`</td>
+                                        </tr>`;
                                     }
                                 content += `</tbody>
                             </table>

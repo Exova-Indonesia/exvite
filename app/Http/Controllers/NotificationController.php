@@ -45,7 +45,7 @@ class NotificationController extends Controller
      */
     public function show($id)
     {
-        if(in_array($id, ['penjualan', 'pembelian'])) {
+        if(in_array($id, ['penjualan', 'pembelian', 'dibatalkan'])) {
             return view('buyer.pesanan');
         } else if(in_array($id, ['update', 'pesan'])) {
             return view('notifications');

@@ -13,4 +13,8 @@ class JasaFavorit extends Model
         'user_id',
         'jasa_id',
     ];
+
+    public function products() {
+        return $this->belongsTo(Jasa::class, 'jasa_id');
+    }
 }

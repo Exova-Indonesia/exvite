@@ -77,10 +77,19 @@ class ApiController extends Controller
     }
     public function pembelian($submenu, $search) {
         $value = auth()->user()->id;
-        $data = OrderJasa::with(['customer', 'products.cover', 'products' => function($q) use($search) {
+        $data = OrderJasa::with(['customer', 'products.cover', 'details.payments', 'products' => function($q) use($search) {
             ($search == 'null') ? $q->withTrashed() : $q->where('jasa_name', 'LIKE', '%'.$search.'%')->withTrashed();
         }])
         ->where('customer_id', $value)
+        ->where('status', $submenu)
+        ->orderby('created_at', 'DESC')
+        ->get();
+        return response()->json($data);
+    }
+    public function dibatalkan($submenu, $search) {
+        $data = OrderJasa::with(['customer', 'products.cover', 'products' => function($q) use($search) {
+            ($search == 'null') ? $q->withTrashed() : $q->where('jasa_name', 'LIKE', '%'.$search.'%')->withTrashed();
+        }])
         ->where('status', $submenu)
         ->orderby('created_at', 'DESC')
         ->get();
@@ -97,25 +106,19 @@ class ApiController extends Controller
         if(in_array($label, ['pesanan_diproses', 'permintaan_revisi'])) {
             $f = $request->file("order_files");
             $path = Auth::user()->id . '/studio/orders' . '/' . date('Y') . '/' . date('F');
-            $pathDB = asset('storage/' . Auth::user()->id . '/studio/orders') . '/' . date('Y') . '/' . date('F');
-            $f_name = 'order-' . date('Y-m-d') . '-' . strtolower($f->getClientOriginalName());
+            $pathDB = Auth::user()->id . '/studio/orders' . '/' . date('Y') . '/' . date('F');
+            $f_name = 'order-' . date('Y-m-d') . '-' . rand(0, 9999) . '-' . strtolower($f->getClientOriginalName());
             Storage::putFileAs($path, $f, $f_name);
-            if($label == 'pesanan_diproses') {
-                $data = OrderJasaResult::create([
-                    'order_id' => $id,
-                    'path' =>  $pathDB,
-                ]);
-            } else if($label == 'permintaan_revisi') {
-                $data = OrderRevision::updateOrCreate([
-                    'order_id' => $id,
-                ],
-                [
-                    'path' => $pathDB,
-                ]);
-            }
+            $data = OrderJasaResult::updateorCreate([
+                'order_id' => $id,
+            ],[
+                'order_id' => $id,
+                'path' =>  $pathDB . '/' . $f_name,
+            ]);
             OrderJasa::where('order_id', $id)
             ->update([
                 'status' => 'pesanan_dikirim',
+                'batal_otomatis' => now()->addDays(1),
             ]);
         }
     }
@@ -126,7 +129,7 @@ class ApiController extends Controller
     }
 
     public function getPictures($id) {
-        $return = JasaPicture::where('jasa_id', $id)->get();
+        $return = Jasa::with('pictures', 'videos')->where('jasa_id', $id)->first();
         return response()->json($return);
     }
     public function getProducts($id) {

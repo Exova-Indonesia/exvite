@@ -9,15 +9,17 @@ namespace App\Http\Controllers;
 use Auth;
 use Lang;
 use App\Models\Cart;
-use App\Models\Subscription;
+use App\Models\OrderJasa;
+use App\Models\PayMethod;
 use App\Models\SubsOrder;
 use App\Models\OrderDetails;
-use App\Models\PayMethod;
-use App\Models\PaymentDetail;
-use App\Models\OrderJasa;
-use App\Models\OrderAdditional;
 use App\Models\OrderExample;
+use App\Models\Subscription;
 use Illuminate\Http\Request;
+use App\Models\PaymentDetail;
+use App\Models\CartAdditional;
+use App\Models\OrderAdditional;
+use Illuminate\Support\Facades\Http;
 
 class PaymentsController extends Controller
 {
@@ -102,17 +104,22 @@ class PaymentsController extends Controller
                     'payment_type' => 'gopay',
                     'customer_details' => $customer_details,
                 );
+                $paymentUrl = \Midtrans\Snap::createTransaction($params)->redirect_url;
                 PaymentDetail::create([
                     'payment_id' => $this->payment_id,
                     'payment_method' => $method,
+                    'path' => $paymentUrl,
                     'discount' => $discount ?? 0,
                     'admin_fee' => $adm_fee,
                     'amount' => $subtotal,
                     'total' => $total,
                     'status' => 'pending',
                 ]);
+                PaymentDetail::where('payment_id', $this->payment_id)
+                ->update([
+                    'invoice' => orderInvoice($this->payment_id),
+                ]);
                 $request->session()->forget('cart_shopping');
-                $paymentUrl = \Midtrans\Snap::createTransaction($params)->redirect_url;
                 return response()->json(["link" => $paymentUrl, "method" => $request->method]);
                 break;
 
@@ -197,25 +204,33 @@ class PaymentsController extends Controller
                 'payment_type' => $method,
                 'customer_details' => $customer_details,
             );
+            $paymentUrl = \Midtrans\Snap::createTransaction($params)->redirect_url;
             PaymentDetail::create([
                 'payment_id' => $this->payment_id,
                 'payment_method' => $method,
+                'path' => $paymentUrl,
                 'discount' => $discount ?? 0,
                 'admin_fee' => $adm_fee,
                 'amount' => $subtotal,
                 'total' => $total,
                 'status' => 'pending',
             ]);
-
+            PaymentDetail::where('payment_id', $this->payment_id)
+            ->update([
+                'invoice' => orderInvoice($this->payment_id),
+            ]);
             request()->session()->forget('cart_shopping');
-            $paymentUrl = \Midtrans\Snap::createTransaction($params)->redirect_url;
             // $response = \Midtrans\CoreApi::charge($params);
             return redirect($paymentUrl);
             // return response()->json($paymentUrl);
     }
 
     function createOrders($d, $subtotal, $add_total, $method, $adm_fee, $payment_id) {
-        $data = Cart::where('cart_id', $d['id'])->first();
+        $data = Cart::with('details', 'additional.additional')->where('cart_id', $d['id'])->first();
+        $dataAdd = CartAdditional::with(['additional' => function($q) {
+            $q->where('title', 'Revisi');
+        }])
+        ->where('cart_id', $d['id'])->first();
         $order_id = date('hi').rand();
         switch($d['type']) {
             case "Subscription":
@@ -241,10 +256,11 @@ class PaymentsController extends Controller
                     'product_id'  =>$data->product_id,
                     'customer_id' =>Auth::user()->id,
                     'type' => $data->product_type,
-                    'invoice' => '',
                     'status' => 'menunggu_pembayaran',
-                    'note' => $data->note,
-                    'deadline' => $data->deadline,
+                    'revision' => $dataAdd->additional['quantity'] ?? 0,
+                    'note' => $data->details['notes'],
+                    'deadline' => $data->details['deadline'],
+                    'batal_otomatis' => now()->addDays(1),
                 ]);
                 OrderExample::create([
                     'order_id' => $order_id,
@@ -271,5 +287,34 @@ class PaymentsController extends Controller
                 default:
                 //
             }
+        }
+        public function repay($id)
+        {
+            $data = PaymentDetail::where('payment_id', $id)->first();
+            return response()->json(['url' => $data->path]);
+
+
+            // $response = array();
+            // $url = 'https://api.sandbox.midtrans.com/v2/' . $id . '/status';
+            // $res = Http::withBasicAuth(config('app.md_secret'), '')->get($url);
+            // if($res['payment_type'] == 'gopay') {
+            //     $response[] = array(
+            //         'name' => 'generate-qr-code',
+            //         'url' => 'https://api.sandbox.midtrans.com/v2/gopay/' . $res['transaction_id'] . '/qr-code',
+            //     );
+            // } else if($res['payment_type'] == 'echannel') {
+            //     $response[] = array('bill_key' => $res['bill_key'], 'biller_code' => $res['biller_code']);
+            // } else {
+            //     $response[] = array('bank' => $res['va_numbers'][0]['bank'],
+            //     'va_number' => $res['va_numbers'][0]['va_number']);
+            // }
+
+            // return response()->json([
+            //     'payment_type' => $res['payment_type'],
+            //     'actions' => $response,
+            //     'transaction_status' => $res['transaction_status'],
+            //     'transaction_time' => $res['transaction_time'],
+            //     'gross_amount' => $res['gross_amount'],
+            // ]);
         }
     }

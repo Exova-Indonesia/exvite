@@ -7,14 +7,18 @@ use Carbon\Carbon;
 use App\Models\Jasa;
 // use Illuminate\Support\Str;
 use App\Models\User;
+use App\Events\Ordered;
 use App\Facades\Studios;
 use App\Mail\InvoiceMail;
+use App\Models\OrderJasa;
 use App\Models\StudioRank;
 use App\Models\Transaction;
 use App\Models\OrderSuccess;
 use Illuminate\Http\Request;
 use App\Exports\Transactions;
+use App\Models\PaymentDetail;
 use App\Models\StudioVisitor;
+use App\Models\CartAdditional;
 use Illuminate\Support\Facades\Route;
 use App\Notifications\TransactionMail;
 use Illuminate\Support\Facades\Notification;
@@ -41,6 +45,7 @@ Route::middleware('auth')->group(function() {
     Route::get('/share/{id}', [App\Http\Controllers\Studio\StudioController::class, 'share']);
     Route::get('/studios/{slug}', [App\Http\Controllers\Studio\StudioController::class, 'studios'])->name('view.studio');
     Route::delete('picture/{id}', [App\Http\Controllers\Studio\StudioController::class, 'destroy_picture']);
+    Route::delete('video/{id}', [App\Http\Controllers\Studio\StudioController::class, 'destroy_video']);
     Route::put('profil/studio/{id}', [App\Http\Controllers\Studio\StudioController::class, 'edit_profil'])->name('studio.profil.update');
     Route::post('lover', [App\Http\Controllers\Studio\StudioController::class, 'love'])->name('studio.love');
     Route::delete('lover', [App\Http\Controllers\Studio\StudioController::class, 'unlove'])->name('studio.unlove');
@@ -53,7 +58,10 @@ Route::middleware('auth')->prefix('upload')->group(function() {
 });
 
 Route::get('/welcome', function (Request $request) {
-    // 
+    $data = PaymentDetail::with('details.products.products.seller.address', 'details.products.products.subcategory', 'details.products.customer.address', 'details.additionals')->where('payment_id', 1903280994)->first();
+    // return view('pdf.order', ['data' => $data]);
+    // return $data;
+    return Ordered::dispatch($data);
 });
 
 Route::get('/components/sidebar', function (Request $request) {
@@ -78,6 +86,7 @@ Route::get('/transaksi', function () {
 Route::middleware('auth')->prefix('/web/v2')->group(function() {
     Route::get('/orders/penjualan/{submenu}/{search}', [App\Http\Controllers\ApiController::class, 'penjualan'])->name('penjualan');
     Route::get('/orders/pembelian/{submenu}/{search}', [App\Http\Controllers\ApiController::class, 'pembelian'])->name('pembelian');
+    Route::get('/orders/dibatalkan/{submenu}/{search}', [App\Http\Controllers\ApiController::class, 'dibatalkan'])->name('dibatalkan');
     Route::get('/notification/update', [App\Http\Controllers\ApiController::class, 'update'])->name('update');
     Route::get('/notification/pesan', [App\Http\Controllers\ApiController::class, 'pesan'])->name('pesan');
     Route::post('/uploads/orders/{id}/{label}', [App\Http\Controllers\ApiController::class, 'store_order_files'])->name('order.files');
@@ -114,6 +123,7 @@ Route::middleware('auth')->group(function() {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::post('/autocomplete', [App\Http\Controllers\HomeController::class, 'autocomplete']);
     Route::get('/search/{title}', [App\Http\Controllers\HomeController::class, 'search']);
+    Route::get('/favorit', [App\Http\Controllers\HomeController::class, 'favorit']);
 });
 Route::get('auth/{provider}', [App\Http\Controllers\Auth\AuthController::class, 'redirectToProvider']);
 Route::get('auth/{provider}/callback', [App\Http\Controllers\Auth\AuthController::class, 'handleProviderCallback']);
@@ -150,6 +160,7 @@ Route::middleware('auth', 'cartsession')->prefix('payments')->group(function() {
     Route::get('/data', [App\Http\Controllers\PaymentsController::class, 'data']);
     Route::post('/pay', [App\Http\Controllers\PaymentsController::class, 'pay'])->name('pay');
 });
+Route::get('/repayment/{id}', [App\Http\Controllers\PaymentsController::class, 'repay'])->name('repay');
 
 Route::get('/payments/handling', [App\Http\Controllers\PaymentsHandling::class, 'handling']);
 
@@ -169,10 +180,10 @@ Route::get('/purchase/{id}/{name}', [App\Http\Controllers\CartController::class,
 Route::get('/highlight', [App\Http\Controllers\HighlightController::class, 'index']);
 Route::get('/highlight/all', [App\Http\Controllers\HighlightController::class, 'all']);
 
-Route::middleware('auth', 'cartsession')->group(function() {
+// Route::group(function() {
     Route::resource('/order', App\Http\Controllers\OrderController::class);
     Route::post('/revision', [App\Http\Controllers\OrderController::class, 'revisi']);
-});
+// });
 
 // Products Page
 Route::middleware('auth')->group(function() {

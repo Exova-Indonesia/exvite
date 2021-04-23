@@ -12,6 +12,7 @@ use Response;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Jobs\VerifyEmailJobs;
+use App\Models\OrderRevision;
 use App\Exports\RevenueExport;
 use App\Models\OrderJasaResult;
 
@@ -57,7 +58,6 @@ class ExportController extends Controller
             default:
                 abort(404);
         }
-        // return response()->json([$request->invoice]);
     }
 
     public function view($path) {

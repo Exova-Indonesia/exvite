@@ -6,13 +6,14 @@ use DB;
 use App;
 use auth;
 use App\Models\Bank;
-use App\Models\Wallet;
-use App\Models\SearchHistory;
-use App\Models\Plan;
 use App\Models\Jasa;
+use App\Models\Plan;
+use App\Models\Wallet;
 use App\Models\Highlight;
+use App\Models\JasaFavorit;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
+use App\Models\SearchHistory;
 
 class HomeController extends Controller
 {
@@ -113,7 +114,12 @@ class HomeController extends Controller
             ]);
         }
 
-        $data = DB::table('jasa_products')->where('jasa_name', 'LIKE', "%{$title}%")->get();
+        $data = Jasa::with('seller')->where('jasa_name', 'LIKE', "%{$title}%")->get();
         return view('search', ['products' => $data, 'balance' => $balance, 'title' => $title]);
+    }
+    public function favorit() {
+        $data = JasaFavorit::with('products.seller', 'products.rating')->where('user_id', auth()->user()->id)->get();
+        return view('products.favorite', ['favorite' => $data]);
+        // return response()->json(['products' => $data]);
     }
 }

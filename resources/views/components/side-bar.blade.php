@@ -37,11 +37,6 @@
         </div>
         <h6 class="menu-divider mt-4">settings</h6>
         <div class="list-group list-custom-small list-menu">
-          <a href="#" data-menu="menu-colors">
-            <i class="fa fa-brush gradient-highlight color-white"></i>
-            <span>Highlights</span>
-            <i class="fa fa-angle-right"></i>
-          </a>
           <a
             href="#"
             data-toggle-theme=""
@@ -70,24 +65,6 @@
           <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
               @csrf
           </form>
-        </div>
-        <h6 class="menu-divider mt-4">Orderan Terakhir</h6>
-        <div class="list-group list-custom-small list-menu">
-          <a href="#">
-            <img src="images/pictures/1s.jpg" />
-            <span>John Droid</span>
-            <i class="fa fa-angle-right"></i>
-          </a>
-          <a href="#">
-            <img src="images/pictures/5s.jpg" />
-            <span>Gina Seed</span>
-            <i class="fa fa-angle-right"></i>
-          </a>
-          <a href="#">
-            <img src="images/pictures/6s.jpg" />
-            <span>Jane Louder</span>
-            <i class="fa fa-angle-right"></i>
-          </a>
         </div>
         <h6 class="menu-divider font-10 mt-4">
         Copyright {{ config('app.name') }}<span class="copyright-year"> {{ date('Y') }}</span>

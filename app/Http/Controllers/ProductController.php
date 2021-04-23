@@ -148,17 +148,19 @@ class ProductController extends Controller
     public function add_favorite(Request $request)
     {
         $data = Jasa::where('jasa_id', $request->id)->first();
-        if($data->studio_id == auth()->user()->studio->id) {
+        if($data->studio_id == studio()->id) {
             return response()->json(['statusMessage' => Lang::get('validation.favorit.failed')], 400);
         }
-        $fav = JasaFavorit::firstOrCreate([
+        $fav = JasaFavorit::query();
+        if($fav->first()) {
+            $fav->delete();
+            return response()->json(['statusMessage' => 'Berhasil menghapus']);
+        } else {
+        $fav->create([
             'user_id' => auth()->user()->id,
             'jasa_id' => $request->id,
         ]);
-        if($fav) {
             return response()->json(['statusMessage' => 'Berhasil menambah ke favorit']);
-        } else {
-            return response()->json(['statusMessage' => 'Gagal menambah ke favorit'], 400);
         }
     }
 

@@ -15,4 +15,8 @@ class ExampleTest extends TestCase
     {
         $this->assertTrue(true);
     }
+    public function test_send_order_created()
+    {
+        $this->assertTrue(true);
+    }
 }

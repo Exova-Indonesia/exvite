@@ -3,6 +3,8 @@
 <form class="formdata" type="POST" enctype="multipart/form-data">
     <div class="my-5">
         <div class="col-lg-12 px-3">
+            <div class="cover-field"></div>
+            <div class="divider"></div>
             <div class="row my-2">
                 <div class="col-lg-4 col-sm-12">
                     <h3 class="font-500">Picture Information</h3>
@@ -16,9 +18,13 @@
                         <div class="row m-0 data-pictures">
 
                         </div>
+                        <div class="text-right">
+                            <button type="button" class="btn btn-success add-video">Tambahkan Video</button>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="video-field"></div>
             <div class="divider"></div>
             <div class="row my-2">
                 <div class="col-lg-4 col-sm-12">
@@ -93,6 +99,41 @@
                 </div>
             </div>
             <div class="divider"></div>
+                <div class="row my-2">
+                    <div class="col-lg-4 col-sm-12">
+                        <h3 class="font-500">Revision</h3>
+                        <p>Lorem</p>
+                    </div>
+                    <div class="col-lg-8 col-sm-12">
+                        <div class="upload-jasa-field p-4 shadow-sm">
+                            
+                            <div class="row m-0">
+                                <div class="input-style col-lg-2 col-sm-12 px-1 input-style-always-active has-borders has-icon mb-4">    
+                                    <input type="hidden" class="form-control" id="revisi_id" value="{{ ($products->additional->where('title', 'Revisi')->first())->id ?? '' }}">
+                                    <input type="number" min="0" max="10" class="form-control" name="revisi_count" id="rev_count" value="{{ ($products->additional->where('title', 'Revisi')->first())->quantity ?? 1 }}" autocomplete="off">
+                                    <label for="rev_count" class="color-theme opacity-50 text-uppercase font-700 font-10">Quantity</label>
+                                </div>
+                                <div class="input-style col-lg-5 col-sm-12 px-1 input-style-always-active has-borders has-icon mb-4">    
+                                    <input type="text" class="form-control" name="revisi_price" id="rev_price" value="{{ rupiah(($products->additional->where('title', 'Revisi')->first())->price ?? 0) }}" autocomplete="off">
+                                    <label for="rev_price" class="color-theme opacity-50 text-uppercase font-700 font-10">Revision Price</label>
+                                </div>
+                                <div class="input-style col-lg-5 col-sm-12 px-1 input-style-always-active has-borders has-icon mb-4">    
+                                    <select type="text" class="form-control" name="revisi_waktu" id="rev_day">
+                                    @if(! empty($products->additional->where('title', 'Revisi')->first()))
+                                        <option value="{{ ($products->additional->where('title', 'Revisi')->first())->add_day }}" selected hidden>{{ ($products->additional->where('title', 'Revisi')->first())->add_day }} Hari</option>
+                                    @endif
+                                    @for($i=1; $i<=14; $i++)
+                                    <option value="{{ $i }}">{{ $i }} Hari</option>
+                                    @endfor
+                                    </select>
+                                    <label for="rev_day" class="color-theme opacity-50 text-uppercase font-700 font-10">Tambahakan Waktu</label>
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+            <div class="divider"></div>
             <div class="row my-2">
                 <div class="col-lg-4 col-sm-12">
                     <h3 class="font-500">Layanan Tambahan</h3>
@@ -101,7 +142,7 @@
                 <div class="col-lg-8 col-sm-12">
                     <div class="upload-jasa-field p-4 shadow-sm">
                         <div class="target-additional">
-                            @forelse($products->additional as $d)
+                            @forelse($products->additional->where('title', '!=', 'Revisi') as $d)
                             <div class="row count-additional" id="EX-{{ $loop->iteration }}">
                                 <div class="input-style col-lg-3 col-sm-12 px-1 input-style-always-active has-borders has-icon mb-4">
                                     <input type="text" class="form-control" name="add_name" placeholder="name" autocomplete="off" value="{{ $d->title }}">
@@ -175,42 +216,56 @@
     $(document).ready(function() {
         dataPictures = () => {
             let dataPic = ``,
-                fieldPic = ``;
-            $.getJSON("{{ url('/web/v2/products/pictures') }}/" + {
-                {
-                    $products - > jasa_id
-                }
-            }, function(data) {
-                let maxFiles = 3 - data.length;
+                fieldPic = ``,
+                coverPic = ``;
+            $.getJSON("{{ url('/web/v2/products/pictures') }}/" + {{ $products->jasa_id }}, function(data) {
+                let maxFiles = 3 - (data.pictures).length;
                 fieldPic = `
                     <label for="jp">Picture</label>
                         <input type="file" class="form-control jpclass" 
                     data-allow-reorder="true" name="jasa_picture" data-max-files="` + maxFiles + `" multiple>
                 `;
-                if (data.length >= 3) {
+                if(! data.jasa_thumbnail) {
+                    coverPic = `
+                        <div class="row my-2">
+                            <div class="col-lg-4 col-sm-12">
+                                <h3 class="font-500">Cover</h3>
+                                <p>Lorem</p>
+                            </div>
+                            <div class="col-lg-8 col-sm-12">
+                                <div class="upload-jasa-field p-4 shadow-sm">
+                                    <div class="col-lg-12 col-sm-12 px-1 cover-field">
+                                    <label for="cover">Cover</label>
+                                        <input type="file" id="cover" class="form-control coverclass" 
+                                    data-allow-reorder="true" name="cover_picture">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                if ((data.pictures).length >= 3) {
                     $('.picture-field').removeClass("d-block");
                     $('.picture-field').addClass("d-none");
                 } else {
                     $('.picture-field').removeClass("d-none");
                     $('.picture-field').addClass("d-block");
                 }
-                $.each(data, function(i, data) {
+                $.each(data.pictures, function(i, index) {
                     dataPic += `
                         <div class="col-lg-4 col-sm-12 col-md-6">
-                            <div class="delete-picture" role="button" data-id="` + data.id + `"><i class="fa fa-trash text-danger"></i></div>`;
-                    if (data.id === {
-                            {
-                                $products - > jasa_thumbnail ?? 0
-                            }
-                        }) {
+                            <div class="delete-picture" role="button" data-id="` + index.id + `"><i class="fa fa-trash text-danger"></i></div>`;
+                    if (index.id === parseInt(data.jasa_thumbnail)) {
                         dataPic += `<div class="cover-picture"><span>Cover</span></div>`;
                     }
-                    dataPic += `<img class="p-1 my-pictures-portfolio" src="` + data.medium + `" alt="">
+                    dataPic += `<img class="p-1 my-pictures-portfolio" src="` + index.medium + `" alt="">
                         </div>
                     `;
                 })
                 $('.picture-field').html(fieldPic);
                 $('.data-pictures').html(dataPic);
+                $('.cover-field').html(coverPic);
                 $('.delete-picture').on('click', function() {
                     let id = $(this).attr('data-id');
                     $.ajax({
@@ -227,7 +282,10 @@
                         }
                     });
                 });
-                const uploadOptions = {
+                const pictures = {
+                    labelMaxTotalFileSizeExceeded: `Ukuran file melebihi batas`,
+                    labelMaxTotalFileSize: `Maksimal total ukuran file adalah {filesize}`,
+                    labelMaxFileSize: `Maksimal ukuran file adalah {filesize}`,
                     checkValidity: true,
                     labelFileTypeNotAllowed: `Format tidak sesuai`,
                     allowFileEncode: true,
@@ -237,8 +295,37 @@
                     imagePreviewHeight: 175,
                     allowReplace: true,
                     allowFileSizeValidation: true,
-                    // maxFiles: maxFiles,
-                    maxTotalFileSize: '50MB',
+                    acceptedFileTypes: ['image/png', 'image/jpeg', 'image/jpg'],
+                    maxTotalFileSize: '25MB',
+                    server: {
+                        url: "{{ route('upload.pictures') }}",
+                        headers: {
+                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                        },
+                    },
+                }
+                const videos = {
+                    labelMaxTotalFileSizeExceeded: `Ukuran file melebihi batas`,
+                    labelMaxFileSizeExceeded: `Ukuran file terlalu besar`,
+                    labelMaxTotalFileSize: `Maksimal total ukuran file adalah {filesize}`,
+                    labelMaxFileSize: `Maksimal ukuran file adalah {filesize}`,
+                    checkValidity: true,
+                    labelFileTypeNotAllowed: `Format tidak sesuai`,
+                    allowFileEncode: true,
+                    allowFileTypeValidation: true,
+                    credits: false,
+                    labelIdle: `Drag & Drop your picture or <span class="filepond--label-action">Browse</span>`,
+                    allowReplace: true,
+                    acceptedFileTypes: ['video/mp4', 'video/avi', 'video/mov', 'video/3gp'],
+                    allowFileSizeValidation: true,
+                    maxTotalFileSize: '150MB',
+                    maxFileSize: '75MB',
+                    server: {
+                        url: "{{ route('upload.pictures') }}",
+                        headers: {
+                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                        },
+                    },
                 }
                 FilePond.registerPlugin(
                     FilePondPluginFileEncode,
@@ -247,7 +334,8 @@
                     FilePondPluginFileValidateSize,
                     FilePondPluginFileValidateType,
                 );
-                const pond = FilePond.create(document.querySelector('input[name="jasa_picture"]'), uploadOptions);
+                const pond = FilePond.create(document.querySelector('input[name="jasa_picture"]'), pictures);
+                FilePond.create(document.querySelector('input[name="cover_picture"]'), pictures);
                 pond.on('warning', (error, file) => {
                     if (error.body === "Max files") {
                         $('#menu-warning-2').addClass("menu-active");
@@ -255,13 +343,74 @@
                         $('.error-message').html("Max files upload is 3");
                     }
                 });
-                FilePond.setOptions({
-                    server: {
-                        url: "{{ route('upload.pictures') }}",
-                        headers: {
-                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-                        },
-                    },
+                // Video Field
+                $('.add-video').on('click', function() {
+                    let videoField = ``;
+                    let count = 0;
+                    let videoMax = 2 - (data.videos).length;
+                    videoField += `
+                    <div class="divider"></div>
+                    <div class="row my-2">
+                        <div class="col-lg-4 col-sm-12">
+                            <h3 class="font-500">Video Information</h3>
+                            <p>Lorem</p>
+                        </div>
+                        <div class="col-lg-8 col-sm-12">
+                            <div class="upload-jasa-field p-4 shadow-sm">
+                                <div class="col-lg-12 col-sm-12 px-1 video-input">
+                                    <label for="video">Video</label>
+                                        <input type="file" id="video" class="form-control videoclass" 
+                                    data-allow-reorder="true" name="jasa_video" data-max-files="`+ videoMax +`" multiple>
+                                </div>
+                                <div class="row m-0">`;
+                                $.each(data.videos, function(i, index) {
+                                    videoField +=
+                                    `<div class="col-lg-6 col-sm-12 py-1">
+                                        <video class="data-videos" id="player`+ count +`" playsinline controls>
+                                            <source src="{{ storage('`+ index.path +`') }}" />
+                                        </video>
+                                        <div class="text-right">
+                                            <button class="delete-video p-1" role="button" data-id="` + index.id + `"><i class="fa fa-trash font-18 text-danger"></i></button>
+                                        </div>
+                                    </div>
+                                    `;
+                                    count++;
+                                });
+                                videoField +=
+                                `</div>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+                    $('.video-field').html(videoField);
+                    FilePond.create(document.querySelector('input[name="jasa_video"]'), videos);
+                    const player = Array.from(document.querySelectorAll('.data-videos')).map(p => new Plyr(p, {
+                        hideControls: true,
+                        controls: ['play-large', 'play', 'progress'],
+                    }));
+                    if ((data.videos).length >= 2) {
+                        $('.video-input').removeClass("d-block");
+                        $('.video-input').addClass("d-none");
+                    } else {
+                        $('.video-input').removeClass("d-none");
+                        $('.video-input').addClass("d-block");
+                    }
+                    $('.delete-video').on('click', function() {
+                        let id = $(this).attr('data-id');
+                        $.ajax({
+                            url: "{{ url('/video') }}/" + id,
+                            type: "DELETE",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                            },
+                            success: function(data) {
+                                dataPictures();
+                            },
+                            error: function(data) {
+                                // console.log(data)
+                            }
+                        });
+                    });
                 });
             });
         }
@@ -338,11 +487,7 @@
 
         $('.delete').on('click', function() {
             $.ajax({
-                url: "{{ url('/products') }}/" + {
-                    {
-                        $products - > jasa_id
-                    }
-                },
+                url: "{{ url('/products') }}/" + {{ $products->jasa_id }},
                 type: "DELETE",
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
@@ -371,7 +516,8 @@
                 });
                 values.push(data);
             });
-            let datainfo = [];
+            let datainfo = [],
+            datavideo = [];
             let info = {},
                 pic = {};
             info['title'] = $('#title').val(),
@@ -382,10 +528,13 @@
             info['revisi_price'] = $('#rev_price').val(),
                 info['revisi_waktu'] = $('#rev_day').val(),
                 info['revisi_type'] = 'Revision',
-                info['cover'] = $('#cover').val(),
+                info['cover_picture'] = $('input[name=cover_picture]').val(),
                 info['rev_id'] = $('#revisi_id').val(),
-                $('input[name=jasa_picture').each(function(index, picture) {
+                $('input[name=jasa_picture]').each(function(index, picture) {
                     datainfo.push(picture.value);
+                })
+                $('input[name=jasa_video]').each(function(index, video) {
+                    datavideo.push(video.value);
                 })
 
             $.ajax({
@@ -395,7 +544,8 @@
                 data: {
                     data: values,
                     info: info,
-                    picture: datainfo
+                    picture: datainfo,
+                    video: datavideo,
                 },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
@@ -415,6 +565,7 @@
                 }
             });
         });
+        
 
         $('#rev_price').on('keyup', function() {
             $(this).val('Rp' + numeral($(this).val()).format("0,0"))
@@ -436,6 +587,7 @@
                 $('#subcat').html(content);
             });
         });
-    })
+    });
+   
 </script>
 @endsection

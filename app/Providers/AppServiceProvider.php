@@ -83,7 +83,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::if('basemenu', function () {
             $url = $this->app->request->segment(1);
             $url2 = $this->app->request->segment(2);
-            if(($url == 'profile') || ($url == 'notifications') || ( $url == '')) {
+            if(($url == 'profile') || ($url == 'notifications') || ($url == 'favorit') || ( $url == '')) {
                 return 1;
             } else {
                 return 0;

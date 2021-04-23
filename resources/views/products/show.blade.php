@@ -1,4 +1,7 @@
 @extends('layouts.app')
+@section('src-scripts')
+  <script src="https://cdn.plyr.io/3.6.5/plyr.js"></script>
+@endsection
 @section('content')
 <div class="container">
     <div class="card card-fixed container p-0" data-card-height="400">
@@ -61,7 +64,7 @@
             <p class="font-400 font-10 mt-n2 mb-0 opacity-50 ">
                 Start From
             </p>
-              <h2 class="me-3 font-700">Rp{{ number_format($seller->jasa_price, 0) }}</h2>
+              <h2 class="me-3 font-700">{{ rupiah($seller->jasa_price) }}</h2>
                     <p class="mb-0">
                         <strong class="color-theme">{{ $seller->jasa_rating }}</strong>
                         <i class="fa fa-star color-yellow-dark"></i>
@@ -88,6 +91,16 @@
             </div>
           </div>
           <div class="divider mt-3"></div>
+          <div class="row m-0">
+            @forelse($seller->videos->take(2) as $p)
+            <div class="col-lg-6 col-sm-12 py-1">
+              <video class="player-video" id="player{{ $loop->iteration }}" playsinline controls>
+                <source src="{{ storage($p->path) }}" type="video/mp4" />
+              </video>
+            </div>
+            @empty
+            @endforelse
+          </div>
           <!-- DOM -->
           <div id="detail-body">
 
@@ -101,46 +114,7 @@
           <div class="row mx-2">
             <ul class="product-slide col-lg-12">
               @forelse($similliar as $f)
-                <li class="col-lg-3 col-sm-10 col-md-12" title="{{ $f->jasa_name }}">
-                    <a class="product-seller" href="{{ url('/studios/' . strtolower(str_replace(' ','-',$f->seller['name']))) }}" title="{{ $f->seller['name'] }}">
-                        <div class="row m-0">
-                            <div class="product-seller-pp">
-                                <img width="40px" height="40px" src="{{ $f->seller['logo']['small'] }}" alt="Picture">
-                            </div>
-                            <div class="product-seller-name">
-                                <span>{{ explode(' ', $f->seller['name'])[0] }}</span>
-                            </div>
-                        </div>
-                    </a>
-                    <div class="col-sm-12 col-lg-12 pe-2">
-                        <div class="card card-style mr-0 mt-2 text-ellipsis ml-2">
-                          <a class="d-block" href="{{ url('products/' . strtolower(str_replace(' ','-', $f->jasa_name))) }}">
-                          <div class="img-fluid image-products-250" style="background-image: url({{ $f->cover['medium'] }})"></div>
-                          <!-- <img src="{{ $f->cover['medium'] }}" class="img-fluid image-products-250"> -->
-                            <div class="px-2 white-space-normal">
-                            <p class="color-highlight font-600 font-11 mb-n1 pt-1">{{ $f->subcategory['parent']['name'] }}</p>
-                                <h5 class="font-14">{{ $f->jasa_name }}</h5>
-                                <p class="font-12 line-height-s mb-2">
-                                  {{ $f->jasa_deskripsi }}
-                                </p>
-                                <!-- <s class="font-12 m-0">Rp</s> -->
-                                <h5 class="font-14 price-rating">Rp{{ number_format($f->jasa_price, 0) }}<span class="float-right"><i class="fa fa-star text-warning"></i>{{ $f->jasa_rating }}</span></h5>
-                                </a>
-                                <div class="d-flex footer-products">
-                                    <div class="likers" role="button" data-id="{{ $f->jasa_id }}" title="Tambah ke favorit">
-                                        <i class="fa fa-heart"></i>
-                                    </div>
-                                    <div class="cart-add" role="button" data-id="{{ $f->jasa_id }}" title="Tambah ke keranjang">
-                                        <i class="fa fa-shopping-cart"></i>
-                                    </div>
-                                    <div class="comments font-11" role="button">
-                                        Tambah Diskusi
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
+                <x-productcard :products="$f" />
               @empty
               @endforelse
             </ul>
@@ -214,6 +188,10 @@
 @section('scripts')
 <script>
   $(document).ready(function() {
+    const players = Array.from(document.querySelectorAll('.player-video')).map(p => new Plyr(p, {
+      settings: ['quality'],
+    }));
+
     let content = ``, subprice = ``;
     reloadPrice = (price, additional) => {
       let total = 0;
@@ -256,7 +234,7 @@
                             <option value="{{ $p->id . '-' . 0 }}">Tidak perlu</option>
                             @if ($seller->additional)
                               @for($i=1; $i<10; $i++)
-                              <option value="{{ $p->id . '-' . $i }}">+{{ $i * $p->add_day . ' Hari' . ' - ' . 'Rp' . number_format($i * $p->price, 0) }}</option>
+                              <option value="{{ $p->id . '-' . $i }}">{{ $i * $p->quantity . 'X ' . '+' . $p->add_day . ' Hari' . ' - ' . rupiah($i * $p->price) }}</option>
                               @endfor
                             @endif
                           </select>
@@ -432,46 +410,7 @@
                   <div class="row mx-2">
                     <ul class="product-slide col-lg-12">
                       @forelse($seller->seller['portfolio'] as $f)
-                        <li class="col-lg-3 col-sm-10 col-md-12" title="{{ $f->jasa_name }}">
-                            <a class="product-seller" href="{{ url('/studios/' . strtolower(str_replace(' ','-',$f->seller['name']))) }}" title="{{ $f->seller['name'] }}">
-                                <div class="row m-0">
-                                    <div class="product-seller-pp">
-                                        <img width="40px" height="40px" src="{{ $f->seller['logo']['small'] }}" alt="Picture">
-                                    </div>
-                                    <div class="product-seller-name">
-                                        <span>{{ explode(' ', $f->seller['name'])[0] }}</span>
-                                    </div>
-                                </div>
-                            </a>
-                            <div class="col-sm-12 col-lg-12 pe-2">
-                                <div class="card card-style mr-0 mt-2 text-ellipsis ml-2">
-                                  <a class="d-block" href="{{ url('products/' . strtolower(str_replace(' ','-', $f->jasa_name))) }}">
-                                  <div class="img-fluid image-products-250" style="background-image: url({{ $f->cover['medium'] }})"></div>
-                                  <!-- <img src="{{ $f->cover['medium'] }}" class="img-fluid image-products-250"> -->
-                                    <div class="px-2 white-space-normal">
-                                    <p class="color-highlight font-600 font-11 mb-n1 pt-1">{{ $f->subcategory['parent']['name'] }}</p>
-                                        <h5 class="font-14">{{ $f->jasa_name }}</h5>
-                                        <p class="font-12 line-height-s mb-2">
-                                          {{ $f->jasa_deskripsi }}
-                                        </p>
-                                        <!-- <s class="font-12 m-0">Rp</s> -->
-                                        <h5 class="font-14 price-rating">Rp{{ number_format($f->jasa_price, 0) }}<span class="float-right"><i class="fa fa-star text-warning"></i>{{ $f->jasa_rating }}</span></h5>
-                                        </a>
-                                        <div class="d-flex footer-products">
-                                            <div class="likers" role="button" data-id="{{ $f->jasa_id }}" title="Tambah ke favorit">
-                                                <i class="fa fa-heart"></i>
-                                            </div>
-                                            <div class="cart-add" role="button" data-id="{{ $f->jasa_id }}" title="Tambah ke keranjang">
-                                                <i class="fa fa-shopping-cart"></i>
-                                            </div>
-                                            <div class="comments font-11" role="button">
-                                                Tambah Diskusi
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
+                        <x-productcard :products="$f" />
                       @empty
                       @endforelse
                     </ul>

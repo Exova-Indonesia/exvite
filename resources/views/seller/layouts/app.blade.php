@@ -23,6 +23,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plyr.io/3.6.5/plyr.js"></script>
 
     <!-- add before </body> -->
     <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
@@ -46,6 +47,7 @@
     
 
     <!-- Styles -->
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.7/plyr.css" />
     <!-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> -->
     <link rel="manifest" href="_manifest.json" data-pwa-version="set_in_manifest_and_pwa_js">
     <link href="{{ asset('fontawesome/css/all.css') }}" rel="stylesheet">

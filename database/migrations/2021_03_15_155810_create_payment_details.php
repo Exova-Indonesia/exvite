@@ -16,11 +16,13 @@ class CreatePaymentDetails extends Migration
         Schema::create('payment_details', function (Blueprint $table) {
             $table->id('payment_id');
             $table->string('payment_method');
+            $table->string('path');
             $table->integer('amount');
             $table->integer('discount');
             $table->integer('admin_fee');
             $table->integer('total');
             $table->string('status');
+            $table->string('invoice');
             $table->timestamps();
         });
     }

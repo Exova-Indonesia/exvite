@@ -47,18 +47,27 @@ class Jasa extends Model
     public function pictures() {
         return $this->hasMany(JasaPicture::class, 'jasa_id');
     }
+
+    public function videos() {
+        return $this->hasMany(JasaVideos::class, 'jasa_id');
+    }
+
     public function cover() {
         return $this->belongsTo(JasaPicture::class, 'jasa_thumbnail');
     }
+
     public function diskusi() {
         return $this->hasMany(JasaDiskusi::class, 'jasa_id');
     }
+
     public function rating() {
         return $this->hasMany(JasaRating::class, 'jasa_id');
     }
+
     public function views() {
         return $this->hasMany(JasaView::class, 'jasa_id');
     }
+
     public function getViews() {
         return $this->views()->count();
     }

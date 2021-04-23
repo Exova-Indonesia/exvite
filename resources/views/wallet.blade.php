@@ -1,5 +1,12 @@
 @extends('layouts.app')
 @section('content')
+@section('src-scripts')
+    <script src="{{ asset('datatables/jquery.dataTables.js') }}" defer></script>
+    <script src="{{ asset('datatables-bs4/js/dataTables.bootstrap4.js') }}" defer></script>
+@endsection
+@section('src-styles')
+    <link rel="stylesheet" href="{{ asset('datatables-bs4/css/dataTables.bootstrap4.css') }}">
+@endsection
 <div class="container">
     <div class="row mb-5">
         <div class="col-md-5 p-2">

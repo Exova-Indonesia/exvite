@@ -18,9 +18,9 @@ class CreateOrders extends Migration
             $table->bigInteger('product_id')->unsigned();
             $table->bigInteger('customer_id')->unsigned();
             $table->string('type');
-            $table->string('invoice');
             $table->string('note');
-            $table->string('deadline');
+            $table->dateTime('deadline');
+            $table->dateTime('batal_otomatis');
             $table->string('status');
             $table->softDeletes();
             $table->timestamps();
