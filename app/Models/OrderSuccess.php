@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use App\Events\OrderSucceed;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,6 +19,10 @@ class OrderSuccess extends Model
         'paid',
     ];
     protected $dates = ['deleted_at'];
+
+    protected $dispatchesEvents = [
+        'saved' => OrderSucceed::class,
+    ];
 
     public function setServiceFee() {
         return $this->service_fee = $this->amount * 0.05;

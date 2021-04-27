@@ -15,6 +15,7 @@ class CreatePaymentDetails extends Migration
     {
         Schema::create('payment_details', function (Blueprint $table) {
             $table->id('payment_id');
+            $table->bigInteger('customer_id')->unsigned();
             $table->string('payment_method');
             $table->string('path');
             $table->integer('amount');
@@ -24,6 +25,8 @@ class CreatePaymentDetails extends Migration
             $table->string('status');
             $table->string('invoice');
             $table->timestamps();
+
+            $table->foreign('customer_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

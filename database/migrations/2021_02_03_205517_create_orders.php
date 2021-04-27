@@ -17,6 +17,7 @@ class CreateOrders extends Migration
             $table->id('order_id');
             $table->bigInteger('product_id')->unsigned();
             $table->bigInteger('customer_id')->unsigned();
+            $table->bigInteger('seller_id')->unsigned();
             $table->string('type');
             $table->string('note');
             $table->dateTime('deadline');
@@ -27,6 +28,7 @@ class CreateOrders extends Migration
 
             // $table->foreign('product_id')->references('jasa_id')->on('jasa_products')->onDelete('cascade');
             $table->foreign('customer_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('seller_id')->references('id')->on('studios')->onDelete('cascade');
         });
     }
 

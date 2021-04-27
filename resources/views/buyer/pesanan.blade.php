@@ -161,10 +161,10 @@ $(document).ready(function() {
             
             $(".accept-btn").on("click", function () {
                 $.ajax({
-                    url: "{{ url('order/orderan') }}",
+                    url: "{{ url('order/accept') }}",
                     type: 'PUT',
                     data: { 
-                        id: $(this).attr('data-id'), type: 'orderan', status: $(this).attr('data-content')
+                        id: $(this).attr('data-id'), type: 'accept', status: $(this).attr('data-content')
                     },
                     headers: {
                         "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),

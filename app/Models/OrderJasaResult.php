@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Events\OrderResult;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OrderJasaResult extends Model
 {
@@ -12,5 +13,9 @@ class OrderJasaResult extends Model
     protected $fillable = [
         'order_id',
         'path',
+    ];
+    
+    protected $dispatchesEvents = [
+        'created' => OrderResult::class,
     ];
 }

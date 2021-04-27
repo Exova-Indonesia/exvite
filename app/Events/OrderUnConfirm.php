@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\PaymentDetail;
+use App\Models\OrderCancel;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -11,19 +11,19 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class Ordered
+class OrderUnConfirm
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     /**
-     * @var PaymentDetail
+     * @var OrderCancel
      */
     public $order;
     /**
      * Create a new event instance.
      *
-     * @param PaymentDetail $order
+     * @param OrderCancel $order
      */
-    public function __construct(PaymentDetail $order)
+    public function __construct(OrderCancel $order)
     {
         $this->order = $order;
     }

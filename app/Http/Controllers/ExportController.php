@@ -52,7 +52,7 @@ class ExportController extends Controller
     public function download_orders($type, $id) {
         switch($type) {
             case "orderan":
-                $data = OrderJasaResult::where('order_id', $id)->first();
+                $data = OrderJasaResult::where('order_id', $id)->orderby('updated_at', 'DESC')->first();
                 return Storage::download($data->path);
             break;
             default:

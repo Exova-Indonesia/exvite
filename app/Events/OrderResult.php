@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\PaymentDetail;
+use App\Models\OrderJasaResult;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -11,19 +11,19 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class Ordered
+class OrderResult
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     /**
-     * @var PaymentDetail
+     * @var OrderJasaResult
      */
     public $order;
     /**
      * Create a new event instance.
      *
-     * @param PaymentDetail $order
+     * @param OrderJasaResult $order
      */
-    public function __construct(PaymentDetail $order)
+    public function __construct(OrderJasaResult $order)
     {
         $this->order = $order;
     }

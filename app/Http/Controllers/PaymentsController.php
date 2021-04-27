@@ -9,6 +9,7 @@ namespace App\Http\Controllers;
 use Auth;
 use Lang;
 use App\Models\Cart;
+use App\Models\Jasa;
 use App\Models\OrderJasa;
 use App\Models\PayMethod;
 use App\Models\SubsOrder;
@@ -105,16 +106,18 @@ class PaymentsController extends Controller
                     'customer_details' => $customer_details,
                 );
                 $paymentUrl = \Midtrans\Snap::createTransaction($params)->redirect_url;
-                PaymentDetail::create([
-                    'payment_id' => $this->payment_id,
-                    'payment_method' => $method,
-                    'path' => $paymentUrl,
-                    'discount' => $discount ?? 0,
-                    'admin_fee' => $adm_fee,
-                    'amount' => $subtotal,
-                    'total' => $total,
-                    'status' => 'pending',
-                ]);
+                $pay = new PaymentDetail;
+                $pay->payment_id = $this->payment_id;
+                $pay->customer_id = Auth::user()->id;
+                $pay->path = $paymentUrl;
+                $pay->payment_method = $method;
+                $pay->discount = $discount ?? 0;
+                $pay->admin_fee = $adm_fee;
+                $pay->amount = $subtotal;
+                $pay->status = 'pending';
+                $pay->setTotal();
+                $pay->save();
+
                 PaymentDetail::where('payment_id', $this->payment_id)
                 ->update([
                     'invoice' => orderInvoice($this->payment_id),
@@ -205,16 +208,18 @@ class PaymentsController extends Controller
                 'customer_details' => $customer_details,
             );
             $paymentUrl = \Midtrans\Snap::createTransaction($params)->redirect_url;
-            PaymentDetail::create([
-                'payment_id' => $this->payment_id,
-                'payment_method' => $method,
-                'path' => $paymentUrl,
-                'discount' => $discount ?? 0,
-                'admin_fee' => $adm_fee,
-                'amount' => $subtotal,
-                'total' => $total,
-                'status' => 'pending',
-            ]);
+            $pay = new PaymentDetail;
+            $pay->payment_id = $this->payment_id;
+            $pay->customer_id = Auth::user()->id;
+            $pay->path = $paymentUrl;
+            $pay->payment_method = $method;
+            $pay->discount = $discount ?? 0;
+            $pay->admin_fee = $adm_fee;
+            $pay->amount = $subtotal;
+            $pay->status = 'pending';
+            $pay->setTotal();
+            $pay->save();
+            
             PaymentDetail::where('payment_id', $this->payment_id)
             ->update([
                 'invoice' => orderInvoice($this->payment_id),
@@ -250,11 +255,12 @@ class PaymentsController extends Controller
                 ]);
                 break;
             case "Jasa":
-
+        $seller = Jasa::where('jasa_id', $data->product_id)->first();
                 OrderJasa::create([
                     'order_id' => $order_id,
                     'product_id'  =>$data->product_id,
                     'customer_id' =>Auth::user()->id,
+                    'seller_id' => $seller->seller_id,
                     'type' => $data->product_type,
                     'status' => 'menunggu_pembayaran',
                     'revision' => $dataAdd->additional['quantity'] ?? 0,

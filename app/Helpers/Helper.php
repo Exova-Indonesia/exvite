@@ -29,6 +29,11 @@ function parse_date($date)
     return date('F j, Y', strtotime($date));
 }
 
+function datetimes($date)
+{
+    return date('F j, Y h:i', strtotime($date));
+}
+
 function month($date)
 {
     return date('F', strtotime($date));

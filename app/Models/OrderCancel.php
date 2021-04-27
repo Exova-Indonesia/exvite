@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Events\OrderConfirm;
+use App\Events\OrderUnConfirm;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OrderCancel extends Model
 {
@@ -15,6 +17,10 @@ class OrderCancel extends Model
         'status',
     ];
     protected $dates = ['deleted_at'];
+
+    protected $dispatchesEvents = [
+        'created' => OrderUnConfirm::class,
+    ];
 
     public function setGrowth() {
         $now = $this->where('studio_id', $this->studio_id)->whereDay('created_at', now()->day)->count();

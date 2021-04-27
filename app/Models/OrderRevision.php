@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Events\OrderRequestRevision;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class OrderRevision extends Model
 {
@@ -11,7 +12,10 @@ class OrderRevision extends Model
     protected $table = 'jasa_order_revision';
     protected $fillable = [
         'order_id',
-        'path',
         'detail',
+    ];
+
+    protected $dispatchesEvents = [
+        'created' => OrderRequestRevision::class,
     ];
 }

@@ -3,7 +3,7 @@
 @if (! empty($order))
 @component('mail::table')
 <div>
-    <h1 class="text-center text-exova amount">Batas Waktu: {{ parse_date($order->products['deadline']) }}</h1>
+    <h1 class="text-center text-exova amount">Batas Waktu: {{ parse_date($order->products['batal_otomatis']) }}</h1>
 </div>
 <table>
     <tbody>
@@ -18,6 +18,10 @@
         <tr>
             <td>Catatan</td>
             <td class="text-right font-weight-bold">{{ $order->products['note'] }}</td>
+        </tr>
+        <tr>
+            <td>Deadline</td>
+            <td class="text-right font-weight-bold">{{ parse_date($order->products['deadline']) }}</td>
         </tr>
         @foreach($order->additionals as $add)
         <tr>

@@ -182,7 +182,7 @@
             </div>
             <div class="row m-0 float-right">
                 <div class="m-1">
-                    <button type="button" class="btn btn-danger delete">Hapus</button>
+                    <a href="{{ url('/mystudio/produk') }}" type="button" class="btn btn-danger">Kembali</a>
                 </div>
                 <div class="m-1">
                     <button type="button" class="btn btn-exova submit">Simpan & Publikasikan</button>
@@ -485,27 +485,27 @@
             $('#EX-' + count).remove();
         });
 
-        $('.delete').on('click', function() {
-            $.ajax({
-                url: "{{ url('/products') }}/" + {{ $products->jasa_id }},
-                type: "DELETE",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                },
-                success: function(data) {
-                    $('.success-message').html(data.message);
-                    $('#menu-success-2').addClass('menu-active');
-                    $('.menu-hider').removeClass("menu-active");
-                    setInterval(() => {
-                        window.location = data.url;
-                    }, 1000);
-                },
-                error: function(data) {
-                    // 
-                },
-            });
-            $('#EX-' + count).remove();
-        });
+        // $('.delete').on('click', function() {
+        //     $.ajax({
+        //         url: "{{ url('/products') }}/" + {{ $products->jasa_id }},
+        //         type: "DELETE",
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        //         },
+        //         success: function(data) {
+        //             $('.success-message').html(data.message);
+        //             $('#menu-success-2').addClass('menu-active');
+        //             $('.menu-hider').removeClass("menu-active");
+        //             setInterval(() => {
+        //                 window.location = data.url;
+        //             }, 1000);
+        //         },
+        //         error: function(data) {
+        //             // 
+        //         },
+        //     });
+        //     $('#EX-' + count).remove();
+        // });
 
         $('.submit').on('click', function() {
             let values = [];

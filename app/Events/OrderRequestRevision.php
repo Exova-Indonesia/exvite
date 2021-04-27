@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\PaymentDetail;
+use App\Models\OrderRevision;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -11,22 +11,23 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class Ordered
+class OrderRequestRevision
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     /**
-     * @var PaymentDetail
+     * @var OrderRevision
      */
     public $order;
     /**
      * Create a new event instance.
      *
-     * @param PaymentDetail $order
+     * @param OrderRevision $order
      */
-    public function __construct(PaymentDetail $order)
+    public function __construct(OrderRevision $order)
     {
         $this->order = $order;
     }
+
 
     /**
      * Get the channels the event should broadcast on.

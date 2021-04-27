@@ -14,6 +14,7 @@ use App\Models\OrderJasa;
 use App\Models\CartDetails;
 use App\Models\OrderCancel;
 use App\Models\StudioPoint;
+use App\Events\OrderConfirm;
 use App\Models\OrderSuccess;
 use Illuminate\Http\Request;
 use App\Models\OrderRevision;
@@ -22,7 +23,7 @@ use App\Models\CartAdditional;
 class OrderController extends Controller
 {
     public function __construct() {
-        return $this->middleware(['auth', 'cartsession'])->except('show');
+        return $this->middleware(['cartsession'])->except(['show', 'update', 'revisi', 'destroy']);
     }
     /**
      * Display a listing of the resource.
@@ -162,12 +163,13 @@ class OrderController extends Controller
                 }
                 break;
 
-            case 'orderan':
+            case 'accept':
                 $order = OrderJasa::where('order_id', $request->id)->first();
                 OrderJasa::where('order_id', $request->id)->update([
                     'status' => $request->status,
                     'batal_otomatis' => $order->deadline,
                 ]);
+                event(new OrderConfirm($order));
                 return response()->json(['status' => 125, 'url' => '/']);
                 break;
 

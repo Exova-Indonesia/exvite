@@ -13,12 +13,14 @@ use App\Mail\InvoiceMail;
 use App\Models\OrderJasa;
 use App\Models\StudioRank;
 use App\Models\Transaction;
+use App\Events\OrderConfirm;
 use App\Models\OrderSuccess;
 use Illuminate\Http\Request;
 use App\Exports\Transactions;
 use App\Models\PaymentDetail;
 use App\Models\StudioVisitor;
 use App\Models\CartAdditional;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use App\Notifications\TransactionMail;
 use Illuminate\Support\Facades\Notification;
@@ -58,10 +60,12 @@ Route::middleware('auth')->prefix('upload')->group(function() {
 });
 
 Route::get('/welcome', function (Request $request) {
-    $data = PaymentDetail::with('details.products.products.seller.address', 'details.products.products.subcategory', 'details.products.customer.address', 'details.additionals')->where('payment_id', 1903280994)->first();
+    // $data = PaymentDetail::with('details.products.products.seller.address', 'details.products.products.subcategory', 'details.products.customer.address', 'details.additionals')->where('payment_id', 1903280994)->first();
     // return view('pdf.order', ['data' => $data]);
-    // return $data;
-    return Ordered::dispatch($data);
+    // $data =  OrderJasa::with('customer', 'products.seller.owner', 'details.additionals', 'success', 'revision')->where('order_id', 810652513728)->first();
+    $response = Http::withBasicAuth(config('app.md_secret'), ' ')->get('https://api.sandbox.midtrans.com/v2/' . '1662921896/status');
+    return $response;
+    // return OrderConfirm::dispatch($data);
 });
 
 Route::get('/components/sidebar', function (Request $request) {
@@ -180,10 +184,10 @@ Route::get('/purchase/{id}/{name}', [App\Http\Controllers\CartController::class,
 Route::get('/highlight', [App\Http\Controllers\HighlightController::class, 'index']);
 Route::get('/highlight/all', [App\Http\Controllers\HighlightController::class, 'all']);
 
-// Route::group(function() {
+Route::middleware('auth')->group(function() {
     Route::resource('/order', App\Http\Controllers\OrderController::class);
     Route::post('/revision', [App\Http\Controllers\OrderController::class, 'revisi']);
-// });
+});
 
 // Products Page
 Route::middleware('auth')->group(function() {

@@ -30,10 +30,6 @@ class OrderJasa extends Model
     ];
     protected $dates = ['deleted_at'];
 
-    // protected $dispatchesEvents = [
-    //     'created' => Ordered::class,
-    // ];
-
     
     public function products() {
         return $this->belongsTo(Jasa::class, 'product_id');
@@ -49,5 +45,8 @@ class OrderJasa extends Model
     }
     public function cancel() {
         return $this->hasOne(OrderCancel::class, 'order_id');
+    }
+    public function revisi() {
+        return $this->hasMany(OrderRevision::class, 'order_id');
     }
 }

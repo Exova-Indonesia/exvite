@@ -64,13 +64,11 @@ class ApiController extends Controller
             $submenu = 'menunggu_konfirmasi';
         }
         $value = auth()->user()->id;
-        $data = OrderJasa::with(['products.seller'])
-        ->with(['products.cover', 'products.seller' => function($q) use($value) {
-            $q->where('user_id', $value);
-        }, 'products' => function($q) use($search) {
+        $data = OrderJasa::with(['products.cover', 'products.seller', 'products' => function($q) use($search) {
             ($search == 'null') ? $q->withTrashed() : $q->where('jasa_name', 'LIKE', '%'.$search.'%')->withTrashed();
         }])
         ->where('status', $submenu)
+        ->where('seller_id', studio()->id)
         ->orderby('created_at', 'DESC')
         ->get();
         return response()->json($data);
@@ -109,9 +107,7 @@ class ApiController extends Controller
             $pathDB = Auth::user()->id . '/studio/orders' . '/' . date('Y') . '/' . date('F');
             $f_name = 'order-' . date('Y-m-d') . '-' . rand(0, 9999) . '-' . strtolower($f->getClientOriginalName());
             Storage::putFileAs($path, $f, $f_name);
-            $data = OrderJasaResult::updateorCreate([
-                'order_id' => $id,
-            ],[
+            $data = OrderJasaResult::create([
                 'order_id' => $id,
                 'path' =>  $pathDB . '/' . $f_name,
             ]);
