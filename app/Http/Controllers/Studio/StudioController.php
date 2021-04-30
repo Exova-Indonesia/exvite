@@ -153,8 +153,8 @@ class StudioController extends Controller
                 // return response()->json(['seller' => $seller, 'sells' => $sells, 'orders' => $orders]);
                 break;
             case "produk":
-                return view('seller.products', ['seller' => $seller, 'orders' => $orders, 'jasa_name' => $jasaChart,
-                'jasa_jual' => $jasaJual, 'jasa_tampil' => $jasaTampil, 'jasa_count' => $jasaTampilCount, 
+                return view('seller.products', ['seller' => $seller, 'orders' => $orders, 'jasa_name' => $jasaChart ?? 0,
+                'jasa_jual' => $jasaJual ?? 0, 'jasa_tampil' => $jasaTampil ?? 0, 'jasa_count' => $jasaTampilCount, 
                 'cancel' => $cancel, 'growthJasa' => $growthJasa->setGrowth(), 'growthView' => $growthView->setGrowth(),
                 'growthSells' => $growthSells->setGrowth(), 'growthCancel' => $growthCancel->setGrowth()]);
                 // return response()->json(['seller' => $seller, 'orders' => $orders, 'jasa_name' => $jasaChart]);

@@ -32,7 +32,7 @@ class StudioVisitor extends Model
 
     public function setByGender($sex)
     {
-        return $this->getSex($sex) / $this->getTotalSex() * 100;
+        // return $this->getSex($sex) / $this->getTotalSex()  * 100;
     }
 
     public function getSex($sex)

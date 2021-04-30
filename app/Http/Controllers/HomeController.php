@@ -53,7 +53,7 @@ class HomeController extends Controller
         $subs = Plan::all();
         return view('landing', [
             'balance' => $balance,
-            'subs' => $subs, 
+            'subs' => $subs,
             'bank' => $bank, 
             'highlight' => $highlight,
             'seller' => $seller,

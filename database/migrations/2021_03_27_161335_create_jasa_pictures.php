@@ -19,6 +19,7 @@ class CreateJasaPictures extends Migration
             $table->longText('small')->nullable();
             $table->longText('medium')->nullable();
             $table->longText('large')->nullable();
+            $table->softDeletes();
             $table->timestamps();
             
             $table->foreign('jasa_id')->references('jasa_id')->on('jasa_products')->onDelete('cascade');
