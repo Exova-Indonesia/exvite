@@ -5,13 +5,14 @@
                 <img width="40px" height="40px" src="{{ $f->seller['logo']['small'] }}" alt="Picture">
             </div>
             <div class="product-seller-name">
-                <span>{{ explode(' ', $f->seller['name'])[0] }}</span>
+                <span>{{ explode(' ', $f->seller['name'])[0] }}
+                </span>
             </div>
         </div>
     </a>
     <div class="col-sm-12 col-lg-12 pe-2">
         <div class="card card-style mr-0 mt-2 text-ellipsis ml-2">
-          <a class="d-block" href="{{ url('products/' . strtolower(str_replace(' ','-', $f->jasa_name))) }}">
+          <a class="d-block" href="{{ url('products/' . $f->slugs) }}">
         <img src="{{ $f->cover['medium'] }}" class="img-fluid image-products-250">
             <div class="px-2 white-space-normal">
             <p class="color-highlight font-600 font-11 mb-n1 pt-1">{{ $f->subcategory['parent']['name'] }}</p>

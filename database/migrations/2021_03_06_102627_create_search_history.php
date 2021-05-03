@@ -18,7 +18,7 @@ class CreateSearchHistory extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('content');
-            $table->integer('avaibility')->default(0);
+            $table->integer('availability')->default(0);
             $table->timestamps();
         });
     }

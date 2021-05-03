@@ -23,6 +23,7 @@ class Jasa extends Model
         'jasa_thumbnail',
         'jasa_rating',
         'jasa_sold',
+        'slugs',
         'deleted_at',
     ];
 

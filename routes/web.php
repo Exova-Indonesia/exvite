@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Route;
 use App\Notifications\TransactionMail;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\MailResetPasswordNotification;
+use Chatify\Http\Models\Message;
 
 /*
 |--------------------------------------------------------------------------
@@ -125,6 +126,13 @@ Route::middleware('auth')->group(function() {
 Auth::routes(['verify' => true]);
 Route::middleware('auth')->group(function() {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('company/{path}', function($path) {
+        if(in_array($path, ['about', 'terms', 'privacy'])) {
+            return view($path);
+        } else {
+            abort(404);
+        }
+    });
     Route::post('/autocomplete', [App\Http\Controllers\HomeController::class, 'autocomplete']);
     Route::get('/search/{title}', [App\Http\Controllers\HomeController::class, 'search']);
     Route::get('/favorit', [App\Http\Controllers\HomeController::class, 'favorit']);
@@ -187,7 +195,11 @@ Route::get('/highlight/all', [App\Http\Controllers\HighlightController::class, '
 Route::middleware('auth')->group(function() {
     Route::resource('/order', App\Http\Controllers\OrderController::class);
     Route::post('/revision', [App\Http\Controllers\OrderController::class, 'revisi']);
+    // Rating & Reviews
+    Route::get('reviews/{id}/{status}', [App\Http\Controllers\OrderController::class, 'rating_view']);
+    Route::post('reviews/{id}/{status}', [App\Http\Controllers\OrderController::class, 'rating_store']);
 });
+
 
 // Products Page
 Route::middleware('auth')->group(function() {
@@ -220,3 +232,17 @@ Route::get('/send', function() {
     // Mail::to(Auth::user())->send(new InvoiceMail($details));
 
 });
+
+
+Route::post('/messenger', function(Request $request) {
+    $exp = explode('-', $request->id);
+    $msg = new Message;
+    $msg->id = rand();
+    $msg->type = 'user';
+    $msg->from_id = auth()->user()->id;
+    $msg->to_id = $exp[0];
+    $msg->body = $exp[1];
+    $msg->save();
+
+    return redirect('/messenger');
+})->name('chat');

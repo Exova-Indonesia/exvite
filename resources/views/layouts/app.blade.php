@@ -92,7 +92,7 @@
 
       <div class="page-title page-title-fixed container">
         <h1>@if(Request::is('/')) 
-          Exova
+          <img src="https://assets.exova.id/img/logo.png" alt="Logo">
           @elseif(Request::segment(1) == 'products')
           Produk
           @elseif(Request::segment(1) == 'cart')
@@ -103,6 +103,8 @@
           Profil
           @elseif(Request::segment(1) == 'favorit')
           Favorit
+          @elseif(Request::segment(1) == 'wallet')
+          E-Wallet
           @endif</h1>
         @if(Request::is('/'))
         <a role="button"
@@ -185,5 +187,79 @@
 
     </div>
     @yield('scripts')
+    <script>
+  $(document).ready(function() {
+    $(".delete-cart").on("click", function (event) {
+      $.ajaxSetup({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                    "content"
+                ),
+                "Access-Control-Allow-Origin": "*",
+            },
+        });
+        $.ajax({
+            url: "{{ url('cart') }}",
+            type: "DELETE",
+            data: "id=" + $(this).attr("data-id"),
+            success: function (data) {
+              $('#menu-success-2').addClass('menu-active');
+              $('.menu-hider').addClass('menu-active');
+              $(".success-message").text(data.status);
+              setInterval(() => {
+                window.location = window.location;
+              }, 1000);
+            },
+            error: function (data) {
+                // console.log(data);
+            },
+        });
+    });
+
+    $(".cart-add").on("click", function () {
+        $.ajax({
+            url: "{{ url('cart/add') }}",
+            type: "POST",
+            data: { id: $(this).attr("data-id") },
+            headers: {
+              "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+              "Access-Control-Allow-Origin": "*",
+            },
+            success: function (data) {
+              $('#menu-success-2').addClass('menu-active');
+              $('.menu-hider').addClass('menu-active');
+              $(".success-message").text(data.statusMessage);
+            },
+            error: function (data) {
+              $('#menu-warning-2').addClass('menu-active');
+              $('.menu-hider').addClass('menu-active');
+              $(".error-message").text(JSON.parse(data.responseText).statusMessage);
+            },
+        });
+    });
+    $(".favorit-add").on("click", function () {
+      let id;
+      id = $(this).attr("data-id");
+      $.ajax({
+        url: "{{ route('products.favorit') }}",
+        type: "POST",
+        data: { id: id },
+        headers: {
+          "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function (data) {
+          $('#menu-success-2').addClass('menu-active');
+          $('.menu-hider').addClass('menu-active');
+          $(".success-message").text(data.statusMessage);
+        },
+        error: function (data) {
+          $('#menu-warning-2').addClass('menu-active');
+          $('.menu-hider').addClass('menu-active');
+          $(".error-message").text(JSON.parse(data.responseText).statusMessage);
+        },
+      });
+    });
+  });
+</script>
 </body>
 </html>

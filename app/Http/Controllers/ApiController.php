@@ -131,9 +131,9 @@ class ApiController extends Controller
     public function getProducts($id) {
         $seller = Jasa::with('seller.logo', 
         'subcategory.parent', 'additional', 
-        'revisi', 'cover', 'diskusi.comment.comment_child',
+        'revisi', 'cover', 'diskusi.comment',
         'diskusi.users', 'diskusi.comment.users', 
-        'diskusi.comment.comment_child.users')
+        'diskusi.comment.users')
         ->where([
             ['jasa_id', $id],
             ])

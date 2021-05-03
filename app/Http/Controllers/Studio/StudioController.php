@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\studio;
+namespace App\Http\Controllers\Studio;
 
 use App\Models\Jasa;
 use App\Models\Studio;
@@ -22,6 +22,7 @@ use App\Models\StudioAddress;
 use App\Models\StudioVisitor;
 use App\Models\JasaAdditional;
 use App\Http\Controllers\Controller;
+use Chatify\Http\Models\Message;
 
 class StudioController extends Controller
 {
@@ -50,10 +51,15 @@ class StudioController extends Controller
 
     public function love(Request $request)
     {
-        StudioLover::firstOrCreate([
-            'studio_id' => $request->id,
-            'customer_id' => auth()->user()->id,
-        ]);
+        $lover = StudioLover::where('studio_id', $request->id);
+        if($lover->withTrashed()->first()) {
+            $lover->restore();
+        } else {
+            StudioLover::create([
+                'studio_id' => $request->id,
+                'customer_id' => auth()->user()->id,
+            ]);
+        }
     }
 
     public function unlove(Request $request)
@@ -61,7 +67,7 @@ class StudioController extends Controller
         StudioLover::where([
             ['studio_id', $request->id],
             ['customer_id', auth()->user()->id],
-            ])->forceDelete();
+            ])->delete();
     }
 
     /**
@@ -72,11 +78,18 @@ class StudioController extends Controller
      */
     public function store(Request $request)
     {
-        $studio = Studio::where('user_id', auth()->user()->id)->first();
+        $slugsNew = Str::slug($request->title);
+        $slugs = Jasa::where('slugs', $slugsNew)->get();
+        if($slugs) {
+            $count = count($slugs) + 1;
+            $slugsNew = $slugsNew . '-' . $count;
+        }
+
         $jasa = Jasa::create([
             'jasa_id' => date('ymd') . rand(),
-            'studio_id' => $studio->id,
+            'studio_id' => studio()->id,
             'jasa_name' => $request->title,
+            'slugs' => $slugsNew,
             'jasa_deskripsi' => $request->description,
         ]);
         JasaAdditional::create([
@@ -84,7 +97,8 @@ class StudioController extends Controller
             'title' => 'Revisi',
             'price' => 0,
         ]);
-        return redirect('manage/' . strtolower(str_replace(' ', '-', $request->title)));
+        // Jasa::where('jasa_id', $jasa->id)->delete();
+        return redirect('manage/' . $slugsNew);
     }
 
     /**
@@ -145,11 +159,19 @@ class StudioController extends Controller
         $visitors = new StudioVisitor;
         $visitors->studio_id = studio()->id;
 
+        $lover = new StudioLover;
+        $lover->studio_id = studio()->id;
+
         $ranks = StudioRank::get();
+
+        $messages = Message::where([
+            ['to_id', auth()->user()->id],
+            ['seen', 0],
+            ])->count();
 
         switch($id) {
             case "dashboard":
-                return view('seller.dashboard', ['seller' => $seller, 'orders' => $orders]);
+                return view('seller.dashboard', ['seller' => $seller, 'orders' => $orders, 'messages' => $messages]);
                 // return response()->json(['seller' => $seller, 'sells' => $sells, 'orders' => $orders]);
                 break;
             case "produk":
@@ -161,7 +183,7 @@ class StudioController extends Controller
                 break;
             case "statistik":
                 return view('seller.statistics', ['seller' => $seller, 'orders' => $orders, 'success' => $success, 
-                'visitors' => $visitors, 'revenue' => $revenue, 'visitors' => $visitors, 'points' => $points, 'ranks' => $ranks]);
+                'visitors' => $visitors, 'revenue' => $revenue, 'visitors' => $visitors, 'points' => $points, 'ranks' => $ranks, 'lover' => $lover]);
                 // return response()->json(['seller' => $seller, 'orders' => $orders, 'success' => $success]);
                 break;
             case "upload":
@@ -169,7 +191,7 @@ class StudioController extends Controller
                 // return response()->json(['seller' => $seller]);
                 break;
             case "orders":
-                return view('seller.orders', ['seller' => $seller]);
+                return redirect('/notifications/penjualan');
                 // return response()->json(['seller' => $seller]);
                 break;
         }
@@ -178,19 +200,17 @@ class StudioController extends Controller
     public function manage($id)
     {
         $category = Category::all();
-        $studio = Studio::where('user_id', auth()->user()->id)->first();
-        $slugs = str_replace('-', ' ', $id);
         $data = Jasa::with('seller', 'subcategory', 'revisi', 'additional', 'pictures')
         ->where([
-            ['jasa_name', $slugs],
-            ['studio_id', $studio->id],
+            ['slugs', $id],
+            ['studio_id', studio()->id],
             ])
-        ->first();
+        ->withTrashed()->first();
         if($data) {
-            return view('seller.uploads.index', ['products' => $data, 'category' => $category, 'seller' => $studio]);
+            return view('seller.uploads.index', ['products' => $data, 'category' => $category, 'seller' => studio()]);
             // return response()->json($data);
         } else {
-            return back();
+            abort(404);
         }
 
     }
@@ -198,19 +218,17 @@ class StudioController extends Controller
     public function share($id)
     {
         $category = Category::all();
-        $studio = Studio::where('user_id', auth()->user()->id)->first();
-        $slugs = str_replace('-', ' ', $id);
         $data = Jasa::with('seller', 'subcategory', 'revisi', 'additional', 'pictures')
         ->where([
-            ['jasa_name', $slugs],
-            ['user_id', $studio->id],
+            ['slugs', $id],
+            ['user_id', studio()->id],
             ])
         ->first();
         if($data) {
             return view('seller.uploads.finish', ['products' => $data]);
             // return response()->json($data);
         } else {
-            return back();
+            abort(404);
         }
 
     }
@@ -296,8 +314,14 @@ class StudioController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $slugsNew = Str::slug($request->info['title']);
+        $slugs = Jasa::where('slugs', $slugsNew)->get();
+        if($slugs) {
+            $count = count($slugs) + 1;
+            $slugsNew = $slugsNew . '-' . $count;
+        }
         $jasa = Jasa::where('jasa_id', $id)->first();
-        $studio = Studio::where('user_id', auth()->user()->id)->first();
+        $studio = studio();
 
         if(isset($request->picture)) {
             foreach($request->picture as $jp) {
@@ -335,6 +359,7 @@ class StudioController extends Controller
         
         Jasa::where('jasa_id', $id)->update([
             'jasa_name' => $request->info['title'],
+            'slugs' => $slugsNew,
             'jasa_deskripsi' => $request->info['description'],
             'jasa_subcategory' => $request->info['subcategory'],
             'jasa_price' =>  parse_rupiah($request->info['price_start']),
@@ -356,7 +381,7 @@ class StudioController extends Controller
             }
         }
         // return response()->json($request->all());
-        return response()->json(['status' => 200, 'url' => url('share/' . Str::slug($jasa->jasa_name)), 'message' => 'Berhasil Mengubah']);
+        return response()->json(['status' => 200, 'url' => url('share/' . $slugsNew), 'message' => 'Berhasil']);
     }
 
     /**

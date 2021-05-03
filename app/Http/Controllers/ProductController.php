@@ -89,22 +89,25 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $slugs = str_replace('-', ' ', $id);
         $seller = Jasa::with(['seller.logo', 'seller.address', 
         'subcategory.parent', 'additional', 'revisi', 'cover', 
         'rating.users', 'seller.portfolio' => function($q) {
             $q->take(4);
         }])
         ->where([
-            ['jasa_name', $slugs],
+            ['slugs', $id],
             ])
         ->first();
-        $similliar = Jasa::with('seller.logo', 'subcategory', 'cover')
-        ->where([
-            ['jasa_name', 'LIKE', '%' . explode(' ', $seller->name)[0] . '%'],
-            ])
-        ->get();
-        return view('products.show', ['seller' => $seller, 'similliar' => $similliar]);
+        if($seller) {
+            $similliar = Jasa::with('seller.logo', 'subcategory', 'cover')
+            ->where([
+                ['jasa_name', 'LIKE', '%' . explode(' ', $seller->name)[0] . '%'],
+                ])
+            ->get();
+            return view('products.show', ['seller' => $seller, 'similliar' => $similliar]);
+        } else {
+            abort(404);
+        }
         // return response()->json($seller);
     }
 

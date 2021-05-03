@@ -22,17 +22,22 @@
           <a id="nav-welcome" href="{{ url('/profile') }}">
             <i class="fa fa-user gradient-red color-white"></i>
             <span>Profil</span>
-            <i class="fa fa-angle-right"></i>
+
           </a>
           <a id="nav-homepages" href="{{ url('/wallet') }}">
             <i class="fa fa-piggy-bank gradient-green color-white"></i>
             <span>Wallet</span>
-            <i class="fa fa-angle-right"></i>
+
           </a>
           <a id="nav-components" href="{{ url('/studio') }}">
             <i class="fa fa-business-time gradient-blue color-white"></i>
             <span>Studio</span>
-            <i class="fa fa-angle-right"></i>
+
+          </a>
+          <a id="nav-components" href="{{ url('/messenger') }}">
+            <i class="fa fa-envelope gradient-yellow color-white"></i>
+            <span>Messenger</span>
+            <!-- <i class="font-normal">{{ $messages ?? 0 }}</i> -->
           </a>
         </div>
         <h6 class="menu-divider mt-4">settings</h6>

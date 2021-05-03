@@ -16,14 +16,14 @@
                     <small class="float-right text-muted">{{ $balance->wallet_id }}</small></h5>
                 </div>
                 <div class="card-body">
-                    <p>@lang('wallet.withdraw.total')<b class="float-right">IDR {{ number_format($balance->balance, 0) }}</b></p>
+                    <p>@lang('wallet.withdraw.total')<b class="float-right">{{ rupiah($balance->balance) }}</b></p>
                     <div class="row">
                         <div class="col-md-12 col-lg-6 p-2">
                             <div class="card-block mb-2">
                                 <div class="card-main">
                                     <div class="balance">
                                         <span class="label">@lang('wallet.withdraw.revenue')</span>
-                                        <h1 class="title">IDR {{ number_format($balance->revenue, 0) }}</h1>
+                                        <h1 class="title">{{ rupiah($balance->revenue) }}</h1>
                                     </div>
                                 </div>
                             </div>
@@ -33,7 +33,7 @@
                                 <div class="card-main">
                                     <div class="balance">
                                         <span class="label">@lang('wallet.withdraw.fund')</span>
-                                        <h1 class="title">IDR {{ number_format($balance->fund, 0) }}</h1>
+                                        <h1 class="title">{{ rupiah($balance->fund) }}</h1>
                                     </div>
                                 </div>
                             </div>
@@ -145,9 +145,9 @@
                                 @endif
                                 <td>{{ $c->wal_transaction_type }}</td>
                                 @if($c->creditedwallet->walletusers['id'] == Auth::user()->id && $c->wal_credited_wallet !== $c->wal_debited_wallet)
-                                <td class="text-success"> + IDR {{ number_format($c->wal_amount, 0) }}</td>
+                                <td class="text-success"> + {{ rupiah($c->wal_amount) }}</td>
                                 @else
-                                <td class="text-danger"> - IDR {{ number_format($c->wal_amount, 0) }}</td>
+                                <td class="text-danger"> - {{ rupiah($c->wal_amount) }}</td>
                                 @endif
                                 <td class="@if($c->wal_status == 'success') text-success 
                                     @elseif($c->wal_status == 'pending') text-warning 
@@ -237,7 +237,7 @@
                                 <label class="label" for="select_send">@lang('wallet.form.from')</label>
                                 <select type="text" class="form-control" id="select_send" name="trf_from"
                                     placeholder="@lang('wallet.form.to')">
-                                <option value="dana" selected>Exova Dana - IDR {{ number_format($balance->fund, 0) }}</option>
+                                <option value="dana" selected>Exova Dana - {{ rupiah($balance->fund) }}</option>
                                 </select>
                             </div>
                         </div>
@@ -263,7 +263,7 @@
                             <label class="label">@lang('wallet.form.amount')</label>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="input14">IDR</span>
+                                    <span class="input-group-text" id="input14">Rp</span>
                                 </div>
                                 <input type="text" id="amount" name="amount" class="form-control saldo_send form-control-lg" autocomplete="off" placeholder="0">
                             </div>
@@ -296,9 +296,9 @@
                             <div class="input-wrapper">
                                 <label class="label" for="select_form">@lang('wallet.withdraw.from')</label>
                                 <select type="text" class="form-control" id="select_form" name="withdraw_from">
-                                <option value="pendapatan" selected>@lang('wallet.withdraw.revenue') - IDR {{ number_format($balance->revenue, 0) }}</option>
-                                <option value="dana">@lang('wallet.withdraw.fund') - IDR {{ number_format($balance->fund, 0) }}</option>
-                                <option value="saldo">@lang('wallet.withdraw.total') - IDR {{ number_format($balance->balance, 0) }}</option>
+                                <option value="pendapatan" selected>@lang('wallet.withdraw.revenue') - {{ rupiah($balance->revenue) }}</option>
+                                <option value="dana">@lang('wallet.withdraw.fund') - {{ rupiah($balance->fund) }}</option>
+                                <option value="saldo">@lang('wallet.withdraw.total') - {{ rupiah($balance->balance) }}</option>
                                 </select>
                             </div>
                         </div>
@@ -327,7 +327,7 @@
                             <label class="label">@lang('wallet.form.amount')</label>
                             <div class="input-group mb-2">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">IDR</span>
+                                    <span class="input-group-text">Rp</span>
                                 </div>
                                 <input type="text" id="amount" name="amount" class="form-control saldo_withdraw form-control-lg" autocomplete="off" placeholder="0">
                             </div>
@@ -356,9 +356,9 @@
             $('.status').html(`<span class="float-right text-right text-danger">`+data.wal_status+`</span>`)
         }
         if(data.creditedwallet.walletusers.id == <?php echo Auth::user()->id ?> && data.wal_credited_wallet != data.wal_debited_wallet) {
-            $('.amount').html(`<span class="float-right text-right text-success">+ IDR `+numeral(data.wal_amount).format('0,0'))+`</span>`
+            $('.amount').html(`<span class="float-right text-right text-success">+ Rp `+numeral(data.wal_amount).format('0,0'))+`</span>`
         } else {
-            $('.amount').html(`<span class="float-right text-right text-danger">- IDR `+numeral(data.wal_amount).format('0,0'))+`</span>`
+            $('.amount').html(`<span class="float-right text-right text-danger">- Rp `+numeral(data.wal_amount).format('0,0'))+`</span>`
         }
         if(data.wal_credited_wallet == data.wal_debited_wallet) {
             $('.from').html(data.debitedwallet.walletusers.name);

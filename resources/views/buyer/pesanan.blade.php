@@ -200,6 +200,7 @@ $(document).ready(function() {
                             icon: 'success',
                             title: 'Berhasil',  
                         });
+                        window.location = data.url;
                     },
                     error: function(data) {
                         // console.log(data)

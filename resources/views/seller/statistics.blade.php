@@ -43,9 +43,16 @@
       <!-- small box -->
       <div class="small-box bg-success">
         <div class="inner">
-          <h4>23</h4>
-          <p class="m-0">Pesanan baru
-            <span class="font-12"><i class="fa fa-arrow-up font-10"></i>80<sup style="font-size: 8px">%</sup></span>
+          <h4>{{ $lover->count() }}</h4>
+          <p class="m-0">Langganan baru 
+            <span class="font-12">
+            @if($lover->setGrowth() < 0)
+            <i class="fa fa-arrow-down font-10"></i>
+            @else
+            <i class="fa fa-arrow-up font-10"></i>
+            @endif
+            {{ $lover->setGrowth() }}
+            <sup style="font-size: 8px">%</sup></span>
           </p>
         </div>
       </div>
@@ -55,9 +62,16 @@
       <!-- small box -->
       <div class="small-box bg-danger">
         <div class="inner">
-          <h4>12</h4>
-          <p class="m-0">Pesanan batal
-            <span class="font-12"><i class="fa fa-arrow-up font-10"></i>80<sup style="font-size: 8px">%</sup></span>
+          <h4>{{ $lover->count('deleted_at') ?? 0 }}</h4>
+          <p class="m-0">Langganan hilang 
+            <span class="font-12">
+            @if($lover->setGone() < 0)
+            <i class="fa fa-arrow-down font-10"></i>
+            @else
+            <i class="fa fa-arrow-up font-10"></i>
+            @endif
+            {{ $lover->setGone() }}
+            <sup style="font-size: 8px">%</sup></span>
           </p>
         </div>
       </div>

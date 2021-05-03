@@ -1,6 +1,6 @@
 (function ($) {
     "use strict";
-    let url = "http://exvite.test/";
+    let url = "http://localhost:8000/";
     $(document).ready(function () {
         $("#search").keyup(function (e) {
             let query = $(this).val();
@@ -155,7 +155,7 @@
                 },
             });
             $.ajax({
-                url: "http://exvite.test/wallet/" + select,
+                url: url + "wallet/" + select,
                 type: "POST",
                 data: "amount=" + amount,
                 dataType: "json",
@@ -192,7 +192,7 @@
                 },
             });
             $.ajax({
-                url: "http://exvite.test/wallet/minimum",
+                url: url + "wallet/minimum",
                 type: "POST",
                 data: "amount=" + amount,
                 dataType: "json",
@@ -228,7 +228,7 @@
                 },
             });
             $.ajax({
-                url: "http://exvite.test/wallet/" + select,
+                url: url + "wallet/" + select,
                 type: "POST",
                 data: "amount=" + amount,
                 dataType: "json",
@@ -262,7 +262,7 @@
             },
         });
         $.ajax({
-            url: "http://exvite.test/wallet/cekuser",
+            url: url + "wallet/cekuser",
             type: "POST",
             data: "wallet_id=" + user,
             dataType: "json",
@@ -291,7 +291,7 @@
         $("#addbanks_form").css("display", "block");
     });
 
-    $.getJSON("http://exvite.test/js/banks.json", function (data) {
+    $.getJSON(url + "js/banks.json", function (data) {
         let banks = data;
         $.each(banks, function (i, data) {
             $("#bank_code").append(

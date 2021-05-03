@@ -40,7 +40,8 @@
     <script src="{{ asset('js/main.js') }}" defer></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="{{ asset('scripts/bootstrap.min.js') }}" defer></script>
-
+    @yield('src-scripts')
+    @yield('src-styles')
 
     <!--<link rel="dns-prefetch" href="//fonts.gstatic.com">-->
     <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">

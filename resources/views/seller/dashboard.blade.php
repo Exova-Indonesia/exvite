@@ -15,9 +15,11 @@
             <div class="flex-grow-1">
               <h2>
                     {{ $seller->name }}
+                @if($seller->is_official)
                 <i
                   class="fa fa-check-circle color-blue-dark font-16 ms-1"
                 ></i>
+                @endif
               </h2>
               @owner
               <button
@@ -34,10 +36,15 @@
               </button>
                 @else
               <button
-                href="#"
+                onclick="event.preventDefault();
+                document.getElementById('chat-form').submit()";
                 class="mt-3 btn btn-xs font-600 btn-border border-highlight color-highlight"
                 >Pesan</button
               >
+              <form id="chat-form" action="{{ route('chat') }}" method="POST" class="d-none">
+                @csrf
+                <input name="id" type="hidden" value="{{ $seller->owner['id'] }}-{{ 'Halo, ' . $seller->owner['name'] . ' dari ' . $seller->name }}" />
+              </form>
               @lover
               <button
                 href="#"
@@ -81,19 +88,19 @@
             <div class="col-4">
               <div class="card mx-1">
                 <h6 class="mb-0 color-theme">{{ $seller->portfolio->count() }}</h6>
-                portfolios
+                Portfolios
               </div>
             </div>
             <div class="col-4">
               <div class="card mx-1">
                 <h6 class="mb-0 color-theme">{{ $seller->lovers->count() }}</h6>
-                lovers
+                Langganan
               </div>
             </div>
             <div class="col-4">
               <div class="card mx-1">
                 <h6 class="mb-0 color-theme">{{ $seller->portfolio->sum('jasa_sold') }}</h6>
-                sells
+                Sells
               </div>
             </div>
           </div>
@@ -134,11 +141,11 @@
               </div>
             </a>
             <!-- ./col -->
-            <a href="{{ url('mystudio/chats') }}" class="col-lg-3 col-6">
+            <a href="{{ url('/messenger') }}" class="col-lg-3 col-6">
               <!-- small box -->
               <div class="small-box bg-danger">
                 <div class="inner">
-                  <h3>12</h3>
+                  <h3>{{ $messages ?? 0 }}</h3>
 
                   <p class="m-0">Chat baru</p>
                 </div>

@@ -17,6 +17,7 @@ class CreateJasaProducts extends Migration
             $table->id('jasa_id');
             $table->bigInteger('studio_id')->unsigned();
             $table->string('jasa_name');
+            $table->string('slugs');
             $table->integer('jasa_subcategory')->nullable();
             $table->string('jasa_deskripsi')->nullable();
             $table->integer('jasa_price')->nullable();

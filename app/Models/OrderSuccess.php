@@ -24,16 +24,18 @@ class OrderSuccess extends Model
         'saved' => OrderSucceed::class,
     ];
 
+
+    public function orders() {
+        return $this->belongsTo(OrderJasa::class, 'order_id');
+    }
+
+
     public function setServiceFee() {
-        return $this->service_fee = $this->amount * 0.05;
+        return $this->service_fee = $this->amount * 0.1;
     }
 
     public function setPaid() {
         return $this->paid = $this->amount - $this->setServiceFee();
-    }
-
-    public function orders() {
-        return $this->belongsTo(OrderJasa::class, 'order_id');
     }
     
     public function setGrowth() {

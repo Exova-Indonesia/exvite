@@ -59,7 +59,7 @@ return [
         |
         */
         'properties'             => [
-            'creator'        => studio()->name,
+            'creator'        => "Exova",
             'lastModifiedBy' => now(),
             'title'          => 'Revenue',
             'description'    => 'Latest Revenue',

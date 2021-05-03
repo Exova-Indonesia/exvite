@@ -196,11 +196,11 @@ class OrderController extends Controller
                     StudioPoint::create([
                         'studio_id' => $order->products->studio_id,
                         'order_id' => $request->id,
-                        'value' => 10,
+                        'value' => 5,
                         'source' => 'Pesanan Selesai',
                     ]);
                 }
-                // return $wallet;
+                return response()->json(["url" => "{{ url('/reviews/' . $total->id . '/success') }}"]);
                 break;
 
             case 'reject':
@@ -230,5 +230,16 @@ class OrderController extends Controller
     public function destroy($id)
     {
         OrderJasa::where('order_id', $id)->delete();
+    }
+
+
+    public function rating_view($id, $status)
+    {
+        if($status == 'success') {
+            $osu = OrderSuccess::find($id)->with('orders.seller', 'orders.products')->first();
+            return view('buyer.rating', ['order' => $osu]);
+        } else {
+            abort(404);
+        }
     }
 }

@@ -8,12 +8,15 @@ use auth;
 use App\Models\Bank;
 use App\Models\Jasa;
 use App\Models\Plan;
+use App\Models\Studio;
 use App\Models\Wallet;
 use App\Models\Highlight;
 use App\Models\JasaFavorit;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use App\Models\SearchHistory;
+use Chatify\Http\Models\Message;
+
 
 class HomeController extends Controller
 {
@@ -42,8 +45,14 @@ class HomeController extends Controller
         if(Auth::user()) {
         $seller = Jasa::with('seller.logo', 'subcategory', 'cover')
         ->get();
+        $official = Studio::where('is_official', 1)->with('portfolio.cover', 'portfolio.subcategory', 'portfolio.seller.logo')
+        ->get();
         $balance = Wallet::where('user_id', Auth::user()->id)->first();
         $bank = Bank::where('user_id', Auth::user()->id)->get();
+        $messages = Message::where([
+            ['to_id', Auth::user()->id],
+            // ['seen', 0],
+            ])->count();
         $category = SubCategory::all()->random(12);
         } else {
         $balance = '';
@@ -58,6 +67,8 @@ class HomeController extends Controller
             'highlight' => $highlight,
             'seller' => $seller,
             'category' => $category,
+            'messages' => $messages,
+            'official' => $official,
         ]);
         // return response()->json([
         //     'highlight' => $highlight,
@@ -80,7 +91,7 @@ class HomeController extends Controller
         $output .= '
         <li class="nav-link text-capitalize">
         <a class="text-primary" href="'.url('search/' . str_replace(' ', '-', strtolower($row->content))).'">'.$row->content.'</a>
-        <span role="button" class="float-right"><i class="text-danger fas fa-times"></i></span>
+        <!-- <span role="button" class="float-right"><i class="text-danger fas fa-times"></i></span> -->
         </li>
         ';
         }

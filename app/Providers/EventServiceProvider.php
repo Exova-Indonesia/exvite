@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Events\Ordered;
+use App\Events\Messaged;
 use App\Events\OrderResult;
 use App\Events\OrderConfirm;
 use App\Events\OrderSucceed;
@@ -11,6 +12,7 @@ use App\Events\OrderRequestRevision;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use App\Listeners\SendNotificationNewOrder;
+use App\Listeners\SendMessageNotification;
 use App\Listeners\SendNotificationResultOrder;
 use App\Listeners\SendNotificationConfirmOrder;
 use App\Listeners\SendNotificationSucceedOrder;
@@ -47,6 +49,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         OrderResult::class => [
             SendNotificationResultOrder::class,
+        ],
+        Messaged::class => [
+            SendMessageNotification::class,
         ],
     ];
 

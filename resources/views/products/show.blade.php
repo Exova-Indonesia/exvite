@@ -214,7 +214,7 @@
           content = `
                 <div class="col-12">
                   <div class="row">
-                    @foreach($seller->pictures as $p)
+                    @foreach($seller->pictures->where('id', '!=', $seller->jasa_thumbnail) as $p)
                     <div class="col-lg-4 col-sm-12">
                       <img class="products-picture" src="{{ $p->medium }}">
                     </div>
@@ -296,7 +296,7 @@
               </div>
             <div class="divider divider-margins mb-3"></div>
             <div class="container">`;
-              $.each((diskusi.comment).slice(0, count), function(i, comment) {
+              $.each((diskusi.comment), function(i, comment) {
                 content += `
                   <div class="content">
                     <div class="d-flex">
@@ -311,10 +311,7 @@
                     </div>
                     <p>
                       ` + comment.content + `
-                    </p>
-                    <div class="text-right">
-                      <span role="button" class="text-exova-2 font-500 add_comment" data-label="comment" data-id="` + diskusi.id + `">Balas</span>
-                  </div>
+                    </p>  
             <div class="divider divider-margins mb-3">
             </div></div>
             `;
@@ -322,13 +319,19 @@
             content += `</div></div>
             `;
           });
+        } else {
+          content += `
+          <div class="text-center">
+            {{ "Belum Ada Diskusi" }}
+          </div>
+          `;
         }
       }
 
       loadComment(1);
 
-          content += `
-          </div>
+        content += `
+        </div>
           <div class="col-lg-6 col-sm-12">
             <div class="col-lg-12 comment-field">
               <div class="input-style input-style-always-active has-borders has-icon validate-field mb-2">
@@ -336,18 +339,18 @@
                 <label for="discuss" class="color-theme opacity-50 text-uppercase font-700 font-10">Apa yang ingin kamu tanyakan?</label>
               </div>
               <div class="text-right">
-                <button class="btn btn-exova submit-diskusi" data-label="` + $(this).attr('data-label') + `" data-id="` + $(this).attr('data-id') + `">Kirim</button>
+                <button class="btn btn-exova submit-diskusi" data-label="diskusi" data-id="{{ $seller->jasa_id }}">Kirim</button>
               </div>
             </div>
           </div>
         </div>
-          `;
+        `;
         } else if(type === 'rating') {
           content = `
           <div class="content">
             <h2>Product Reviews</h2>
           </div>
-          @foreach($seller->rating as $r)
+          @forelse($seller->rating as $r)
           <div class="content">
             <div class="d-flex">
               <div class="flex-grow-1">
@@ -368,12 +371,16 @@
             </p>
           </div>
           <div class="divider divider-margins mb-3"></div>
-          @endforeach
+          @empty
+          <div class="text-center">
+            {{ "Belum Ada Rating & Review" }}
+          </div>
+          @endforelse
           `;
         } else if(type === 'studio') {
           content = `
             <div class="col-12">
-              <div class="row m-0">
+              <div class="row m-0 mb-5">
                 <div class="col-lg-8 col-sm-12">
                   <div class="row m-0">
                     <div class="user-profile-picture m-0">
@@ -382,6 +389,7 @@
                     <div class="mx-3 my-auto text-profile">
                       <div class="user-profile-title text-muted">@lang('seller.title')</div>
                       <div class="user-profile-content name-banner">{{ $seller->seller['name'] }}</div>
+                      <div class="user-profile-title text-capitalize font-14">Owned by <b> {{ $seller->seller['owner']['name'] }} </b></div>
                     </div>
                   </div>
                 </div>
@@ -403,9 +411,20 @@
                           </div>
                       </div>
                   </li>
+                  <li>
+                    <div>
+                      <button onclick="event.preventDefault();
+                      document.getElementById('chat-form').submit()"; data-id="{{ $seller->seller['owner']['id'] }}" type="button" class="chat btn btn-success">Hubungi Owner</button>
+                    </div>
+                    <form id="chat-form" action="{{ route('chat') }}" method="POST" class="d-none">
+                        @csrf
+                        <input name="id" type="hidden" value="{{ $seller->seller['owner']['id'] }}" />
+                    </form>
+                  </li>
                 </div>
               </div>
-              <div class="content">
+              <div class="divider m-0"></div>
+              <div class="content mt-5">
                 <h2>Produk lain dari {{ $seller->seller['name'] }}</h2>
                   <div class="row mx-2">
                     <ul class="product-slide col-lg-12">
@@ -420,6 +439,25 @@
           `;
         }
         $('#detail-body').html(content);
+
+        $('.submit-diskusi').on('click', function() {
+          $.ajax({
+            url: "{{ route('diskusi.new') }}",
+            type: "POST",
+            data: { id: $(this).attr('data-id'), content: $('#discuss').val(), label: $(this).attr('data-label') },
+            headers: {
+              "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            success: function (data) {
+              reload('diskusi');
+            },
+            error: function (data) {
+              $('#menu-warning-2').addClass('menu-active');
+              $('.menu-hider').addClass('menu-active');
+              $(".error-message").text(JSON.parse(data.responseText).statusMessage);
+            },
+          });
+        });
         let zero = [[0, 0]];
         reloadPrice(data.jasa_price, zero);
         $('.add-additional').on('change', function() {
@@ -461,25 +499,12 @@
               },
           });
       });
-      $('.show_comment').on('click', function() {
-        let comment = ``;
-        comment += `
-            <div class="input-style input-style-always-active has-borders has-icon validate-field mb-2">
-              <textarea type="name" class="form-control validate-name" id="discuss"></textarea>
-              <label for="discuss" class="color-theme opacity-50 text-uppercase font-700 font-10">Diskusi</label>
-            </div>
-            <div class="text-right">
-              <button class="btn btn-exova submit-diskusi" data-label="` + $(this).attr('data-label') + `" data-id="` + $(this).attr('data-id') + `">Kirim</button>
-            </div>
-        `;
-        $('.comment-field').html(comment);
-      });
       $('.add_comment').on('click', function() {
         let field = ``;
         field += `
             <div class="input-style input-style-always-active has-borders has-icon validate-field mb-2">
               <textarea type="name" class="form-control validate-name" id="discuss"></textarea>
-              <label for="discuss" class="color-theme opacity-50 text-uppercase font-700 font-10">Diskusi</label>
+              <label for="discuss" class="color-theme opacity-50 text-uppercase font-700 font-10">Balas</label>
             </div>
             <div class="text-right">
               <button class="btn btn-exova submit-diskusi" data-label="` + $(this).attr('data-label') + `" data-id="` + $(this).attr('data-id') + `">Kirim</button>

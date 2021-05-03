@@ -33,6 +33,7 @@
                     </div>
                         <input id="search" type="search" autocomplete="off" placeholder="@lang('home.header.search')" aria-describedby="button-addon4" class="form-control bg-transparent border-0">
                 </div>
+                <div id="result"></div>
             </div>
             <div class="row col-lg-8 m-auto">
                 <div class="col-5 px-1">
@@ -77,7 +78,51 @@
                 </div>
                 <div class="row mx-2">
                     <ul class="product-slide col-lg-12">
-                      @forelse($seller as $f)
+                      @forelse($seller->sortByDesc('jasa_sold')->take(12) as $f)
+                        <x-productcard :products="$f" />
+                      @empty
+                      @endforelse
+                    </ul>
+                </div>
+            </div>
+            @if(count($official) > 0)
+            <div class="col-12">
+                <div class="section-title">
+                    <h2 class="s-title d-block">Official Studio <a href="{{ url('/products/terlaris') }}" class="text-capitalize font-14">Lihat Semua</a></h2>
+                </div>
+                <div class="row mx-2">
+                    <ul class="product-slide col-lg-12">
+                      @forelse($official as $s)
+                        @forelse($s->portfolio as $f)
+                          <x-productcard :products="$f" />
+                        @empty
+                        @endforelse
+                      @empty
+                      @endforelse
+                    </ul>
+                </div>
+            </div>
+            @endif
+            <div class="col-12">
+                <div class="section-title">
+                    <h2 class="s-title d-block">Termurah <a href="{{ url('/products/terlaris') }}" class="text-capitalize font-14">Lihat Semua</a></h2>
+                </div>
+                <div class="row mx-2">
+                    <ul class="product-slide col-lg-12">
+                      @forelse($seller->sortby('jasa_price', true) as $f)
+                        <x-productcard :products="$f" />
+                      @empty
+                      @endforelse
+                    </ul>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="section-title">
+                    <h2 class="s-title d-block">Terbaru <a href="{{ url('/products/terlaris') }}" class="text-capitalize font-14">Lihat Semua</a></h2>
+                </div>
+                <div class="row mx-2">
+                    <ul class="product-slide col-lg-12">
+                      @forelse($seller->sortByDesc('created_at') as $f)
                         <x-productcard :products="$f" />
                       @empty
                       @endforelse
@@ -118,9 +163,9 @@
           </div>
           <div class="divider mb-3"></div>
           <div class="row text-center mb-3 pl-3 pr-3">
-            <a class="font-11 col-4" href="#">Privacy Policy</a>
-            <a class="font-11 col-4" href="#">Terms of Service</a>
-            <a class="font-11 col-4" href="#">About Exova</a>
+            <a class="font-11 col-4" href="company/privacy">Kebijakan Privasi</a>
+            <a class="font-11 col-4" href="company/terms">Persyaratan Layanan</a>
+            <a class="font-11 col-4" href="company/about">Tentang Exova</a>
           </div>
         </div>
       </div>
@@ -167,81 +212,6 @@
         beforeSend: function(data) {
           $('.modal-body').html('Loading...');
         }
-      });
-    });
-    $(".delete-cart").on("click", function (event) {
-      $.ajaxSetup({
-            headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-                    "content"
-                ),
-                "Access-Control-Allow-Origin": "*",
-            },
-        });
-        $.ajax({
-            url: "{{ url('cart') }}",
-            type: "DELETE",
-            data: "id=" + $(this).attr("data-id"),
-            success: function (data) {
-              $('#menu-success-2').addClass('menu-active');
-              $('.menu-hider').addClass('menu-active');
-              $(".success-message").text(data.status);
-              setInterval(() => {
-                window.location = window.location;
-              }, 1000);
-            },
-            error: function (data) {
-                // console.log(data);
-            },
-        });
-    });
-
-    $(".cart-add").on("click", function () {
-        let id;
-        id = $(this).attr("data-id");
-
-        $.ajaxSetup({
-            headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-                "Access-Control-Allow-Origin": "*",
-            },
-        });
-        $.ajax({
-            url: "{{ url('cart/add') }}",
-            type: "POST",
-            data: { id: id },
-            success: function (data) {
-              $('#menu-success-2').addClass('menu-active');
-              $('.menu-hider').addClass('menu-active');
-              $(".success-message").text(data.statusMessage);
-            },
-            error: function (data) {
-              $('#menu-warning-2').addClass('menu-active');
-              $('.menu-hider').addClass('menu-active');
-              $(".error-message").text(JSON.parse(data.responseText).statusMessage);
-            },
-        });
-    });
-    $(".favorit-add").on("click", function () {
-      let id;
-      id = $(this).attr("data-id");
-      $.ajax({
-        url: "{{ route('products.favorit') }}",
-        type: "POST",
-        data: { id: id },
-        headers: {
-          "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        },
-        success: function (data) {
-          $('#menu-success-2').addClass('menu-active');
-          $('.menu-hider').addClass('menu-active');
-          $(".success-message").text(data.statusMessage);
-        },
-        error: function (data) {
-          $('#menu-warning-2').addClass('menu-active');
-          $('.menu-hider').addClass('menu-active');
-          $(".error-message").text(JSON.parse(data.responseText).statusMessage);
-        },
       });
     });
   });

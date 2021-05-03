@@ -78,6 +78,22 @@
 /* Customs */
 
 /* Dashboard Studio Box */
+.input-group .input-group-text-check {
+    background: transparent;
+    border-radius: 0;
+    font-size: 14px;
+    text-transform: uppercase;
+    border: 1px solid var(--bs-green);
+    font-weight: 500;
+    color: var(--bs-green);
+    height: 40px;
+    width: auto;
+    padding: 9px 5px 10px 5px;
+    vertical-align: middle;
+}
+.font-normal {
+    font-style: normal !important;
+}
 li {
     list-style: none;
 }

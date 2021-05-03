@@ -59,7 +59,7 @@ class UploadController extends Controller
     }
 
     public function jasa_picture(Request $request) {
-        $dimension = ['250', '720', '1080'];
+        $dimension = ['250', '720', '1440'];
         $ids = array();
         $path = base_path('../assets/' . Auth::user()->id . '/studio/products' . '/' . date('Y') . '/' . date('F'));
         $pathDB = asset('storage/' . Auth::user()->id . '/studio/products') . '/' . date('Y') . '/' . date('F');
