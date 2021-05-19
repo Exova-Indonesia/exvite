@@ -25,7 +25,7 @@
 		<div class="container-login100">
 			<div class="wrap-login100 border-0 justify-content-center">
 				<form class="login100-form shadow validate-form" method="POST" action="{{ route('login') }}">
-				<img class="mx-auto d-block" src="https://assets.exova.id/img/1.png" alt="icon" width="80" height="80">
+				<!-- <img class="mx-auto d-block" src="https://assets.exova.id/img/1.png" alt="icon" width="80" height="80"> -->
 					<span class="login100-form-title p-b-34">
 						@lang('authuser.login.title')
                     </span>
@@ -45,13 +45,13 @@
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
-                                <div class="form-check">
+                                <!-- <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 
                                     <label for="remember">
                                          @lang('authuser.login.rememberme')
                                     </label>
-                                </div>
+                                </div> -->
                          		
 					<div class="container-login100-form-btn">
 						<button type="submit" class="btn btn-success w-100">

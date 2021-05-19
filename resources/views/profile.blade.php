@@ -33,8 +33,8 @@
                                 </li>
                                 @empty
                                     <div class="p-5 text-center">
-                                        <img class="my-2" src="{{ asset('images/icons/noactivity.svg') }}" alt="No Activity">
-                                        <span class="text-muted">Tidak ada aktivitas apapun</span>
+                                        <img class="my-2" width="120" src="{{ asset('images/icons/noactivity.svg') }}" alt="No Activity">
+                                        <div class="text-muted">Tidak ada aktivitas apapun</div>
                                     </div>
                                 @endforelse
                             </ul>
@@ -308,7 +308,7 @@
 @section('scripts')
     <script>
     $(document).ready(function() {
-        let url = "http://localhost:8000/";
+        let url = "{{ url('/') }}";
     let ReloadAll = () => {
         let reloadProfile = (data) => {
             let content = ``;

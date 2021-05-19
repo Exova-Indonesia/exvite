@@ -31,7 +31,13 @@ class OrderSuccess extends Model
 
 
     public function setServiceFee() {
-        return $this->service_fee = $this->amount * 0.1;
+        if($this->amount <= 1000000) {
+            return $this->service_fee = $this->amount * 0.15;
+        } else if($this->amount > 1000000 && $this->amount < 10000000) {
+            return $this->service_fee = $this->amount * 0.1;
+        } else if($this->amount >= 10000000) {
+            return $this->service_fee = $this->amount * 0.5;
+        }
     }
 
     public function setPaid() {

@@ -11,6 +11,7 @@ use App\Models\Jasa;
 use App\Models\Studio;
 use App\Models\Wallet;
 use App\Models\OrderJasa;
+use App\Models\JasaRating;
 use App\Models\CartDetails;
 use App\Models\OrderCancel;
 use App\Models\StudioPoint;
@@ -18,12 +19,13 @@ use App\Events\OrderConfirm;
 use App\Models\OrderSuccess;
 use Illuminate\Http\Request;
 use App\Models\OrderRevision;
+use App\Events\OrderUnConfirm;
 use App\Models\CartAdditional;
 
 class OrderController extends Controller
 {
     public function __construct() {
-        return $this->middleware(['cartsession'])->except(['show', 'update', 'revisi', 'destroy']);
+        return $this->middleware(['cartsession'])->except(['show', 'update', 'revisi', 'destroy', 'rating_view', 'rating_store']);
     }
     /**
      * Display a listing of the resource.
@@ -200,7 +202,7 @@ class OrderController extends Controller
                         'source' => 'Pesanan Selesai',
                     ]);
                 }
-                return response()->json(["url" => "{{ url('/reviews/' . $total->id . '/success') }}"]);
+                return response()->json(["url" => url('/reviews/' . $request->id . '/success')]);
                 break;
 
             case 'reject':
@@ -209,12 +211,21 @@ class OrderController extends Controller
                     'status' => $request->status,
                 ]);
                 Jasa::where('jasa_id', $order->products->jasa_id)->increment('jasa_cancel');
-                OrderCancel::create([
+                $cc = OrderCancel::create([
                     'customer_id' => auth()->user()->id,
                     'studio_id' => $order->products->studio_id,
                     'order_id' => $request->id,
                     'status' => $request->status,
                 ]);
+                    $wallet = Wallet::where('user_id', $order->customer_id)->first();
+                    $rf = Wallet::where('user_id', $order->customer_id)->update([
+                        'fund' => $wallet->fund + $order->details['subtotal'],
+                    ]);
+                    $wallet = Wallet::where('user_id', $order->customer_id)->first();
+                    Wallet::where('user_id', $order->customer_id)->update([
+                        'balance' => $wallet->revenue + $wallet->fund,
+                    ]);
+                // event(new OrderUnConfirm($cc));
                 break;
             default:
             //
@@ -235,11 +246,39 @@ class OrderController extends Controller
 
     public function rating_view($id, $status)
     {
-        if($status == 'success') {
-            $osu = OrderSuccess::find($id)->with('orders.seller', 'orders.products')->first();
+        $osu = OrderSuccess::where('order_id', $id)->with('orders.products.seller', 'orders.products.cover', 'orders.details')->first();
+        $rating = JasaRating::where('order_id', $id)->first();
+        if($status == 'success' && !empty($osu) && empty($rating)) {
             return view('buyer.rating', ['order' => $osu]);
+            // return $osu;
         } else {
             abort(404);
         }
+    }
+
+
+    public function rating_store(Request $request)
+    {
+        $request->validate([
+            'content' => ['required', 'max:125'],
+            'rating' => ['required', 'max:5', 'integer'],
+            'order_id' => ['required'],
+        ]);
+
+        $rating = intval($request->rating);
+        if($rating > 5) {
+            $rating = 5;
+        }
+        $jasa = OrderJasa::where('order_id', $request->order_id)->first();
+        JasaRating::firstOrCreate([
+            'order_id' => $request->order_id,
+        ], [
+            'user_id' => auth()->user()->id,
+            'order_id' => $request->order_id,
+            'jasa_id' => $jasa->product_id,
+            'rating' => $rating,
+            'content' => htmlentities($request->content),
+        ]);
+        return redirect('/')->with(['feedback' => true]);
     }
 }

@@ -111,8 +111,11 @@ $(document).ready(function() {
                                 }
                             content +=`</div>
                             <div class="notif-btn ml-auto">
-                            <button class="detail-btn btn btn-exova" data-label="detail_pesanan" data-id="` + data.order_id + `" data-toggle="modal" data-target="#orderModal"><i class="fas fa-eye" title="Lihat Detail"></i></button>
+                            <button class="detail-btn btn btn-exova" data-label="detail_pesanan" data-id="` + data.order_id + `" data-toggle="modal" data-target="#orderModal"><i class="fas fa-eye" title="Lihat Detail"></i></button>`;
+                            if(base === 'pembelian') {
+                            content +=`<button class="editorder-btn btn btn-danger" data-label="edit_orderan" data-id="` + data.order_id + `" data-toggle="modal" data-target="#orderModal"><i class="fas fa-cog" title="Edit Ulang Orderan"></i></button>
                             `;
+                            }
                             if(id === 'menunggu_pembayaran') {
                                 content += `
                                     <button class="repay-btn btn btn-success" data-label="detail_pembayaran" data-id="` + data.details.payments.payment_id + `"><i class="fas fa-credit-card"></i></button>
@@ -125,7 +128,7 @@ $(document).ready(function() {
                                 `;
                             } else if(id === 'menunggu_konfirmasi' && base === 'pembelian') {
                                 content += `
-                                    <button class="reject-btn btn btn-danger" data-content="pesanan_dibatalkan" data-id="` + data.order_id + `" title="Tolak Pesanan"><i class="fas fa-times"></i></button>
+                                    <button class="reject-btn btn btn-danger" data-content="pesanan_dibatalkan" data-id="` + data.order_id + `" title="Batalkan Pesanan"><i class="fas fa-times"></i></button>
                                 `;
                             } else if(id === 'pesanan_dikirim' && base === 'pembelian') {
                                 content += `
@@ -437,6 +440,7 @@ $(document).ready(function() {
                     <span class="shortcut-product notif-active" data-id="pesanan_dibatalkan">Pesanan Dibatalkan</span>
                     <span class="shortcut-product" data-id="pesanan_ditolak">Pesanan Ditolak</span>
                     <span class="shortcut-product" data-id="batal_otomatis">Batal Otomatis</span>
+                    <span class="shortcut-product" data-id="pembayaran_kedaluarsa">Pembayaran Kedaluarsa</span>
                 </div>
                 `;    
             }

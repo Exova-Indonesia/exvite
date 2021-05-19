@@ -260,6 +260,50 @@
       });
     });
   });
+
+  $(document).ready(function() {
+    $('#modalReview').on('show.bs.modal', function(e) {
+      let btn = $(e.relatedTarget);
+      $.ajax({
+        url: "{{ url('web/v2/rating') }}/" + btn.data('id'),
+        type: "GET",
+        success: function(data) {
+          let content = ``;
+          if(data.length > 0) {
+            $.each(data, function(i, data) {
+              content += `
+                <div class="row m-0">
+                  <div class="me-2">
+                    <img class="rounded-circle" src="` + data.users.avatar.small + `" width="50" height="50" alt="Profile Picture">
+                  </div>
+                  <div class="review-content">
+                    <h5 class="m-0">` + data.users.name + `</h5>
+                    <p class="m-0">` + data.content + `</p>
+                  </div>
+                  <div class="ml-auto text-right">
+                    <div><small>` + new Date(data.created_at).toDateString() + `</small></div>
+                    <div><small>` + numeral(data.rating).format('0.00') + ` <i class="fa fa-star text-warning"></i> </small></div>
+                  </div>
+                </div>
+                <div class="divider m-3"></div>
+              `;
+            });
+          } else {
+            content += `<div class="text-center"><span>Tidak ada data</span></div>`;
+          }
+
+          $('.modal-body').html(content)
+          $('.modal-title').html('Review & Rating')
+        },
+        error: function(data) {
+          // 
+        },
+        beforeSend: function(data) {
+          $('.modal-body').html('Loading...');
+        }
+      });
+    });
+  });
 </script>
 </body>
 </html>

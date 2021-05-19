@@ -80,7 +80,7 @@ class StudioController extends Controller
     {
         $slugsNew = Str::slug($request->title);
         $slugs = Jasa::where('slugs', $slugsNew)->get();
-        if($slugs) {
+        if(count($slugs) > 0) {
             $count = count($slugs) + 1;
             $slugsNew = $slugsNew . '-' . $count;
         }
@@ -120,12 +120,8 @@ class StudioController extends Controller
             ])
         ->first();
         // $sells = Jasa::where('studio_id', auth()->user()->studio->id)->sum('jasa_sold');
-        $orders = OrderJasa::with(['success', 'products' => function($q) {
-            $q->where('studio_id', studio()->id);
-        }])->get();
-        $success = OrderSuccess::with(['orders.products' => function($q) {
-            $q->where('studio_id', studio()->id);
-        }])->get();
+        $orders = OrderJasa::where('seller_id', studio()->id)->with('success', 'products')->get();
+        $success = OrderSuccess::where('studio_id', studio()->id)->with('orders.products')->get();
         $category = Category::all();
         foreach($seller->portfolio->sortby('jasa_sold')->take(3) as $p) {
             $jasaChart[] = $p->jasa_name;
@@ -315,9 +311,9 @@ class StudioController extends Controller
     public function update(Request $request, $id)
     {
         $slugsNew = Str::slug($request->info['title']);
-        $slugs = Jasa::where('slugs', $slugsNew)->get();
-        if($slugs) {
-            $count = count($slugs) + 1;
+        $slugs = Jasa::where('slugs', $slugsNew);
+        if(count($slugs->get()) > 0 && $slugs->first()->jasa_id != $id) {
+            $count = count($slugs->get()) + 1;
             $slugsNew = $slugsNew . '-' . $count;
         }
         $jasa = Jasa::where('jasa_id', $id)->first();

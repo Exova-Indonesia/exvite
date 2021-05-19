@@ -24,7 +24,7 @@
       <!-- small box -->
       <div class="small-box bg-exova-2">
         <div class="inner">
-          <h4>{{ rupiah($revenue->sum('paid')) }}</h4>
+          <h4>{{ rupiah($revenue->where('studio_id', studio()->id)->sum('paid')) }}</h4>
           <p class="m-0">Pendapatan 
             <span class="font-12">
             @if($revenue->setRevenueGrowth() < 0)
@@ -43,7 +43,7 @@
       <!-- small box -->
       <div class="small-box bg-success">
         <div class="inner">
-          <h4>{{ $lover->count() }}</h4>
+          <h4>{{ $lover->where('studio_id', studio()->id)->count() }}</h4>
           <p class="m-0">Langganan baru 
             <span class="font-12">
             @if($lover->setGrowth() < 0)
@@ -62,7 +62,7 @@
       <!-- small box -->
       <div class="small-box bg-danger">
         <div class="inner">
-          <h4>{{ $lover->count('deleted_at') ?? 0 }}</h4>
+          <h4>{{ $lover->where('studio_id', studio()->id)->count('deleted_at') ?? 0 }}</h4>
           <p class="m-0">Langganan hilang 
             <span class="font-12">
             @if($lover->setGone() < 0)

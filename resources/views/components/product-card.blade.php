@@ -21,7 +21,7 @@
                   {{ $f->jasa_deskripsi }}
                 </p>
                 <!-- <s class="font-12 m-0">Rp</s> -->
-                <h5 class="font-14 price-rating">{{ rupiah($f->jasa_price) }}<span class="float-right"><i class="fa fa-star text-warning"></i>{{ $f->jasa_rating }}</span></h5>
+                <h5 class="font-14 price-rating">{{ rupiah($f->jasa_price) }}<span class="float-right"><i class="fa fa-star text-warning"></i>{{ rating($f->rating->sum('rating'), $f->rating->count()) }}</span></h5>
                 </a>
                 <div class="d-flex footer-products">
                     <div class="likers favorit-add" role="button" data-id="{{ $f->jasa_id }}" title="Tambah ke favorit">

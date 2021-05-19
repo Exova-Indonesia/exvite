@@ -66,7 +66,7 @@
             </p>
               <h2 class="me-3 font-700">{{ rupiah($seller->jasa_price) }}</h2>
                     <p class="mb-0">
-                        <strong class="color-theme">{{ $seller->jasa_rating }}</strong>
+                        <strong class="color-theme">{{ rating($seller->rating->sum('rating'), $seller->rating->count()) }}</strong>
                         <i class="fa fa-star color-yellow-dark"></i>
                     </p>
                     <a href="#" class="d-block">{{ $seller->rating->count() }} Reviews</a><br />
@@ -273,7 +273,7 @@
         <div class="row m-0">
           <div class="col-lg-6 col-sm-12">`;
       loadComment = (count) => {
-        if(data.diskusi) {
+        if((data.diskusi).length > 0) {
           $.each(data.diskusi, function(i, diskusi) {
             content += `
             <div class="content">
@@ -423,17 +423,6 @@
                   </li>
                 </div>
               </div>
-              <div class="divider m-0"></div>
-              <div class="content mt-5">
-                <h2>Produk lain dari {{ $seller->seller['name'] }}</h2>
-                  <div class="row mx-2">
-                    <ul class="product-slide col-lg-12">
-                      @forelse($seller->seller['portfolio'] as $f)
-                        <x-productcard :products="$f" />
-                      @empty
-                      @endforelse
-                    </ul>
-                </div>
               </div>
             </div>
           `;

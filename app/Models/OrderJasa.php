@@ -18,6 +18,7 @@ class OrderJasa extends Model
         'order_detail_id',
         'product_id',
         'customer_id',
+        'seller_id',
         'type',
         'invoice',
         'status',
@@ -33,6 +34,10 @@ class OrderJasa extends Model
     
     public function products() {
         return $this->belongsTo(Jasa::class, 'product_id');
+    }
+    
+    public function seller() {
+        return $this->belongsTo(Jasa::class, 'seller');
     }
     public function customer() {
         return $this->belongsTo(User::class, 'customer_id');

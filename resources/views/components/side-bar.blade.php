@@ -44,12 +44,13 @@
         <div class="list-group list-custom-small list-menu">
           <a
             href="#"
-            data-toggle-theme=""
-            data-trigger-switch="switch-dark-mode"
+            data-toggle-thee=""
+            data-trigger-switc="switch-dark-mod"
           >
             <i class="fa fa-moon gradient-dark color-white"></i>
             <span>Dark Mode</span>
-            <div class="custom-control small-switch ios-switch">
+              <span class="bg-danger rounded-pill text-white pr-2">Coming Soon</span>
+            <!-- <div class="custom-control small-switch ios-switch">
               <input
                 data-toggle-theme=""
                 type="checkbox"
@@ -60,7 +61,7 @@
                 class="custom-control-label"
                 for="toggle-dark-menu"
               ></label>
-            </div>
+            </div> -->
           </a>
           <a role="button" onclick="event.preventDefault();
             document.getElementById('logout-form').submit();">

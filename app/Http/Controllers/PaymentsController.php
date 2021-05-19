@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 \Midtrans\Config::$isProduction = config('app.md_production');
 \Midtrans\Config::$isSanitized = config('app.md_sanitized');
 
+use PDF;
 use Auth;
 use Lang;
 use App\Models\Cart;
@@ -21,6 +22,7 @@ use App\Models\PaymentDetail;
 use App\Models\CartAdditional;
 use App\Models\OrderAdditional;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class PaymentsController extends Controller
 {
@@ -120,7 +122,7 @@ class PaymentsController extends Controller
 
                 PaymentDetail::where('payment_id', $this->payment_id)
                 ->update([
-                    'invoice' => orderInvoice($this->payment_id),
+                    'invoice' => PaymentsController::orderInvoice($this->payment_id),
                 ]);
                 $request->session()->forget('cart_shopping');
                 return response()->json(["link" => $paymentUrl, "method" => $request->method]);
@@ -222,7 +224,7 @@ class PaymentsController extends Controller
             
             PaymentDetail::where('payment_id', $this->payment_id)
             ->update([
-                'invoice' => orderInvoice($this->payment_id),
+                'invoice' => PaymentsController::orderInvoice($this->payment_id),
             ]);
             request()->session()->forget('cart_shopping');
             // $response = \Midtrans\CoreApi::charge($params);
@@ -322,5 +324,13 @@ class PaymentsController extends Controller
             //     'transaction_time' => $res['transaction_time'],
             //     'gross_amount' => $res['gross_amount'],
             // ]);
+        }
+        public function orderInvoice($id) {
+            $data = PaymentDetail::with('details.products.products.seller.address', 'details.products.products.subcategory', 'details.products.customer.address', 'details.additionals')->where('payment_id', $id)->first();
+            $pdf = PDF::loadview('pdf.order', ['data' => $data])->setPaper('a4', 'potrait');
+            $url = auth()->user()->id . '/' . 'invoices/orders' . '/' . date('Y') . '/' . date('F');
+            $name = 'EX-' . $id . '-' . date('Y-m-d') . '.pdf';
+            Storage::put($url . '/' . $name, $pdf->output());
+            return $url . '/' . $name;
         }
     }

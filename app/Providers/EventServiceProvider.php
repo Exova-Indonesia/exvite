@@ -7,15 +7,17 @@ use App\Events\Messaged;
 use App\Events\OrderResult;
 use App\Events\OrderConfirm;
 use App\Events\OrderSucceed;
+use App\Events\UserBirthday;
 use App\Events\OrderUnConfirm;
 use App\Events\OrderRequestRevision;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
-use App\Listeners\SendNotificationNewOrder;
 use App\Listeners\SendMessageNotification;
+use App\Listeners\SendNotificationNewOrder;
 use App\Listeners\SendNotificationResultOrder;
 use App\Listeners\SendNotificationConfirmOrder;
 use App\Listeners\SendNotificationSucceedOrder;
+use App\Listeners\SendNotificationUserBirthday;
 use App\Listeners\SendNotificationUnConfirmOrder;
 use App\Listeners\SendNotificationRequestRevisionOrder;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -52,6 +54,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         Messaged::class => [
             SendMessageNotification::class,
+        ],
+        UserBirthday::class => [
+            SendNotificationUserBirthday::class,
         ],
     ];
 

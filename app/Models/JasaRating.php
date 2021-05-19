@@ -11,6 +11,7 @@ class JasaRating extends Model
     protected $table = 'jasa_rating';
     protected $fillable = [
         'user_id',
+        'order_id',
         'jasa_id',
         'rating',
         'content',

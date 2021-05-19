@@ -218,6 +218,9 @@ return [
         'password' => 'Password',
         'email' => 'Email',
         'reason' => 'Alasan',
+        'rating' => 'Rating',
+        'content' => 'Ulasan',
+        'order_id' => 'ID',
     ],
 
 ];

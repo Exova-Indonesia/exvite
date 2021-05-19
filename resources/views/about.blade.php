@@ -9,7 +9,7 @@
         <div class="splide__track">
           <div class="splide__list">
             <div class="splide__slide">
-              <div class="card bg-13" data-card-height="400" style="background-image: url('http://localhost:8000/storage/20210429654305011/studio/products/2021/May/1440/products-121984369-20210429654305011.jpeg')">
+              <div class="card bg-13" data-card-height="400" style="background-image: url('{{asset('images/banners/about.jpg')}}')">
                 <div class="card-bottom text-center mb-3">
                   <h1 class="color-white font-700 mb-0">Tentang Exova Indonesia</h1>
                   <p class="color-white">Sejarah, Tim, & Perjalanan Menuju Kebebasan</p>

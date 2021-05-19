@@ -1,6 +1,6 @@
 (function ($) {
     "use strict";
-    let url = "http://localhost:8000/";
+    let url = "http://exvite.test/";
     $(document).ready(function () {
         $("#search").keyup(function (e) {
             let query = $(this).val();

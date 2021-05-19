@@ -16,14 +16,14 @@ class SendMail extends Command
      *
      * @var string
      */
-    protected $signature = 'email:deadline';
+    protected $signature = 'order:mail';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Email Schedule Test';
+    protected $description = 'Email schedule of order due date';
 
     /**
      * Create a new command instance.
@@ -42,9 +42,6 @@ class SendMail extends Command
      */
     public function handle()
     {
-    $data = OrderJasa::with('products.seller.owner')->whereDate('deadline', now()->format('Y-m-d'))->get();
-        foreach($data as $d){
-            $d->products->seller->owner->notify(new \App\Notifications\DeadlineAlert($d->products->seller->owner->name));
-        }
+        // 
     }
 }

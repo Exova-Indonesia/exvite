@@ -89,6 +89,8 @@ class ApiController extends Controller
             ($search == 'null') ? $q->withTrashed() : $q->where('jasa_name', 'LIKE', '%'.$search.'%')->withTrashed();
         }])
         ->where('status', $submenu)
+        ->where('customer_id', auth()->user()->id)
+        ->orWhere('seller_id', studio()->id)
         ->orderby('created_at', 'DESC')
         ->get();
         return response()->json($data);

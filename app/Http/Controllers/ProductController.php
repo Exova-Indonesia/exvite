@@ -66,14 +66,14 @@ class ProductController extends Controller
                 JasaDiskusi::create([
                     'user_id' => auth()->user()->id,
                     'jasa_id' => $request->id,
-                    'content' => $request->content,
+                    'content' => htmlentities($request->content),
                 ]);
             break;
             case "comment":
                 JasaDiskusiComment::create([
                     'user_id' => auth()->user()->id,
                     'diskusi_id' => $request->id,
-                    'content' => $request->content,
+                    'content' => htmlentities($request->content),
                 ]);
             break;
             default:
@@ -151,7 +151,7 @@ class ProductController extends Controller
     public function add_favorite(Request $request)
     {
         $data = Jasa::where('jasa_id', $request->id)->first();
-        if($data->studio_id == studio()->id) {
+        if($data->studio_id == (studio()->id ?? 0)) {
             return response()->json(['statusMessage' => Lang::get('validation.favorit.failed')], 400);
         }
         $fav = JasaFavorit::query();

@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Models\Wallet;
 use App\Models\OrderJasa;
 use App\Events\OrderUnConfirm;
 use Illuminate\Queue\InteractsWithQueue;
@@ -31,7 +32,7 @@ class SendNotificationUnConfirmOrder implements ShouldQueue
      */
     public function handle(OrderUnConfirm $event)
     {
-        $data =  OrderJasa::with('customer', 'products.seller.owner', 'details.additionals')->where('order_id', $event->order['order_id'])->first();
+        $data =  OrderJasa::with('customer', 'products.seller.owner', 'details.additionals', 'details.payments')->where('order_id', $event->order['order_id'])->first();
         if($event->order['status'] == 'pesanan_ditolak') {
             $data->customer->notify(new OrderRejectedConfirmation($data));
         } else if($event->order['status'] == 'batal_otomatis') {

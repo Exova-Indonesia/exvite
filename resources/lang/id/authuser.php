@@ -1,7 +1,7 @@
 <?php 
 return [
     'login' => [
-        'title' => 'Masuk ke Exova',
+        'title' => 'Exova Login',
         'email' => 'Email',
         'password' => 'Password',
         'rememberme' => 'Ingatkan Saya',
@@ -15,7 +15,7 @@ return [
         'forget' => 'Lupa Password ?'
     ],
     'register' => [
-        'title' => 'Daftar ke Exova',
+        'title' => 'Exova Registration',
         'name' => 'Nama',
         'confirm' => 'Konfirmasi Password',
         'haveaccount' => 'Sudah Punya Akun ?',

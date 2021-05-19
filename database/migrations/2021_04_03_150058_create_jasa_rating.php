@@ -15,12 +15,14 @@ class CreateJasaRating extends Migration
     {
         Schema::create('jasa_rating', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('order_id')->unsigned();
             $table->bigInteger('jasa_id')->unsigned();
             $table->bigInteger('user_id')->unsigned();
             $table->tinyInteger('rating');
             $table->string('content');
 
             $table->foreign('jasa_id')->references('jasa_id')->on('jasa_products')->onDelete('cascade');
+            $table->foreign('order_id')->references('order_id')->on('jasa_orders')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

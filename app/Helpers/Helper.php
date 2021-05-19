@@ -1,8 +1,11 @@
 <?php 
 
+// namespace App\Helpers;
+
 use App\Models\Studio;
 use App\Models\OrderJasa;
 use App\Models\PaymentDetail;
+use Illuminate\Support\Facades\Storage;
 
 function studio()
 {
@@ -49,15 +52,9 @@ function parse_rupiah($amount)
     return preg_replace(['/[Rp,.]/'],'', $amount);
 }
 
-function orderInvoice($id)
-{
-    $data = PaymentDetail::with('details.products.products.seller.address', 'details.products.products.subcategory', 'details.products.customer.address', 'details.additionals')->where('payment_id', $id)->first();
-    $pdf = PDF::loadview('pdf.order', ['data' => $data])->setPaper('a4', 'potrait');
-    $url = auth()->user()->id . '/' . 'invoices/orders' . '/' . date('Y') . '/' . date('F');
-    $name = 'EX-' . $id . '-' . date('Y-m-d') . '.pdf';
-    Storage::put($url . '/' . $name, $pdf->output());
-    return $url . '/' . $name;
+function rating($sum, $count) {
+    if($count == 0) { $count = 1; }
+    return $sum / $count;
 }
-
 
 ?>

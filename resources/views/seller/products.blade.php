@@ -126,7 +126,7 @@
                             <td>{{ $p->jasa_sold }}</td>
                             <td>{{ $p->jasa_cancel }}</td>
                             <td class="text-center w-150">
-                                <a href="{{ url('manage/' . Str::slug($p->jasa_name)) }}" class="btn btn-exova m-1"><i class="fa fa-pencil-alt"></i></a>
+                                <a href="{{ url('manage/' . $p->slugs) }}" class="btn btn-exova m-1"><i class="fa fa-pencil-alt"></i></a>
                                 <button data-id="{{ $p->jasa_id }}" class="btn btn-danger m-1 delete"><i class="fa fa-trash"></i></button>
                             </td>
                         </tr>

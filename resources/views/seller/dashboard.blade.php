@@ -159,10 +159,10 @@
             <h2 class="s-title d-block">Terlaris</h2>
           </div>
           <div class="d-flex">
-            @forelse($seller->portfolio->sortby('jasa_sold', true)->take(4) as $f)
+            @forelse($seller->portfolio->sortby('jasa_sold', true)->take(20) as $f)
             <div class="col-lg-2 col-sm-6">
               <a
-                href="{{ url('products/' . strtolower(str_replace(' ','-', $f->jasa_name))) }}"
+                href="{{ url('products/' . $f->slugs) }}"
                 title="{{ $f->jasa_name }}"
                 data-gallery="gallery"
               >

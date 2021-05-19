@@ -39,15 +39,15 @@
                             </div>
                         </div>
                         <div class="m-auto row">
+                            <!-- <div class="m-1 text-right">
+                                <button type="button" data-target="#topupActionSheet" data-toggle="modal" class="btn btn-danger">@lang('wallet.topup.title')</button>
+                            </div> -->
                             <div class="m-1 text-right">
-                                <button type="button" data-target="#withdrawActionSheet" data-toggle="modal" class="btn btn-danger">@lang('wallet.withdraw.title')</button>
+                                <button type="button" data-target="#withdrawActionSheet" data-toggle="modal" class="btn btn-success">@lang('wallet.withdraw.title')</button>
                             </div>
-                            <div class="m-1 text-right">
-                                <button type="button" data-target="#topupActionSheet" data-toggle="modal" class="btn btn-success">@lang('wallet.topup.title')</button>
-                            </div>
-                            <div class="m-1 text-right">
+                            <!-- <div class="m-1 text-right">
                                 <button type="button" data-target="#sendActionSheet" data-toggle="modal" class="btn btn-primary">@lang('wallet.transfer.title')</button>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>

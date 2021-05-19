@@ -64,9 +64,11 @@ Route::get('/welcome', function (Request $request) {
     // $data = PaymentDetail::with('details.products.products.seller.address', 'details.products.products.subcategory', 'details.products.customer.address', 'details.additionals')->where('payment_id', 1903280994)->first();
     // return view('pdf.order', ['data' => $data]);
     // $data =  OrderJasa::with('customer', 'products.seller.owner', 'details.additionals', 'success', 'revision')->where('order_id', 810652513728)->first();
-    $response = Http::withBasicAuth(config('app.md_secret'), ' ')->get('https://api.sandbox.midtrans.com/v2/' . '1662921896/status');
-    return $response;
+    // $response = Http::withBasicAuth(config('app.md_secret'), ' ')->get('https://api.sandbox.midtrans.com/v2/' . '1662921896/status');
+    // return $response;
     // return OrderConfirm::dispatch($data);
+    // return app_path();  
+    // return OrderJasa::with('details', 'products.seller.owner')->whereDate('batal_otomatis', now()->format('Y-m-d'))->get();
 });
 
 Route::get('/components/sidebar', function (Request $request) {
@@ -197,7 +199,7 @@ Route::middleware('auth')->group(function() {
     Route::post('/revision', [App\Http\Controllers\OrderController::class, 'revisi']);
     // Rating & Reviews
     Route::get('reviews/{id}/{status}', [App\Http\Controllers\OrderController::class, 'rating_view']);
-    Route::post('reviews/{id}/{status}', [App\Http\Controllers\OrderController::class, 'rating_store']);
+    Route::post('reviews', [App\Http\Controllers\OrderController::class, 'rating_store'])->name('submit.rating');
 });
 
 

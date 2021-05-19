@@ -25,7 +25,7 @@
 		<div class="container-login100">
 			<div class="wrap-login100 border-0 justify-content-center">
 				<form class="login100-form shadow validate-form" method="POST" action="{{ route('register') }}">
-				<img class="mx-auto d-block" src="https://assets.exova.id/img/1.png" alt="icon" width="80" height="80">
+				<!-- <img class="mx-auto d-block" src="https://assets.exova.id/img/1.png" alt="icon" width="80" height="80"> -->
 					<span class="login100-form-title p-b-34">
 						@lang('authuser.register.title')
                     </span>

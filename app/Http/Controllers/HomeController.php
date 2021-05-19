@@ -109,7 +109,7 @@ class HomeController extends Controller
         return $output;
         }
     }
-    public function search($title) {
+    public function search(Request $request, $title) {
         $balance = WalletController::index()->balance;
         $title = str_replace('-', ' ', $title);
 
@@ -124,8 +124,18 @@ class HomeController extends Controller
                 'availability' => (Auth::user()->notif->pencarian == 1) ? 1 : 0,
             ]);
         }
-
         $data = Jasa::with('seller')->where('jasa_name', 'LIKE', "%{$title}%")->get();
+        if(isset($request->price)) {
+            $data = Jasa::with('seller')->where('jasa_price', '<=', $request->price)->get();
+        }
+        if($request->sort == 'terlaris') {
+            $data = Jasa::with('seller')->orderBy('jasa_sold', 'DESC')->get();
+        } else if($request->sort == 'terbaru') {
+            $data = Jasa::with('seller')->orderBy('created_at', 'DESC')->get();
+        } else if($request->sort == 'termurah') {
+            $data = Jasa::with('seller')->orderBy('jasa_price', 'ASC')->get();
+        }
+
         return view('search', ['products' => $data, 'balance' => $balance, 'title' => $title]);
     }
     public function favorit() {

@@ -12,6 +12,7 @@ use App\Events\OrderSucceed;
 use App\Models\OrderSuccess;
 use App\Models\OrderRevision;
 use App\Models\PaymentDetail;
+use App\Events\OrderUnConfirm;
 use App\Models\OrderJasaResult;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -31,12 +32,13 @@ class ExampleTest extends TestCase
     // }
     public function test_send_order_created()
     {
-        // $pay = PaymentDetail::find(1903280994);
-        // $pay->customer_id = 2021022120422715;
-        // $pay->status = 'success';
-        // $pay->save();
-        $order = OrderJasa::where('order_id', 810652513728)->first();
-        event(new OrderConfirm($order));
-        $this->assert(true);
+        $data = OrderCancel::create([
+            'customer_id' => 2021022120422715,
+            'studio_id' => 3,
+            'order_id' => 9181174500848,
+            'status' => 'pesanan_dibatalkan',
+        ]);
+
+        // event(new OrderUnConfirm($data));
     }
 }

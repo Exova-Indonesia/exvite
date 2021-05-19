@@ -139,7 +139,7 @@ class WalletController extends Controller
             'wal_description' => $request['note'],
             'wal_amount' => preg_replace(['/[,.]/'],'',$request['amount']),
             'wal_transaction_type' => 'Penarikan',
-            'wal_status' => 'failed',
+            'wal_status' => 'pending',
             'wal_token' => $token,
             'wal_invoice' => $invoice,
         ]);

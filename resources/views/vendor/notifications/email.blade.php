@@ -33,12 +33,6 @@
 @endcomponent
 @endisset
 
-@if (! empty($details))
-# {{ $details }}
-@else
- # Indtoduction 
-@endif
-
 {{-- Outro Lines --}}
 @foreach ($outroLines as $line)
 {{ $line }}

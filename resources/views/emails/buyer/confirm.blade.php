@@ -25,12 +25,13 @@
             <td class="text-right font-weight-bold">{{ parse_date($order->deadline) }}</td>
         </tr>
         @endif
-        @foreach($order->details['additionals'] as $add)
+        @forelse($order->details['additionals'] as $add)
         <tr>
             <td>Layanan Tambahan</td>
             <td class="text-right font-weight-bold">{{ $add->quantity . ' X ' . $add->title }}</td>
         </tr>
-        @endforeach
+        @empty
+        @endforelse
     </tbody>
 </table>
 @endcomponent

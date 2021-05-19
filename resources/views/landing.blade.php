@@ -11,7 +11,7 @@
               <div class="splide__slide ps-3">
                 <div
                   data-card-height="220"
-                  class="card shadow-xl rounded-m bg-6"
+                  class="card shadow-xl rounded-m" style="background-image: url('{{ $s->icon }}')"
                 >
                   <div class="card-bottom text-center">
                     <h4 class="color-white font-800 mb-3">{{ $s->name }}</h4>
@@ -74,7 +74,7 @@
         <div class="container">
             <div class="col-12">
                 <div class="section-title">
-                    <h2 class="s-title d-block">Terlaris <a href="{{ url('/products/terlaris') }}" class="text-capitalize font-14">Lihat Semua</a></h2>
+                    <h2 class="s-title d-block">Terlaris <a href="{{ url('/search/all?sort=terlaris') }}" class="text-capitalize font-14">Lihat Semua</a></h2>
                 </div>
                 <div class="row mx-2">
                     <ul class="product-slide col-lg-12">
@@ -85,10 +85,10 @@
                     </ul>
                 </div>
             </div>
-            @if(count($official) > 0)
+            <!-- @if(count($official) > 0)
             <div class="col-12">
                 <div class="section-title">
-                    <h2 class="s-title d-block">Official Studio <a href="{{ url('/products/terlaris') }}" class="text-capitalize font-14">Lihat Semua</a></h2>
+                    <h2 class="s-title d-block">Official Studio <a href="{{ url('/search/photo?sort=official') }}" class="text-capitalize font-14">Lihat Semua</a></h2>
                 </div>
                 <div class="row mx-2">
                     <ul class="product-slide col-lg-12">
@@ -102,10 +102,10 @@
                     </ul>
                 </div>
             </div>
-            @endif
+            @endif -->
             <div class="col-12">
                 <div class="section-title">
-                    <h2 class="s-title d-block">Termurah <a href="{{ url('/products/terlaris') }}" class="text-capitalize font-14">Lihat Semua</a></h2>
+                    <h2 class="s-title d-block">Termurah <a href="{{ url('/search/all?sort=termurah') }}" class="text-capitalize font-14">Lihat Semua</a></h2>
                 </div>
                 <div class="row mx-2">
                     <ul class="product-slide col-lg-12">
@@ -118,7 +118,7 @@
             </div>
             <div class="col-12">
                 <div class="section-title">
-                    <h2 class="s-title d-block">Terbaru <a href="{{ url('/products/terlaris') }}" class="text-capitalize font-14">Lihat Semua</a></h2>
+                    <h2 class="s-title d-block">Terbaru <a href="{{ url('/search/all?sort=terbaru') }}" class="text-capitalize font-14">Lihat Semua</a></h2>
                 </div>
                 <div class="row mx-2">
                     <ul class="product-slide col-lg-12">
@@ -139,21 +139,20 @@
           </p>
           <div class="text-center mb-4">
             <a
-              href="#"
+              href="https://www.facebook.com/exovaindonesia"
+              target="_blank"
               class="icon icon-xs rounded-sm shadow-l mr-1 bg-facebook"
               ><i class="fab fa-facebook-f"></i
             ></a>
-            <a href="#" class="icon icon-xs rounded-sm shadow-l mr-1 bg-twitter"
+            <a href="https://www.twitter.com/exova"
+            target="_blank"
+            class="icon icon-xs rounded-sm shadow-l mr-1 bg-twitter"
               ><i class="fab fa-twitter"></i
             ></a>
-            <a href="#" class="icon icon-xs rounded-sm shadow-l mr-1 bg-phone"
-              ><i class="fa fa-phone"></i
-            ></a>
-            <a
-              href="#"
-              data-menu="menu-share"
-              class="icon icon-xs rounded-sm mr-1 shadow-l bg-red-dark"
-              ><i class="fa fa-share-alt"></i
+            <a href="https://www.instagram.com/exova.id"
+            target="_blank"
+            class="icon icon-xs rounded-sm shadow-l mr-1 bg-instagram"
+              ><i class="fab fa-instagram"></i
             ></a>
             <a
               href="#"
@@ -173,47 +172,8 @@
 </div>
 @endsection
 @section('modals')
-
+<!--  -->
 @endsection
 @section('scripts')
-<script>
-  $(document).ready(function() {
-    $('#modalReview').on('show.bs.modal', function(e) {
-      let btn = $(e.relatedTarget);
-      $.ajax({
-        url: "{{ url('web/v2/rating') }}/" + btn.data('id'),
-        type: "GET",
-        success: function(data) {
-          let content = ``;
-          $.each(data, function(i, data) {
-            content += `
-              <div class="row m-0">
-                <div class="me-2">
-                  <img class="rounded-circle" src="` + data.users.avatar.small + `" width="50" height="50" alt="Profile Picture">
-                </div>
-                <div class="review-content">
-                  <h5 class="m-0">` + data.users.name + `</h5>
-                  <p class="m-0">` + data.content + `</p>
-                </div>
-                <div class="ml-auto text-right">
-                  <div><small>` + new Date(data.created_at).toDateString() + `</small></div>
-                  <div><small>` + numeral(data.rating).format('0.00') + ` <i class="fa fa-star text-warning"></i> </small></div>
-                </div>
-              </div>
-              <div class="divider m-3"></div>
-            `;
-          });
-          $('.modal-body').html(content)
-          $('.modal-title').html('Review & Rating')
-        },
-        error: function(data) {
-          // 
-        },
-        beforeSend: function(data) {
-          $('.modal-body').html('Loading...');
-        }
-      });
-    });
-  });
-</script>
+<!--  -->
 @endsection

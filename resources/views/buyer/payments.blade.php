@@ -172,7 +172,7 @@
                     type: "POST",
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                        'Access-Control-Allow-Origin': 'http://exvite.test',
+                        'Access-Control-Allow-Origin': '*',
                     },
                     success: function (data) {
                         // console.log(data)

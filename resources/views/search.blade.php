@@ -13,16 +13,16 @@
         </div>
     </div>
     <div class="search-title">
-        <h5>Menampilkan hasil untuk {{ $title }}</h5>
+        <h5>@if($title == 'all') Menampilkan semua hasil @else Menampilkan hasil untuk {{ $title }} @endif</h5>
     </div>
     <div class="col-lg-12">
         <div class="row">
             @forelse($products as $p)
                 <x-productcard :products="$p" />
             @empty
-                <div class="unfinded-products">
+                <div class="unfinded-products m-auto text-center">
                     <img width="250px" class="my-2" src="{{ asset('images/icons/noactivity.svg') }}" alt="No Products">
-                    <span class="text-muted">Produk tidak ditemukan</span>
+                    <div class="text-muted">Produk tidak ditemukan</div>
                 </div>
             @endforelse
         </div>

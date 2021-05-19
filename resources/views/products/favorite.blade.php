@@ -6,9 +6,9 @@
             @forelse($favorite as $p)
                 <x-productcard :products="$p->products" />
             @empty
-                <div class="unfinded-products">
+                <div class="unfinded-products m-auto text-center">
                     <img width="250px" class="my-2" src="{{ asset('images/icons/noactivity.svg') }}" alt="No Products">
-                    <span class="text-muted">Sepertinya kamu belum memiliki favorit <br> <a class="btn btn-success" href="{{ url('/') }}">Yuk cari produk</a> </span>
+                    <div class="text-muted">Sepertinya kamu belum memiliki favorit <br> <a class="btn btn-success" href="{{ url('/') }}">Yuk cari produk</a> </div>
                 </div>
             @endforelse
         </div>

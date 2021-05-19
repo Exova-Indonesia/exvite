@@ -13,6 +13,8 @@ class Wallet extends Model
     protected $fillable = [
         'wallet_id',
         'user_id',
+        'revenue',
+        'fund',
     ];
 
     public function walletusers() {
