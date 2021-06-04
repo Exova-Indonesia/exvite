@@ -7,10 +7,10 @@ use App\Models\OrderJasa;
 use App\Models\PaymentDetail;
 use Illuminate\Support\Facades\Storage;
 
-function studio()
-{
-    return Studio::where('user_id', auth()->user()->id)->first();
-}
+// function studio()
+// {
+//     return Studio::where('user_id', auth()->user()->id)->first();
+// }
 
 function storage($url)
 {
