@@ -25,10 +25,6 @@ class CreateOrders extends Migration
             $table->string('status');
             $table->softDeletes();
             $table->timestamps();
-
-            // $table->foreign('product_id')->references('jasa_id')->on('jasa_products')->onDelete('cascade');
-            $table->foreign('customer_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('seller_id')->references('id')->on('studios')->onDelete('cascade');
         });
     }
 

@@ -46,10 +46,12 @@
                         <div class="card-header text-white bg-exova">
                             @lang('profile.card-2.title')
                         </div>
+                        {{--
                         <div class="alert alert-primary m-2 text-center">
                             @lang('profile.card-2.membership')
                             <a href="{{ url('/#membership') }}" class="btn-sm btn-danger">@lang('profile.card-2.button.membership')</a>
                         </div>
+                        --}}
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-lg-7 col-sm-12 p-1">

@@ -10,6 +10,7 @@ use App\Models\Jasa;
 use App\Models\Plan;
 use App\Models\Studio;
 use App\Models\Wallet;
+use App\Models\ChMessage;
 use App\Models\Highlight;
 use App\Models\JasaFavorit;
 use App\Models\SubCategory;
@@ -49,7 +50,7 @@ class HomeController extends Controller
         ->get();
         $balance = Wallet::where('user_id', Auth::user()->id)->first();
         $bank = Bank::where('user_id', Auth::user()->id)->get();
-        $messages = Message::where([
+        $messages = ChMessage::where([
             ['to_id', Auth::user()->id],
             // ['seen', 0],
             ])->count();

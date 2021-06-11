@@ -35,8 +35,8 @@
                 <div class="col-lg-6 col-sm-12">
                     <span>
                         Sejarah Exova bermula ketika sang founder "Triyana Artha" ingin membangun sebuah perusahaan e-commerce.
-                        Namun, sebelum mulai membangun Exova. Dia pernah membuat sebuah sosial media sederhana yang dia ciptakan karena sakit hati dengan "teman dekatnya" kala itu.
-                        Tak lama, dia pun merilis layanannya tersebut yang dia beri nama "curhatskuy". Namun, setelah update versi 2.0, dia memberhentikan layanannya karena ingin serius membangun perusahaan.
+                        Dia memang sangat ambisius sekali, rasa ambisius ingin membangun perusahaan yang sukses muncul ketika ia sakit hati karena harus berpisah tanpa alasan yang jelas dengan pacarnya saat masih di bangku SMA.
+                        Setelah itu, dia belajar dan belajar giat tentang dunia teknologi & programming. Tak lama, dia pun merilis layanannya yang dia beri nama "curhatskuy" sebuah platform untuk saling bertukar cerita masalah asmara. Namun, setelah update versi 2.0, dia memberhentikan layanannya karena ingin serius membangun perusahaan.
                         Lantas, dalam perjalanannya membangun exova ini, dia mengajak sang co-founder "Ngurah Krisna" untuk bergabung. Dikala itu nama Exova masih "Kayana Entertainment", karena memang awalnya mereka ingin membuat sebuah game, bahkan sudah seperempat perjalanan.
                         Dan akhirnya produksi game berhenti dan mulai serius membangun Platform Penyedia Jasa Online yang akhirnya mereka beri nama Exova. Sebuah platform jual beli jasa apapun terlengkap dan termurah.
                         Exova akhirnya didaftarkan event pertamanya namun gagal, event kedua gagal, event ketiga gagal, hingga lima kali saat ini. Namun mereka tak menyerah sedikit pun. Dibalik dua orang tadi juga masih ada tim exova yang lainnya,

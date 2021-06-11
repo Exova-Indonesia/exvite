@@ -305,5 +305,50 @@
     });
   });
 </script>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-messaging.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyBem8hm_QXgBkzrVI7deL9YgC83Nkf99v0",
+    authDomain: "elated-oxide-290910.firebaseapp.com",
+    databaseURL: "https://elated-oxide-290910.firebaseio.com",
+    projectId: "elated-oxide-290910",
+    storageBucket: "elated-oxide-290910.appspot.com",
+    messagingSenderId: "919542326880",
+    appId: "1:919542326880:web:c64fb34f3327949d40c505",
+    measurementId: "G-1EN9PNZZSJ"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const messaging = firebase.messaging();
+
+  messaging
+  .requestPermission()
+  .then(function () {
+      return messaging.getToken({vapidKey: "BPlEOAI6adR2gORVv21YtIBkSHY7bjLduOAnxvaJ4vs-zbmOspP-zvBRg3pb7zclRUtPyPvmdW_TxLgp0gWZ3Yc"})
+  })
+  .then(function(token) {
+      console.log("Token : " + token)
+  })
+  .catch(function (err) {
+      console.log("Unable to get permission to notify.", err);
+  });
+
+    messaging.onMessage(function(payload) {
+        const noteTitle = payload.notification.title;
+        const noteOptions = {
+            body: payload.notification.body,
+            icon: payload.notification.icon,
+        };
+        new Notification(noteTitle, noteOptions);
+    });
+</script>
 </body>
 </html>

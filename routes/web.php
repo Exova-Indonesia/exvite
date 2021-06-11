@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Events\Ordered;
 use App\Facades\Studios;
 use App\Mail\InvoiceMail;
+use App\Models\ChMessage;
 use App\Models\OrderJasa;
 use App\Models\StudioRank;
 use App\Models\Transaction;
@@ -20,12 +21,12 @@ use App\Exports\Transactions;
 use App\Models\PaymentDetail;
 use App\Models\StudioVisitor;
 use App\Models\CartAdditional;
+use Chatify\Http\Models\Message;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use App\Notifications\TransactionMail;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\MailResetPasswordNotification;
-use Chatify\Http\Models\Message;
 
 /*
 |--------------------------------------------------------------------------
@@ -121,6 +122,9 @@ Route::middleware('auth')->group(function() {
     Route::resource('/profile', App\Http\Controllers\ProfileController::class);
 });
 
+// Notifications
+Route::post('/save-token', [App\Http\Controllers\NotificationController::class, 'saveToken'])->name('save-token');
+Route::post('/send-notification', [App\Http\Controllers\NotificationController::class, 'sendNotification'])->name('send.notification');
 Route::middleware('auth')->group(function() {
     Route::resource('/notifications', App\Http\Controllers\NotificationController::class);
 });
@@ -238,12 +242,12 @@ Route::get('/send', function() {
 
 Route::post('/messenger', function(Request $request) {
     $exp = explode('-', $request->id);
-    $msg = new Message;
+    $msg = new ChMessage;
     $msg->id = rand();
     $msg->type = 'user';
     $msg->from_id = auth()->user()->id;
     $msg->to_id = $exp[0];
-    $msg->body = $exp[1];
+    $msg->body = "Halo, aku tertarik dengan jasa kamu yang ini " . '<a target="_blank" href="'.$request->content.'">' . $request->content . '</a>';
     $msg->save();
 
     return redirect('/messenger');

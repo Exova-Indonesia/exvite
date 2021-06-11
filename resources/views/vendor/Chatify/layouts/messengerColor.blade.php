@@ -46,6 +46,10 @@
     color: {{ $messengerColor }};
 }
 
+.mc-sender a {
+    color: white !important;
+}
+
 .messenger-listView-tabs a,
 .messenger-listView-tabs a:hover,
 .messenger-listView-tabs a:focus{

@@ -29,9 +29,6 @@ class CreateJasaProducts extends Migration
             $table->integer('jasa_cancel')->default(0);
             $table->softDeletes();
             $table->timestamps();
-
-            // $table->foreign('studio_id')->references('id')->on('studios')->onDelete('cascade');
-
         });
     }
 

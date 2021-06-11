@@ -3,9 +3,35 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class NotificationController extends Controller
 {
+    public function saveToken(Request $request)
+    {
+        auth()->user()->update(['device_token' => $request->token]);
+        return response()->json(['token saved successfully.']);
+    }
+
+    public function sendNotification(Request $request)
+    {
+        $firebaseToken = User::whereNotNull('device_token')->pluck('device_token')->all();
+          
+        $SERVER_API_KEY = 'XXXXXX';
+  
+        $data = [
+            "registration_ids" => $firebaseToken,
+            "notification" => [
+                "title" => $request->title,
+                "body" => $request->body,  
+            ]
+        ];
+        $dataString = json_encode($data);
+
+        $response = Http::withToken('t')->post('https://fcm.googleapis.com/fcm/send', $dataString);
+
+        dd($response);
+    }
     /**
      * Display a listing of the resource.
      *

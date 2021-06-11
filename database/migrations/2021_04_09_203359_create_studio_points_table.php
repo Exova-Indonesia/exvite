@@ -16,7 +16,7 @@ class CreateStudioPointsTable extends Migration
         Schema::create('studio_points', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('studio_id')->unsigned();
-            $table->integer('order_id')->nullable();
+            $table->bigInteger('order_id')->nullable();
             $table->integer('value');
             $table->string('source');
             $table->softDeletes();

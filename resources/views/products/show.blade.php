@@ -419,6 +419,7 @@
                     <form id="chat-form" action="{{ route('chat') }}" method="POST" class="d-none">
                         @csrf
                         <input name="id" type="hidden" value="{{ $seller->seller['owner']['id'] }}" />
+                        <input name="content" type="hidden" value="{{ Request::url() }}" />
                     </form>
                   </li>
                 </div>

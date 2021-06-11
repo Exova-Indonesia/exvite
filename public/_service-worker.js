@@ -1,6 +1,6 @@
 var _0x9928 = [
     "Exova",
-    "index.php",
+    "/",
     "install",
     "skipWaiting",
     "then",

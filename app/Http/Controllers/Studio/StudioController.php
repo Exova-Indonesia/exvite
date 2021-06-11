@@ -11,6 +11,7 @@ use App\Models\JasaVideos;
 use App\Models\StudioLogo;
 use App\Models\StudioRank;
 use App\Models\JasaPicture;
+use App\Models\ChMessage;
 use App\Models\OrderCancel;
 use App\Models\StudioLover;
 use App\Models\StudioPoint;
@@ -160,7 +161,7 @@ class StudioController extends Controller
 
         $ranks = StudioRank::get();
 
-        $messages = Message::where([
+        $messages = ChMessage::where([
             ['to_id', auth()->user()->id],
             ['seen', 0],
             ])->count();
